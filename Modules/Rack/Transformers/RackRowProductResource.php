@@ -30,6 +30,8 @@ class RackRowProductResource extends JsonResource
                 $collection->put('pivot', collect($item->pivot)->put('priority', $this->additional['rack_row']->priority));
             })->when($item->relationLoaded('gallery'), function (Collection $collection)use ($item) {
                 $collection->put('gallery', $item->gallery);
+            })->when($item->relationLoaded('image'), function (Collection $collection)use ($item) {
+                $collection->put('image', $item->image);
             })->when($item->relationLoaded('model'), function (Collection $collection)use ($item) {
                 $collection->put('model', $item->model);
             })->toArray();
