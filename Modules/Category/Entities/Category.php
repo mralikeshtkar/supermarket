@@ -123,7 +123,7 @@ class Category extends Model
      */
     public function getAdminIndexPaginate(Request $request, $category = null): LengthAwarePaginator
     {
-        return self::query()
+        return self::query()/*
             ->with('image')
             ->latest()
             ->when($request->filled('name'), function (Builder $builder) use ($request) {
@@ -133,7 +133,7 @@ class Category extends Model
                 $builder->where('parent_id', $category);
             }, function (Builder $builder) use ($category) {
                 $builder->whereNull('parent_id');
-            })->paginate(2);
+            })*/->paginate(2);
     }
 
     /**
