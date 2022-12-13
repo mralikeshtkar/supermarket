@@ -37,7 +37,6 @@ Route::prefix('v1')->group(function (Router $router) {
                 ->name('category.v1.api-admin-category.all.get.api');
             $router->get('categories/accepted', [V1ApiAdminCategoryController::class, 'accepted'])
                 ->name('category.v1.api-admin-category.accepted.get.api');
-            $router->get('categories/{category?}', [V1ApiAdminCategoryController::class, 'index']);
             $router->get('categories/{category}/show', [V1ApiAdminCategoryController::class, 'show'])
                 ->name('category.v1.api-admin-category.show.get.api');
             $router->post('categories', [V1ApiAdminCategoryController::class, 'store'])
@@ -46,6 +45,7 @@ Route::prefix('v1')->group(function (Router $router) {
                 ->name('category.v1.api-admin-category.update.patch.api');
             $router->delete('categories/{category}', [V1ApiAdminCategoryController::class, 'destroy'])
                 ->name('category.v1.api-admin-category.destroy.delete.api');
+            $router->get('categories/{category?}', [V1ApiAdminCategoryController::class, 'index']);
 
             $router->get('categories/{category}/features/{feature?}',[V1ApiAdminCategoryController::class, 'features']);
 
