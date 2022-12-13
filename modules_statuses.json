@@ -1,0 +1,19 @@
+{
+    "Otp": true,
+    "Core": true,
+    "User": true,
+    "Permission": true,
+    "Category": true,
+    "Product": true,
+    "Tag": true,
+    "Comment": true,
+    "Feature": true,
+    "Address": true,
+    "Brand": true,
+    "Discount": true,
+    "Media": true,
+    "Rack": true,
+    "Storeroom": true,
+    "Order": true,
+    "Setting": true
+}

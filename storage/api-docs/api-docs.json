@@ -1,0 +1,740 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Ario Web Services",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api/v1"
+        }
+    ],
+    "paths": {
+        "/brands/{id}": {
+            "get": {
+                "tags": [
+                    "برند"
+                ],
+                "summary": "دریافت برند همراه با محصولات",
+                "description": "",
+                "operationId": "a315db8b4f68460e06cfa13ddcb3c6d3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه برند",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}/filters": {
+            "get": {
+                "tags": [
+                    "دسته بندی"
+                ],
+                "summary": "لیست فیلترهای دسته",
+                "description": "",
+                "operationId": "9feb3de16dc80adc207c8e8f98c75fce",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه دسته",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orders": {
+            "get": {
+                "tags": [
+                    "سفارشات - پنل مدیریت"
+                ],
+                "summary": "لیست سفارشات بصورت صفحه بندی",
+                "description": "ثبت سفارش",
+                "operationId": "5478286f8e1b7aa4fe445da47494d20f",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "شماره سفارش",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "user_name",
+                        "in": "query",
+                        "description": "نام سفارش دهنده",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "شناسه سفارش دهنده",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": " 1401/8/24 - از تاریخ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": " 1401/8/24 - تا تاریخ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "وضعیت",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Pending",
+                                "Success",
+                                "Canceled",
+                                "Fail"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orders/{id}": {
+            "get": {
+                "tags": [
+                    "سفارشات - پنل مدیریت"
+                ],
+                "summary": "نمایش جزئیات سفارش",
+                "description": "نمایش جزئیات سفارش",
+                "operationId": "01fe47b2a842ba3c0ebdaee982b3c92b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه سفارش",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/orders/{id}/change-status": {
+            "post": {
+                "tags": [
+                    "سفارشات - پنل مدیریت"
+                ],
+                "summary": "تغییر وضعیت سفارش",
+                "description": "تغییر وضعیت سفارش",
+                "operationId": "f2ed1bb67f54e39ea0b5a39da13814d9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه سفارش",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "_method",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "_method": {
+                                        "description": "این مقدار باید بصورت ثابت شود",
+                                        "type": "string",
+                                        "default": "put",
+                                        "enum": [
+                                            "put"
+                                        ]
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pending",
+                                            "Success",
+                                            "Canceled",
+                                            "Fail"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "post": {
+                "tags": [
+                    "سفارشات"
+                ],
+                "summary": "ثبت سفارش",
+                "description": "ثبت سفارش",
+                "operationId": "d9d19b241f6bf02489c3c63ab7ac4e7d",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "address_id"
+                                ],
+                                "properties": {
+                                    "address_id": {
+                                        "description": "شناسه آدرس",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "حساب کاربری"
+                ],
+                "summary": "درخواست کد فعالسازی",
+                "description": "درخواست کد فعالسازی",
+                "operationId": "724894015647e3d9fed3135077b547c3",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "mobile"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "description": "شماره موبایل",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/confirm": {
+            "post": {
+                "tags": [
+                    "حساب کاربری"
+                ],
+                "summary": "اعتبار سنجی کد فعالسازی",
+                "description": "اعتبار سنجی کد فعالسازی",
+                "operationId": "7b4379f2c3fc0bb4270b840d29589a94",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "mobile",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "description": "شماره موبایل",
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "description": "کد فعالسازی",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{category}": {
+            "get": {
+                "tags": [
+                    "محصولات"
+                ],
+                "summary": "جستجو میان مصحولات همراه با فیلتر",
+                "description": "",
+                "operationId": "a25e7d1b8138cc6282bac92439490af7",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "description": "اجباری نیست",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/latest": {
+            "get": {
+                "tags": [
+                    "محصولات"
+                ],
+                "summary": "دریافت جدیدترین محصولات",
+                "description": "",
+                "operationId": "b15dd3607df0266975ef009ed2f9f12d",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "محصولات"
+                ],
+                "summary": "دریافت اصلاعات محصول",
+                "description": "",
+                "operationId": "4bc53800f8d548d71ae8f74fa8a53139",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه محصول",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/compare/{product1}/{product2}": {
+            "get": {
+                "tags": [
+                    "محصولات"
+                ],
+                "summary": "مقایسه محصول",
+                "description": "",
+                "operationId": "b67eb1eaf8b8113fa05128f2e0d2ed41",
+                "parameters": [
+                    {
+                        "name": "product1",
+                        "in": "path",
+                        "description": "شناسه محصول اول",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "product2",
+                        "in": "path",
+                        "description": "شناسه محصول دوم",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/latest/seen": {
+            "get": {
+                "tags": [
+                    "محصولات"
+                ],
+                "summary": "دریافت محصولات دیده شده",
+                "description": "",
+                "operationId": "1fd4da0ac323aeb2dd1bb87273d3c9af",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/special-products": {
+            "get": {
+                "tags": [
+                    "محصولات ویژه"
+                ],
+                "summary": "لیست محصولات ویژه - تنظیم تعداد ایتم ها در تنظیمات است",
+                "description": "",
+                "operationId": "faa662100fdd08043d5f4a784079940e",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/check-store-is-open": {
+            "get": {
+                "tags": [
+                    "تنظیمات"
+                ],
+                "summary": "آیا فروشگاه باز است یا بسته",
+                "description": "",
+                "operationId": "b51a7239b4f74097f613ee9abe66b615",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/cart": {
+            "get": {
+                "tags": [
+                    "سبد خرید"
+                ],
+                "summary": "لیست سبد خرید",
+                "description": "لیست سبد خرید",
+                "operationId": "b6234cb8a4eef4bbd261ff5c1d4945fc",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "سبد خرید"
+                ],
+                "summary": "افزودن محصول به سبد خرید",
+                "description": "افزودن محصول به سبد خرید",
+                "operationId": "44983cdb2fd7ba44fabf6b7829fe84a8",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "product_id": {
+                                        "description": "شناسه محصول",
+                                        "type": "number"
+                                    },
+                                    "quantity": {
+                                        "description": "تعداد",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "post": {
+                "tags": [
+                    "کاربر"
+                ],
+                "summary": "بروزرسانی اطلاعات",
+                "description": "",
+                "operationId": "97b94ff0354d05afe4c28d19000c2efa",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "_method",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "_method": {
+                                        "description": "این مقدار باید بصورت ثابت شود",
+                                        "type": "string",
+                                        "default": "put",
+                                        "enum": [
+                                            "put"
+                                        ]
+                                    },
+                                    "name": {
+                                        "description": "نام",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "ایمیل",
+                                        "type": "string"
+                                    },
+                                    "old_password": {
+                                        "description": "کلمه عبور قبلی",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "کلمه عبور جدید",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/orders": {
+            "get": {
+                "tags": [
+                    "کاربر"
+                ],
+                "summary": "لیست سفارشات کاربر",
+                "description": "لیست سفارشات کاربر",
+                "operationId": "d5ee3ea3df13f40b1a64f304ca5bcc79",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/orders/{id}": {
+            "get": {
+                "tags": [
+                    "کاربر"
+                ],
+                "summary": "نمایش جزئیات سفارش کاربر",
+                "description": "نمایش جزئیات سفارش کاربر",
+                "operationId": "239636d950d778a8bd49a5c61bc9f420",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "شناسه سفارش",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "توکن را به همراه Bearer وارد کنید.",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "sanctum": []
+        }
+    ]
+}

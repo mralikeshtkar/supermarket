@@ -1,0 +1,13 @@
+{
+    "name": "Rack",
+    "alias": "rack",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Rack\\Providers\\RackServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

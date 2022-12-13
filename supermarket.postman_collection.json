@@ -1,0 +1,2596 @@
+{
+	"info": {
+		"_postman_id": "8a92bc91-61ba-4f06-b121-c88e7d8d590b",
+		"name": "supermarket",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18620240"
+	},
+	"item": [
+		{
+			"name": "authenticate",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mobile",
+									"value": "+989123456789",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resend",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mobile",
+									"value": "+989123456789",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/resend",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"resend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set Berarer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    if(pm.response.to.have.status(200)){\r",
+									"        pm.collectionVariables.set(\"token\", jsonData.data.token);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mobile",
+									"value": "+989123456789",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "315363",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/confirm",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "like",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "favouritable[id]",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "favouritable[type]",
+									"value": "product",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/users/like",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dislike",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "favouritable[id]",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "favouritable[type]",
+									"value": "product",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/users/dislike",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"dislike"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "permission",
+			"item": [
+				{
+					"name": "permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/permissions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"permissions"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/roles",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_en",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "name_fa",
+									"value": "تست",
+									"type": "text"
+								},
+								{
+									"key": "permissions[]",
+									"value": "manage products",
+									"type": "text"
+								},
+								{
+									"key": "permissions[]",
+									"value": "manage categories",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/roles",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_en",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "name_fa",
+									"value": "تست",
+									"type": "text"
+								},
+								{
+									"key": "permissions[]",
+									"value": "manage products",
+									"type": "text"
+								},
+								{
+									"key": "permissions[]",
+									"value": "manage categories",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/roles/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/roles/super admin",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"roles",
+								"super admin"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories/drink/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories",
+								"drink",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show category features",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories/drink/features",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories",
+								"drink",
+								"features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "لوازم خانگی",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "home",
+									"type": "text"
+								},
+								{
+									"key": "parent_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SRG Co/Desktop/Home-Appliances-zahedan-plus.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accept status category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories/drink/accept",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories",
+								"drink",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reject status category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories/drink/reject",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories",
+								"drink",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories/drink",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories",
+								"drink"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/categories/drink",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"categories",
+								"drink"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "store product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{$randomFullName}}",
+									"type": "default"
+								},
+								{
+									"key": "slug",
+									"value": "{{$randomFullName}}",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "{{$randomInt}}",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SRG Co/Desktop/download.jpg"
+								},
+								{
+									"key": "brand_id",
+									"value": "1",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product attributes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/products/mr-carlos-runolfsson/attributes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"mr-carlos-runolfsson",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"{{$randomFullName}}\",\r\n    \"slug\":\"darrel-pouros\",\r\n    \"price\":\"{{$randomInt}}\",\r\n    \"categories_id\":[1]\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/products/darrel-pouros",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"darrel-pouros"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/products/miss-elsa-mclaughlin",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"miss-elsa-mclaughlin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete media",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/galleries/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"galleries",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "tag",
+			"item": [
+				{
+					"name": "store tag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"{{$randomCompanyName}}\",\r\n    \"slug\":\"{{$randomCompanyName}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/tags",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update tag",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"{{$randomCompanyName}}\",\r\n    \"slug\":\"{{$randomCompanyName}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/tags/white-and-sons",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"tags",
+								"white-and-sons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete tag",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"{{$randomCompanyName}}\",\r\n    \"slug\":\"{{$randomCompanyName}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/tags/white-and-sons",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"tags",
+								"white-and-sons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show tag",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/tags/satterfield-and-sons",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"tags",
+								"satterfield-and-sons"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "store comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"commentable\":{\r\n        \"id\":2,\r\n        \"type\":\"product\"\r\n    },\r\n    \"title\":\"{{$randomJobTitle}}\",\r\n    \"body\":\"{{$randomLoremSentence}}\",\r\n    \"advantage\":[\r\n        \"عالیه\",\r\n        \"کیفیت بالا\"\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/comments",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "feature",
+			"item": [
+				{
+					"name": "option",
+					"item": [
+						{
+							"name": "feature options",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/v1/features/2/options",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"features",
+										"2",
+										"options"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "store feature options",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"option_value\":\"{{$randomInt}} گرم\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/v1/features/2/options",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"features",
+										"2",
+										"options"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "attribute",
+					"item": [
+						{
+							"name": "store attribute",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"attributable\":{\r\n        \"id\":2,\r\n        \"type\":\"product\"\r\n    },\r\n    \"option_id\":2\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}/v1/features/2/attributes",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"features",
+										"2",
+										"attributes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "store feature",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"featureable\":{\r\n        \"id\":1,\r\n        \"type\":\"category\"\r\n    },\r\n    \"parent_id\":1,\r\n    \"title\":\"وزن\",\r\n    \"has_option\":true,\r\n    \"is_filter\":true\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/features",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show feature",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/features/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"features",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update feature",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"کیفیت\",\r\n    \"is_filter\":true\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/features/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"features",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "province",
+			"item": [
+				{
+					"name": "store province",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "گلستان",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/provinces",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"provinces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "destroy province",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "گلستان",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/provinces/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"provinces",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update province",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"خراسان رضوی\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/provinces/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"provinces",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show province",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/provinces/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"provinces",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "city",
+			"item": [
+				{
+					"name": "store city",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"province_id\":1,\r\n    \"name\":\"مشهد\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/cities",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "destroy city",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "گلستان",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/cities/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"cities",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update city",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"province_id\":1,\r\n    \"name\":\"مشهد\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/cities/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"cities",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show city",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/cities/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"cities",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "address",
+			"item": [
+				{
+					"name": "store address",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"province_id\":1,\r\n    \"city_id\":1,\r\n    \"name\":\"علی کشتکار\",\r\n    \"address\":\"بلوار باهنر\",\r\n    \"mobile\":\"+989115059242\",\r\n    \"postal_code\":4198614439\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/addresses",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update address",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"province_id\":1,\r\n    \"city_id\":1,\r\n    \"name\":\"علی کشتکار\",\r\n    \"address\":\"بلوار معلم\",\r\n    \"mobile\":\"+989115059242\",\r\n    \"postal_code\":4198614439\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/v1/addresses/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"addresses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "destroy address",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/addresses/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"addresses",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show address",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/addresses/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"addresses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "brand",
+			"item": [
+				{
+					"name": "store brand",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "سامسونگ",
+									"type": "default"
+								},
+								{
+									"key": "name_en",
+									"value": "Samsung",
+									"type": "default"
+								},
+								{
+									"key": "slug",
+									"value": "samsung",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SRG Co/Desktop/SAMSUNG.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/brands",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update brand",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "patch",
+									"type": "default"
+								},
+								{
+									"key": "name",
+									"value": "سامسونگ",
+									"type": "default"
+								},
+								{
+									"key": "name_en",
+									"value": "Samsung",
+									"type": "default"
+								},
+								{
+									"key": "slug",
+									"value": "Samsung",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/SRG Co/Desktop/SAMSUNG.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/brands/samsung",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"brands",
+								"samsung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete brand",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/brands/samsung",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"brands",
+								"samsung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show brand",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/brands/samsung",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"brands",
+								"samsung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accept brand",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/brands/samsung/accept",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"brands",
+								"samsung",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reject brand",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/brands/samsung/reject",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"brands",
+								"samsung",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "discount",
+			"item": [
+				{
+					"name": "store discount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "code",
+									"value": "summer",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "start_at",
+									"value": "1401/02/10 00:00:00",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "expire_at",
+									"value": "1401/03/10 00:00:00",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "usage_limitation",
+									"value": "2",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "discountables[discountable_type]",
+									"value": "product",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "discountables[discountable_ids][]",
+									"value": "2",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "amount",
+									"value": "50",
+									"type": "default"
+								},
+								{
+									"key": "is_percent",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "priority",
+									"value": "5",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/discounts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"discounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "destroy discount",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/v1/discounts/7",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"discounts",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update discount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accepted",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "code",
+									"value": "summer",
+									"type": "default"
+								},
+								{
+									"key": "start_at",
+									"value": "1401/02/10 00:00:00",
+									"type": "default"
+								},
+								{
+									"key": "expire_at",
+									"value": "1401/03/10 00:00:00",
+									"type": "default"
+								},
+								{
+									"key": "usage_limitation",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "discountables[discountable_type]",
+									"value": "product",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "discountables[discountable_ids][]",
+									"value": "1",
+									"type": "default",
+									"disabled": true
+								},
+								{
+									"key": "amount",
+									"value": "50",
+									"type": "default"
+								},
+								{
+									"key": "is_percent",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "priority",
+									"value": "-50",
+									"type": "default"
+								},
+								{
+									"key": "_method",
+									"value": "put",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/v1/discounts/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"discounts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/otp",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"otp"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
