@@ -133,8 +133,7 @@ class Category extends Model
                 $builder->where('parent_id', $category);
             }, function (Builder $builder) use ($category) {
                 $builder->whereNull('parent_id');
-            })->paginate(2)
-            ->appends($request->only('name'));
+            })->paginate(2);
     }
 
     /**
