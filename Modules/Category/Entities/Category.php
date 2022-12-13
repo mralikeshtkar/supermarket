@@ -129,6 +129,10 @@ class Category extends Model
             ->when($request->filled('name'), function (Builder $builder) use ($request) {
                 $builder->where('name', 'LIKE', '%' . $request->name . '%')
                     ->orWhere('slug', 'LIKE', '%' . $request->name . '%');
+            })->when($category, function (Builder $builder) use ($category) {
+                $builder->where('parent_id', $category->id);
+            }, function (Builder $builder) use ($category) {
+                $builder->whereNull('parent_id');
             })->paginate(2);
     }
 
