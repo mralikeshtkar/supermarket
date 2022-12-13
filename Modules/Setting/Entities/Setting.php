@@ -19,6 +19,7 @@ class Setting extends Model
     const SETTING_MINIMUM_CART_PRICE = "setting_minimum_cart_price";
     const SETTING_MAXIMUM_CART_PRICE = "setting_maximum_cart_price";
     const SETTING_INACTIVATE_BUY_BUTTON = "inactivate_buy_button";
+    const SETTING_SHIPPING_COST = "shipping_cost";
 
     const SETTING_KEYS = [
         self::SETTING_SHOP_IS_OPEN,
@@ -26,6 +27,7 @@ class Setting extends Model
         self::SETTING_MINIMUM_CART_PRICE,
         self::SETTING_MAXIMUM_CART_PRICE,
         self::SETTING_INACTIVATE_BUY_BUTTON,
+        self::SETTING_SHIPPING_COST,
     ];
 
     const SETTING_RULES = [
@@ -34,6 +36,7 @@ class Setting extends Model
         self::SETTING_MINIMUM_CART_PRICE => ['nullable', 'numeric', 'min:1'],
         self::SETTING_MAXIMUM_CART_PRICE => ['nullable', 'numeric', 'min:1'],
         self::SETTING_INACTIVATE_BUY_BUTTON => ['nullable', 'boolean'],
+        self::SETTING_SHIPPING_COST => ['nullable', 'numeric', 'min:0'],
     ];
 
     const SETTING_BOOLEAN = [

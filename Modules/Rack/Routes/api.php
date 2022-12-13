@@ -60,8 +60,7 @@ Route::prefix('v1')->group(function (Router $router) {
                 ->name('rack.v1.api-admin-rack-row.destroy.delete.api');
             $router->match(['put', 'patch'], 'rows/{rack_row}/active', [V1ApiAdminRackRowController::class, 'active'])
                 ->name('rack.v1.api-admin-rack-row.active.patch.api');
-            $router->match(['put', 'patch'], 'rows/{rack_row}/inactive', [V1ApiAdminRackRowController::class, 'inactive'])
-                ->name('rack.v1.api-admin-rack-row.active.patch.api');
+            $router->match(['put', 'patch'], 'rows/{rack_row}/inactive', [V1ApiAdminRackRowController::class, 'inactive']);
             $router->post('rows/{rack_row}/products/attach', [V1ApiAdminRackRowController::class, 'attach'])
                 ->name('rack.v1.api-admin-rack-row.attach.post.api');
             $router->post('rows/{rack_row}/products/detach', [V1ApiAdminRackRowController::class, 'detach'])

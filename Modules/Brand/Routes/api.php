@@ -16,8 +16,10 @@ use Modules\Brand\Http\Controllers\V1\Api\ApiBrandController as V1ApiBrandContro
 */
 
 Route::prefix('v1')->group(function (Router $router) {
-    $router->get('brands/{brand}', [V1ApiBrandController::class, 'show']);
     $router->middleware('auth:sanctum')->group(function (Router $router) {
+        $router->get('brands', [V1ApiBrandController::class, 'index']);
+        $router->get('brands/{brand}', [V1ApiBrandController::class, 'show']);
+
         $router->group(['prefix' => 'admin'], function (Router $router) {
             $router->get('all-brands', [V1ApiAdminBrandController::class, 'allBrands'])
                 ->name('brand.v1.api-admin-brand.all-brands.get.api');

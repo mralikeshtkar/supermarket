@@ -58,6 +58,19 @@ class Brand extends Model
     }
 
     /**
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function getAcceptedBrands(Request $request): LengthAwarePaginator
+    {
+        return self::query()
+            ->with(['image'])
+            ->select(['id', 'name', 'name_en'])
+            ->accepted()
+            ->paginate();
+    }
+
+    /**
      * @return string
      */
     public function getTranslatedStatus(): string

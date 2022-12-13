@@ -19,6 +19,7 @@ class CartProductResource extends JsonResource
      */
     public function toArray($request)
     {
+        $shipping_cost=Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_SHIPPING_COST, 0);
         $products = $this->resource->map(function ($item) {
             $quantity = collect(collect($this->additional['cart'])->get($item->id))->get('quantity');
             return collect($item->toArray())
@@ -30,7 +31,8 @@ class CartProductResource extends JsonResource
         });
         return [
             'products' => $products,
-            'total_price' => $products && $products->count() ? $products->sum('sum_price') : 0,
+            'shipping_cost' => $shipping_cost,
+            'total_price' => $products && $products->count() ? $products->sum('sum_price') + $shipping_cost : 0,
             'inactive_buy_button' => Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_INACTIVATE_BUY_BUTTON, false),
         ];
     }

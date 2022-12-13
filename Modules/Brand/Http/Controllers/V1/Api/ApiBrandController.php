@@ -21,6 +21,27 @@ use Throwable;
 class ApiBrandController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/brands",
+     *     summary="دریافت برندها",
+     *     description="",
+     *     tags={"برند"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="عملیات موفق",
+     *         @OA\JsonContent()
+     *     ),
+     * )
+     */
+    public function index(Request $request)
+    {
+        $brands = Brand::init()->getAcceptedBrands($request);
+        return ApiResponse::message(trans('brand::messages.received_information_successfully'))
+            ->addData('brands', ApiPaginationResource::make($brands)->additional(['itemsResource' => BrandResource::class]))
+            ->send();
+    }
+
+    /**
      * Store a brand from call api.
      *
      * @param Request $request
@@ -28,7 +49,7 @@ class ApiBrandController extends Controller
      */
     public function store(Request $request)
     {
-        ApiResponse::authorize($request->user()->can('store', Brand::class));
+//        ApiResponse::authorize($request->user()->can('store', Brand::class));
         $request->merge([
             'slug' => Str::slug($request->slug),
             'name_en' => ucfirst($request->name_en),
@@ -103,7 +124,7 @@ class ApiBrandController extends Controller
      */
     public function update(Request $request, $slug)
     {
-        ApiResponse::authorize($request->user()->can('update', Brand::class));
+//        ApiResponse::authorize($request->user()->can('update', Brand::class));
         $request->merge([
             'slug' => Str::slug($request->slug),
             'name_en' => ucfirst($request->name_en),
