@@ -125,7 +125,11 @@ class Category extends Model
     {
         return self::query()
             ->with('image')
-            ->paginate(2);
+            ->latest()
+            ->when($request->filled('name'), function (Builder $builder) use ($request) {
+                $builder->where('name', 'LIKE', '%' . $request->name . '%')
+                    ->orWhere('slug', 'LIKE', '%' . $request->name . '%');
+            })->paginate(2);
     }
 
     /**
