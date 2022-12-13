@@ -26,7 +26,6 @@ class ApiAdminCategoryController extends Controller
      */
     public function index(Request $request, $category = null)
     {
-        dd("salam");
         return ApiResponse::message(trans('category::messages.received_information_successfully'))
             ->addData('categories', Category::init()->getAdminIndexPaginate($request, $category))
             ->send();
