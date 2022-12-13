@@ -124,12 +124,7 @@ class Category extends Model
     public function getAdminIndexPaginate(Request $request, $category = null): LengthAwarePaginator
     {
         return self::query()
-            ->with('image')
-            ->latest()
-            ->when($request->filled('name'), function (Builder $builder) use ($request) {
-                $builder->where('name', 'LIKE', '%' . $request->name . '%')
-                    ->orWhere('slug', 'LIKE', '%' . $request->name . '%');
-            })->paginate(2);
+            ->paginate(2);
     }
 
     /**
