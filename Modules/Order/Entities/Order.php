@@ -18,6 +18,7 @@ use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Enums\OrderStatus;
 use Modules\Order\Transformers\Api\Admin\ApiOrderResource;
 use Modules\Product\Entities\Product;
+use Modules\Product\Transformers\V1\Api\CartProductResource;
 use Modules\Setting\Entities\Setting;
 use Modules\User\Entities\User;
 use Modules\User\Transformers\Api\Admin\ApiUserOrdersResource;
@@ -90,14 +91,14 @@ class Order extends Model
      */
     public function store(Request $request): JsonResponse
     {
-        $cart = $request->user()->getCart();
+        $cart = collect($request->user()->getCart()->toArray($request));
         $address = $request->user()->findOrFailAddressById($request->address_id);
         if (Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_INACTIVATE_BUY_BUTTON, false)) return ApiResponse::sendError(trans("Shopping is disabled"), Response::HTTP_BAD_REQUEST);
         if ($this->_checkTotalPriceIsNotGreaterThanMinimum($cart)) return ApiResponse::sendError(trans("order::messages.setting_minimum_cart_price", ["price" => number_format($this->_getMinimumCartPrice())]), Response::HTTP_BAD_REQUEST);
         $request->user()->clearCart();
         $order = self::query()->create([
             'user_id' => $request->user()->id,
-            'amount' => $cart->sum('total_price'),
+            'amount' => $cart->get('total_price'),
         ]);
         $order->address()->create([
             'city_id' => $address->city_id,
@@ -106,10 +107,10 @@ class Order extends Model
             'address' => $address->address,
             'postal_code' => $address->postal_code,
         ]);
-        $order->products()->attach($cart->products->mapWithKeys(function ($item) {
+        $order->products()->attach($cart->get('products')->mapWithKeys(function ($item) {
             return [$item['id'] => [
                 'quantity' => $item['quantity'],
-                'unit_price' => $item['cart_price'] / $item['quantity'],
+                'unit_price' => $item['unit_price'],
             ]];
         }));
         return ApiResponse::message(trans('Registration information completed successfully'))

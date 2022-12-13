@@ -13,6 +13,26 @@
         }
     ],
     "paths": {
+        "/brands": {
+            "get": {
+                "tags": [
+                    "برند"
+                ],
+                "summary": "دریافت برندها",
+                "description": "",
+                "operationId": "52ee91bc9fb9919dd37d74153eff3170",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/brands/{id}": {
             "get": {
                 "tags": [
@@ -44,14 +64,26 @@
                 }
             }
         },
-        "/categories": {
+        "/categories/{id}": {
             "get": {
                 "tags": [
                     "دسته بندی"
                 ],
                 "summary": "دریافت دسته بندی",
                 "description": "",
-                "operationId": "b41947171cd3c6408f9d42b583ceb20d",
+                "operationId": "6807523db668c1472b0763eecf23442e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "میتواند خالی باشد",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "example": "1"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "عملیات موفق",

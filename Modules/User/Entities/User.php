@@ -31,7 +31,7 @@ use Modules\Setting\Entities\Setting;
 use Modules\User\Database\factories\UserFactory;
 use Modules\User\Exceptions\NotEnoughProductInCartException;
 use Modules\User\Exceptions\NotEnoughProductStockException;
-use Modules\User\Transformers\V1\Api\ApiUserOrdersResource;
+use Modules\User\Transformers\V1\Api\ApiUserOrderResource;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Traits\HasRoles;
 use Symfony\Component\HttpFoundation\Response;
@@ -375,18 +375,16 @@ class User extends Authenticatable
     }
 
     /**
-     * Get orders as pagination.
-     *
-     * @return ApiPaginationResource
+     * @return LengthAwarePaginator
      */
-    public function getOrders(): ApiPaginationResource
+    public function getOrders(): LengthAwarePaginator
     {
-        return ApiPaginationResource::make($this->orders()
-            ->with(['user:id,mobile,name', 'address' => function (HasOne $hasOne) {
+        return $this->orders()
+            ->with(['user:id,mobile,name','products:id,name', 'products.image', 'address' => function (HasOne $hasOne) {
                 $hasOne->withAggregate('city', 'name')
                     ->withAggregate('province AS province_name', 'provinces.name');
-            }])
-            ->paginate())->additional(['itemsResource' => ApiUserOrdersResource::class]);
+            }])->latest()
+            ->paginate();
     }
 
     /**

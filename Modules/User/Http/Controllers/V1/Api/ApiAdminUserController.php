@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Rules\MobileRule;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
+use Modules\Order\Transformers\Api\Admin\ApiOrderResource;
 use Modules\Permission\Entities\Role;
 use Modules\User\Entities\User;
 use Modules\User\Rules\UniqueMobileRule;
+use Modules\User\Transformers\V1\Api\Admin\AdminUserOrderResource;
 use Modules\User\Transformers\V1\Api\Admin\AdminUserResource;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -46,7 +48,7 @@ class ApiAdminUserController extends Controller
      */
     public function show($user)
     {
-        $user = User::init()->selectColumns(['id','mobile', 'email', 'name', 'password','is_blocked'])
+        $user = User::init()->selectColumns(['id', 'mobile', 'email', 'name', 'password', 'is_blocked'])
             ->withRelationships(['roles'])
             ->findOrFailById($user);
         try {
@@ -162,12 +164,25 @@ class ApiAdminUserController extends Controller
      * @param $user
      * @return JsonResponse
      */
-    public function cart(Request $request,$user)
+    public function cart(Request $request, $user)
     {
-        $user=User::init()->selectColumns(['id','cart'])->findOrFailById($user);
+        $user = User::init()->selectColumns(['id', 'cart'])->findOrFailById($user);
         $cart = $user->getCart();
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('cart', $cart)
+            ->send();
+    }
+
+    /**
+     * @param Request $request
+     * @param $user
+     * @return JsonResponse
+     */
+    public function orders(Request $request, $user)
+    {
+        $user = User::init()->selectColumns(['id'])->findOrFailById($user);
+        return ApiResponse::message(trans('user::messages.received_information_successfully'))
+            ->addData('orders', ApiPaginationResource::make($user->getOrders())->additional(['itemsResource' => AdminUserOrderResource::class]))
             ->send();
     }
 }

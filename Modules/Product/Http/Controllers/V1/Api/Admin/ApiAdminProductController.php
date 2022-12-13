@@ -53,6 +53,18 @@ class ApiAdminProductController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function allStocks(Request $request)
+    {
+        $products = Product::init()->allStocks($request);
+        return ApiResponse::message(trans('product::messages.received_information_successfully'))
+            ->addData('products', AdminProductResource::collection($products))
+            ->send();
+    }
+
+    /**
      * @param $product
      * @return JsonResponse
      */

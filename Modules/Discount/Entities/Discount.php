@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Modules\Category\Entities\Category;
 use Modules\Discount\Database\factories\DiscountFactory;
@@ -42,6 +43,12 @@ class Discount extends Model
         'is_percent' => 'boolean',
     ];
 
+    private array $selected_columns = ['*'];
+
+    private array $with_relationships = [];
+
+    private array $with_scopes = [];
+
     #endregion
 
     #region Methods
@@ -54,6 +61,21 @@ class Discount extends Model
     public static function init(): Discount
     {
         return new self();
+    }
+
+    /**
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function getAdminIndexPaginate(Request $request): LengthAwarePaginator
+    {
+        return self::query()
+            ->select(['id', 'code', 'status', 'amount', 'is_percent', 'start_at', 'expire_at', 'usage_limitation', 'uses', 'description',])
+            ->with('products:id')
+            ->when($request->filled('code'), function (Builder $builder) use ($request) {
+                $builder->where('code', 'LIKE', '%' . $request->code . '%');
+            })->latest()
+            ->paginate();
     }
 
     /**
@@ -79,8 +101,8 @@ class Discount extends Model
             'code' => $request->code,
             'amount' => $request->amount,
             'is_percent' => $request->filled('is_percent') ? $request->is_percent : true,
-            'start_at' => $request->filled('start_at') ? Verta::parseFormat('Y/m/d H:i:s', $request->start_at) : null,
-            'expire_at' => $request->filled('expire_at') ? Verta::parseFormat('Y/m/d H:i:s', $request->expire_at) : null,
+            'start_at' => $request->filled('start_at') ? Verta::parseFormat('Y/n/j H:i', $request->start_at) : null,
+            'expire_at' => $request->filled('expire_at') ? Verta::parseFormat('Y/n/j H:i', $request->expire_at) : null,
             'usage_limitation' => $request->usage_limitation,
             'uses' => $request->filled('uses') ? $request->uses : 0,
             'description' => $request->description,
@@ -96,57 +118,116 @@ class Discount extends Model
      * Check code doesn't exist code in valid discounts.
      *
      * @param mixed $code
+     * @param $discount
      * @return bool
      */
-    public function checkDoesntExistValidDiscount(mixed $code): bool
+    public function checkDoesntExistValidDiscount(mixed $code, $discount = null): bool
     {
         return self::query()
-            ->usageLimitationGreaterThanZeroOrNull()
+            ->when(!is_null($discount), function (Builder $builder) use ($discount) {
+                $builder->whereNot('id', $discount);
+            })->usageLimitationGreaterThanZeroOrNull()
             ->codeDoesntExpireOrNull()
             ->where('code', $code)
             ->doesntExist();
     }
 
     /**
-     * Find a discount with param column.
-     *
      * @param $discount
-     * @param string $column
-     * @return Model|Builder
+     * @return mixed
      */
-    public function findByColumnOrFail($discount, string $column = 'id'): Model|Builder
+    public function findOrFailById($discount): mixed
     {
-        return self::query()->where($column, $discount)->firstOrFail();
+        return self::query()->select($this->selected_columns)
+            ->with($this->with_relationships)
+            ->scopes($this->with_scopes)
+            ->findOrFail($discount);
     }
 
     /**
-     * Update a discount.
-     *
-     * @param Request $request
-     * @return Discount
+     * @param $discount
+     * @return mixed
      */
-    public function updateDiscount(Request $request): Discount
+    public function changeStatus($discount): mixed
+    {
+        $this->update(['status' => DiscountStatus::coerce($discount->status)->is(DiscountStatus::Accepted) ? DiscountStatus::Rejected : DiscountStatus::Accepted]);
+        return $this->selectColumns(['id', 'code', 'status', 'amount', 'is_percent', 'start_at', 'expire_at', 'usage_limitation', 'uses', 'description',])
+            ->findOrFailById($this->id);
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function updateDiscount(Request $request)
     {
         $this->update([
             'code' => $request->code,
             'amount' => $request->amount,
             'is_percent' => $request->filled('is_percent') ? $request->is_percent : $this->is_percent,
-            'start_at' => $request->filled('start_at') ? Verta::parseFormat('Y/m/d H:i:s', $request->start_at) : $this->start_at,
-            'expire_at' => $request->filled('expire_at') ? Verta::parseFormat('Y/m/d H:i:s', $request->expire_at) : $this->expire_at,
+            'start_at' => $request->filled('start_at') ? Verta::parseFormat('Y/m/d H:i', $request->start_at) : $this->start_at,
+            'expire_at' => $request->filled('expire_at') ? Verta::parseFormat('Y/m/d H:i', $request->expire_at) : $this->expire_at,
             'usage_limitation' => $request->usage_limitation,
             'uses' => $request->filled('uses') ? $request->uses : $this->uses,
             'description' => $request->description,
             'priority' => $request->priority,
         ]);
-        $this->discountables(Arr::get($request->discountables, 'discountable_type'))->sync(Arr::get($request->discountables, 'discountable_ids', []));
-        return $this->refresh();
     }
 
-    public function destroyDiscount()
+    /**
+     * @return bool|null
+     */
+    public function destroyDiscount(): ?bool
     {
         $this->products()->delete();
         $this->categories()->delete();
         return $this->delete();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTranslatedStatus(): string
+    {
+        return DiscountStatus::getDescription($this->status);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusClassName(): string
+    {
+        return DiscountStatus::coerce($this->status)->getCssClass();
+    }
+
+    /**
+     * @param array $columns
+     * @return $this
+     */
+    public function selectColumns(array $columns): static
+    {
+        $this->selected_columns = $columns;
+        return $this;
+    }
+
+    /**
+     * @param array $relations
+     * @return $this
+     */
+    public function withRelationships(array $relations): static
+    {
+        $this->with_relationships = $relations;
+        return $this;
+    }
+
+    /**
+     * @param array $scopes
+     * @return $this
+     */
+    public function withScopes(array $scopes): static
+    {
+        $this->with_scopes = $scopes;
+        return $this;
     }
 
     #endregion
@@ -276,6 +357,10 @@ class Discount extends Model
         $builder->where('status', DiscountStatus::Accepted);
     }
 
+    /**
+     * @param Builder $builder
+     * @return void
+     */
     public function scopeOrderPriority(Builder $builder)
     {
         $builder->orderByDesc('priority');

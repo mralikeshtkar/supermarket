@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7eafe0591accdfe92639d2ad6ac68245",
+    "content-hash": "7b06edc6812afbef83932a3a2da156f3",
     "packages": [
         {
             "name": "bensampo/laravel-enum",
@@ -4750,6 +4750,97 @@
                 "source": "https://github.com/shetabit/visitor/tree/v3.1.4"
             },
             "time": "2022-08-06T14:57:53+00:00"
+        },
+        {
+            "name": "spatie/laravel-activitylog",
+            "version": "4.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-activitylog.git",
+                "reference": "3619d823069333018dd94aa36ef900b88497210d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-activitylog/zipball/3619d823069333018dd94aa36ef900b88497210d",
+                "reference": "3619d823069333018dd94aa36ef900b88497210d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "^8.0 || ^9.0",
+                "illuminate/database": "^8.53 || ^9.0",
+                "illuminate/support": "^8.0 || ^9.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.6.3"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "orchestra/testbench": "^6.23 || ^7.0",
+                "pestphp/pest": "^1.20"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Activitylog\\ActivitylogServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Activitylog\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Tom Witkowski",
+                    "email": "dev.gummibeer@gmail.com",
+                    "homepage": "https://gummibeer.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A very simple activity logger to monitor the users of your website or application",
+            "homepage": "https://github.com/spatie/activitylog",
+            "keywords": [
+                "activity",
+                "laravel",
+                "log",
+                "spatie",
+                "user"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-activitylog/issues",
+                "source": "https://github.com/spatie/laravel-activitylog/tree/4.7.1"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-11-11T15:38:25+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",

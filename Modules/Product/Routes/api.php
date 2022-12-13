@@ -97,6 +97,7 @@ Route::prefix('v1')->group(function (Router $router) {
 
             /* Product stocks */
             $router->get('storeroom/products/stocks', [V1ApiAdminProductController::class, 'stocks']);
+            $router->get('storeroom/products/all-stocks', [V1ApiAdminProductController::class, 'allStocks']);
         });
         $router->get('products/most-selling-products', [V1ApiProductController::class, 'mostSellingProducts']);
         $router->get('products/latest', [V1ApiProductController::class, 'latest']);

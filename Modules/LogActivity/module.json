@@ -1,0 +1,13 @@
+{
+    "name": "LogActivity",
+    "alias": "logactivity",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\LogActivity\\Providers\\LogActivityServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

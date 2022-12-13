@@ -11,8 +11,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\User\Rules\FavouritableRule;
-use Modules\User\Transformers\V1\Api\ApiUserOrdersResource;
+use Modules\User\Transformers\V1\Api\ApiUserOrderResource;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -179,7 +180,7 @@ class ApiUserController extends Controller
     public function orders(Request $request)
     {
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
-            ->addData('orders', $request->user()->getOrders())
+            ->addData('orders', ApiPaginationResource::make($request->user()->getOrders())->additional(['itemsResource' => ApiUserOrderResource::class]))
             ->send();
     }
 
@@ -207,7 +208,7 @@ class ApiUserController extends Controller
     {
         $order = $request->user()->findOrFailOrderById($order);
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
-            ->addData('order', ApiUserOrdersResource::make($order))
+            ->addData('order', ApiUserOrderResource::make($order))
             ->send();
     }
 }

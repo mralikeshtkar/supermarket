@@ -15,5 +15,6 @@
     "Rack": true,
     "Storeroom": true,
     "Order": true,
-    "Setting": true
+    "Setting": true,
+    "LogActivity": true
 }

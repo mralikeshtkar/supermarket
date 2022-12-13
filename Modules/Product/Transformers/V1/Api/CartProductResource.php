@@ -24,6 +24,7 @@ class CartProductResource extends JsonResource
             $quantity = collect(collect($this->additional['cart'])->get($item->id))->get('quantity');
             return collect($item->toArray())
                 ->put('quantity', $quantity)
+                ->put('unit_price', $item->price)
                 ->put('sum_price', $item->price * $quantity)
                 ->when($item->relationLoaded('image'), function (Collection $collection) use ($item) {
                     $collection->put('image', $item->image);

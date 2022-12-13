@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\Product\Entities\Product;
 use Modules\Tag\Database\factories\TagFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Tag extends Model
 {
-    use HasFactory;
+    use HasFactory,LogsActivity;
 
     #region Constance
 
@@ -106,6 +108,14 @@ class Tag extends Model
     }
 
     /**
+     * @return LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logAll();
+    }
+
+    /**
      * Destroy a tag from database.
      *
      * @param Model|Builder $tag
@@ -139,5 +149,4 @@ class Tag extends Model
     }
 
     #endregion
-
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\User\Transformers\V1\Api;
+namespace Modules\User\Transformers\V1\Api\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use function collect;
+use Modules\User\Transformers\V1\Api\ApiUserOrderProductsResource;
 
-class ApiUserOrdersResource extends JsonResource
+class AdminUserOrderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,8 @@ class ApiUserOrdersResource extends JsonResource
     public function toArray($request)
     {
         return collect([
-            'id' => $this->resource->id,
             'user_id' => $this->resource->user_id,
+            'id' => $this->resource->id,
             'status_id' => $this->resource->status,
             'address_id' => $this->resource->address_id,
             'amount' => $this->resource->amount,
@@ -30,8 +30,8 @@ class ApiUserOrdersResource extends JsonResource
         })->when($this->resource->relationLoaded('address'), function (Collection $collection) {
             $collection->put('address', collect([
                 'id' => $this->resource->address->id,
-                'province_id' => $this->resource->address->province_id,
                 'city_id' => $this->resource->address->city_id,
+                'province_id' => $this->resource->address->province_id,
                 'name' => $this->resource->address->name,
                 'mobile' => $this->resource->address->mobile,
                 'address' => $this->resource->address->address,
@@ -41,8 +41,8 @@ class ApiUserOrdersResource extends JsonResource
             })->when($this->resource->address->originalIsEquivalent('city_name'), function (Collection $collection) {
                 $collection->put('city_name', $this->resource->address->city_name);
             })->toArray());
-        })->when($this->resource->relationLoaded('products'),function (Collection $collection){
-            $collection->put('products',ApiUserOrderProductsResource::collection($this->resource->products));
+        })->when($this->resource->relationLoaded('products'), function (Collection $collection) {
+            $collection->put('products', AdminUserOrderProductResource::collection($this->resource->products));
         })->toArray();
     }
 }

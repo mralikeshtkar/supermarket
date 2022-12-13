@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -26,7 +25,6 @@ use Modules\Category\Traits\HasCategory;
 use Modules\Comment\Traits\HasComment;
 use Modules\Core\Traits\EloquentHelper;
 use Modules\Discount\Traits\HasDiscount;
-use Modules\Feature\Entities\Feature;
 use Modules\Feature\Traits\HasAttribute;
 use Modules\Media\Entities\Media;
 use Modules\Media\Traits\HasMedia;
@@ -102,6 +100,22 @@ class Product extends Model
     public static function init(): Product
     {
         return new self();
+    }
+
+    /**
+     * @param Request $request
+     * @return Collection
+     */
+    public function allStocks(Request $request): Collection
+    {
+        return self::query()
+            ->select(['id', 'name'])
+            ->when($request->filled('search'), function (Builder $builder) use ($request) {
+                $builder->where('name', 'LIKE', '%' . $request->search . '%');
+            })->when($request->filled('products') && is_array($request->products), function (Builder $builder) use ($request) {
+                $builder->orWhereIn('id', $request->products);
+            })->hasStock(1)
+            ->get();
     }
 
     /**
@@ -227,7 +241,8 @@ class Product extends Model
                     $builder->where('name', 'LIKE', '%' . $request->search . '%')
                         ->orWhere('slug', 'LIKE', '%' . $request->search . '%');
                 });
-            })->accepted()
+            })
+            ->accepted()
             ->paginate()
             ->appends($request->only('search'));
     }

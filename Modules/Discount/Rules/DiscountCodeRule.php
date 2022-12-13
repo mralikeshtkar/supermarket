@@ -8,13 +8,18 @@ use Modules\Discount\Entities\Discount;
 class DiscountCodeRule implements Rule
 {
     /**
+     * @var null
+     */
+    private $discount;
+
+    /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param null $discount
      */
-    public function __construct()
+    public function __construct($discount=null)
     {
-        //
+        $this->discount = $discount;
     }
 
     /**
@@ -26,7 +31,7 @@ class DiscountCodeRule implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        return Discount::init()->checkDoesntExistValidDiscount($value);
+        return Discount::init()->checkDoesntExistValidDiscount($value,$this->discount);
     }
 
     /**
