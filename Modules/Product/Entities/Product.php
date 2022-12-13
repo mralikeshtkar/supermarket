@@ -11,11 +11,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use LaravelIdea\Helper\Modules\Media\Entities\_IH_Media_QB;
 use LaravelIdea\Helper\Modules\Product\Entities\_IH_Product_C;
 use LaravelIdea\Helper\Modules\Product\Entities\_IH_Product_QB;
 use Modules\Brand\Entities\Brand;
@@ -28,6 +30,7 @@ use Modules\Feature\Entities\Feature;
 use Modules\Feature\Traits\HasAttribute;
 use Modules\Media\Entities\Media;
 use Modules\Media\Traits\HasMedia;
+use Modules\Order\Entities\Order;
 use Modules\Product\Database\factories\ProductFactory;
 use Modules\Product\Enums\ProductStatus;
 use Modules\Product\Transformers\V1\Api\CartProductResource;
@@ -99,6 +102,24 @@ class Product extends Model
     public static function init(): Product
     {
         return new self();
+    }
+
+    /**
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function getAdminStocks(Request $request): LengthAwarePaginator
+    {
+        return self::query()
+            ->select(['id', 'name'])
+            ->with(['image'])
+            ->when($request->filled('name'), function (Builder $builder) use ($request) {
+                $builder->where('name', 'LIKE', '%' . $request->name . '%');
+            })->when($request->filled('min'), function (Builder $builder) use ($request) {
+                $builder->where('name', 'LIKE', '%' . $request->name . '%');
+            })->stock()
+            ->hasStock($request->min, $request->max)
+            ->paginate();
     }
 
     /**
@@ -469,11 +490,44 @@ class Product extends Model
         $this->attributes()->createMany($attributes);
     }
 
+    /**
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function mostSellingProducts(Request $request): LengthAwarePaginator
+    {
+        return self::query()
+            ->select(['id', 'name', 'price'])
+            ->with(['model', 'image'])
+            ->withCount('successOrders')
+            ->orderByDesc('success_orders_count')
+            ->paginate();
+    }
+
     #endregion
 
     #region Relationships
 
-    public function gallery()
+    /**
+     * @return MorphToMany
+     */
+    public function orders(): MorphToMany
+    {
+        return $this->morphToMany(Order::class, 'orderable', 'orderables');
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public function successOrders(): MorphToMany
+    {
+        return $this->orders()->success();
+    }
+
+    /**
+     * @return _IH_Media_QB
+     */
+    public function gallery(): _IH_Media_QB
     {
         return $this->media()
             ->select('id', 'model_id', 'model_type', 'disk', 'files')
@@ -626,15 +680,22 @@ class Product extends Model
     /**
      * @param Builder $builder
      * @param $min
+     * @param $max
      * @return void
      */
-    public function scopeHasStock(Builder $builder, $min = 1)
+    public function scopeHasStock(Builder $builder, $min = null, $max = null)
     {
-        $builder->whereExists(function ($builder) use ($min) {
-            $builder->selectRaw('1')
-                ->from('product_storeroom_entrance')
-                ->whereColumn('product_storeroom_entrance.product_id', 'products.id')
-                ->havingRaw('COALESCE(SUM(product_storeroom_entrance.quantity),0) - COALESCE((select SUM(product_storeroom_out_entrance.quantity) from "product_storeroom_out_entrance" where "product_storeroom_out_entrance"."product_id" = "products"."id"),0) >= ' . $min);
+        $builder->when(is_numeric($min) || is_numeric($max), function (Builder $builder) use ($min, $max) {
+            $builder->whereExists(function ($builder) use ($min, $max) {
+                $builder->selectRaw('1')
+                    ->from('product_storeroom_entrance')
+                    ->whereColumn('product_storeroom_entrance.product_id', 'products.id')
+                    ->when(is_numeric($max), function ($builder) use ($max) {
+                        $builder->havingRaw('COALESCE(SUM(product_storeroom_entrance.quantity),0) - COALESCE((select SUM(product_storeroom_out_entrance.quantity) from "product_storeroom_out_entrance" where "product_storeroom_out_entrance"."product_id" = "products"."id"),0) <= ' . $max);
+                    })->when(is_numeric($min), function ($builder) use ($min) {
+                        $builder->havingRaw('COALESCE(SUM(product_storeroom_entrance.quantity),0) - COALESCE((select SUM(product_storeroom_out_entrance.quantity) from "product_storeroom_out_entrance" where "product_storeroom_out_entrance"."product_id" = "products"."id"),0) >= ' . $min);
+                    });
+            });
         });
     }
 

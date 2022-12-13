@@ -7,6 +7,9 @@
     "servers": [
         {
             "url": "http://127.0.0.1:8000/api/v1"
+        },
+        {
+            "url": "https://ario.jcoders.ir/api"
         }
     ],
     "paths": {
@@ -29,6 +32,26 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "دسته بندی"
+                ],
+                "summary": "دریافت دسته بندی",
+                "description": "",
+                "operationId": "b41947171cd3c6408f9d42b583ceb20d",
                 "responses": {
                     "200": {
                         "description": "عملیات موفق",
@@ -498,6 +521,26 @@
                 "summary": "دریافت محصولات دیده شده",
                 "description": "",
                 "operationId": "1fd4da0ac323aeb2dd1bb87273d3c9af",
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/most-selling-products": {
+            "get": {
+                "tags": [
+                    "محصولات"
+                ],
+                "summary": "دریافت محصولات پرفروش",
+                "description": "",
+                "operationId": "60c1fe76193ec0c6ec7dc475d8a0fd7d",
                 "responses": {
                     "200": {
                         "description": "عملیات موفق",

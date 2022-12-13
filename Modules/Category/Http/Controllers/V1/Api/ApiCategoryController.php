@@ -13,6 +13,7 @@ use Modules\Category\Enums\CategoryStatus;
 use Modules\Category\Transformers\V1\Api\CategoryFilterResource;
 use Modules\Category\Transformers\V1\Api\CategoryResource;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Permission\Entities\Permission;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,15 +22,32 @@ use Throwable;
 class ApiCategoryController extends Controller
 {
     /**
-     * Get all categories as a json.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/categories/{id}",
+     *     summary="دریافت دسته بندی",
+     *     description="",
+     *     tags={"دسته بندی"},
+     *     @OA\Parameter(
+     *         description="میتواند خالی باشد",
+     *         in="path",
+     *         name="id",
+     *         example="1",
+     *         required=true,
+     *         @OA\Schema(type="number"),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="عملیات موفق",
+     *         @OA\JsonContent()
+     *     ),
+     * )
      */
-    public function categories(Request $request)
+    public function categories(Request $request, $category)
     {
+        if ($category) $category = Category::init()->withScopes(['accepted'])->findOrFailById($category);
+        $categories = Category::init()->getAllCategories($request,$category);
         return ApiResponse::message(trans('category::messages.received_information_successfully'))
-            ->addData('categories', Category::all())
+            ->addData('categories', ApiPaginationResource::make($categories)->additional(['itemsResource' => CategoryResource::class]))
             ->send();
     }
 

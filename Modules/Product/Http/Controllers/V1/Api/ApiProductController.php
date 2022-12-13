@@ -103,7 +103,6 @@ class ApiProductController extends Controller
      */
     public function show(Request $request, $product)
     {
-        dd("eror");
         $product = Product::init()->withRateAvg()
             ->withAcceptedCommentsCount()
             ->select(['id', 'name', 'price'])
@@ -178,6 +177,27 @@ class ApiProductController extends Controller
         $latestSeen = Product::init()->latestSeen($request->user());
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
             ->addData('products', ApiPaginationResource::make($latestSeen)->additional(['itemsResource' => ProductResource::class]))
+            ->send();
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/products/most-selling-products",
+     *     summary="دریافت محصولات پرفروش",
+     *     description="",
+     *     tags={"محصولات"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="عملیات موفق",
+     *         @OA\JsonContent()
+     *     ),
+     * )
+     */
+    public function mostSellingProducts(Request $request)
+    {
+        $mostSellingProducts = Product::init()->mostSellingProducts($request);
+        return ApiResponse::message(trans('product::messages.received_information_successfully'))
+            ->addData('products', ApiPaginationResource::make($mostSellingProducts)->additional(['itemsResource' => ProductResource::class]))
             ->send();
     }
 }

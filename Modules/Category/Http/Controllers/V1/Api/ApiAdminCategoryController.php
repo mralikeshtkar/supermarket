@@ -26,15 +26,9 @@ class ApiAdminCategoryController extends Controller
      */
     public function index(Request $request, $category = null)
     {
-        try {
-            return ApiResponse::message(trans('category::messages.received_information_successfully'))
-                ->addData('categories', Category::init()->getAdminIndexPaginate($request, $category))
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        return ApiResponse::message(trans('category::messages.received_information_successfully'))
+            ->addData('categories', Category::init()->getAdminIndexPaginate($request, $category))
+            ->send();
     }
 
     /**

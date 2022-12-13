@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Routing\Router;
-use Modules\Product\Entities\ProductUnit;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminProductAttributeController as V1ApiAdminProductAttributeController;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminProductCartController as V1ApiAdminProductCartController;
+use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminProductController as V1ApiAdminProductController;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminSpecialProductController as V1ApiAdminSpecialProductController;
-use Modules\Product\Http\Controllers\V1\Api\ApiAdminProductController as V1ApiAdminProductController;
 use Modules\Product\Http\Controllers\V1\Api\ApiAdminProductUnitController as V1ApiAdminProductUnitController;
 use Modules\Product\Http\Controllers\V1\Api\ApiProductController as V1ApiProductController;
 use Modules\Product\Http\Controllers\V1\Api\ApiSpecialProductController as V1ApiSpecialProductController;
@@ -90,7 +89,16 @@ Route::prefix('v1')->group(function (Router $router) {
             $router->get('products/cart/{user}', [V1ApiAdminProductCartController::class, 'products']);
             $router->put('products/{product}/cart/{user}', [V1ApiAdminProductCartController::class, 'update']);
             $router->delete('products/{product}/cart/{user}', [V1ApiAdminProductCartController::class, 'destroy']);
+
+            /* Product cart */
+            $router->get('products/cart/{user}', [V1ApiAdminProductCartController::class, 'products']);
+            $router->put('products/{product}/cart/{user}', [V1ApiAdminProductCartController::class, 'update']);
+            $router->delete('products/{product}/cart/{user}', [V1ApiAdminProductCartController::class, 'destroy']);
+
+            /* Product stocks */
+            $router->get('storeroom/products/stocks', [V1ApiAdminProductController::class, 'stocks']);
         });
+        $router->get('products/most-selling-products', [V1ApiProductController::class, 'mostSellingProducts']);
         $router->get('products/latest', [V1ApiProductController::class, 'latest']);
         $router->get('products/latest/seen', [V1ApiProductController::class, 'latestSeen']);
         $router->match(['put', 'patch'], 'products/{product}/change-status', [V1ApiProductController::class, 'changeStatus']);

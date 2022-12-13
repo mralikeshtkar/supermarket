@@ -16,7 +16,8 @@ use Modules\Storeroom\Entities\StoreroomEntrance;
 
 Route::get('/', function () {
 
-    dd(\Modules\Product\Entities\Product::query()->stock()->hasStock(74)->get()->toArray());
+    dd(\Modules\Product\Entities\Product::query()->withCount('successOrders')
+        ->orderByDesc('success_orders_count')->get()->toArray());
 });
 Route::get('token', function () {
 

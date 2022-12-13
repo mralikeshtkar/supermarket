@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use LaravelIdea\Helper\Modules\Feature\Entities\_IH_Feature_C;
@@ -87,7 +88,25 @@ class Category extends Model
         return self::query()->get();
     }
 
-    public function onlyAccepted(Request $request)
+    public function getAllCategories(Request $request, $category = null)
+    {
+        return self::query()
+            ->without('parent')
+            ->select(['id', 'parent_id', 'name'])
+            ->with(['image'])
+            ->accepted()
+            ->when(is_null($category), function (Builder $builder) {
+                $builder->parent();
+            }, function (Builder $builder) use ($category) {
+                $builder->where('parent_id', $category->id);
+            })->paginate();
+    }
+
+    /**
+     * @param Request $request
+     * @return Collection
+     */
+    public function onlyAccepted(Request $request): Collection
     {
         return self::query()
             ->when($request->filled('search'), function (Builder $builder) use ($request) {
@@ -97,7 +116,12 @@ class Category extends Model
             ->get();
     }
 
-    public function getAdminIndexPaginate(Request $request, $category = null)
+    /**
+     * @param Request $request
+     * @param $category
+     * @return LengthAwarePaginator
+     */
+    public function getAdminIndexPaginate(Request $request, $category = null): LengthAwarePaginator
     {
         return self::query()
             ->with('image')
@@ -308,6 +332,19 @@ class Category extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id', 'id');
+    }
+
+    #endregion
+
+    #region Scopes
+
+    /**
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeParent(Builder $builder)
+    {
+        $builder->whereNull('parent_id');
     }
 
     #endregion

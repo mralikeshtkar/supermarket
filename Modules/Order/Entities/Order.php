@@ -205,4 +205,17 @@ class Order extends Model
 
     #endregion
 
+    #region Scopes
+
+    /**
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeSuccess(Builder $builder)
+    {
+        $builder->where('status', OrderStatus::Success);
+    }
+
+    #endregion
+
 }

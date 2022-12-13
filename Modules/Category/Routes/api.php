@@ -17,11 +17,11 @@ use Modules\Category\Http\Controllers\V1\Api\ApiCategoryController as V1ApiCateg
 */
 
 Route::prefix('v1')->group(function (Router $router) {
-    $router->get('categories', [V1ApiCategoryController::class, 'categories'])
-        ->name('category.v1.api-category.categories.get.api');
     $router->get('categories/{category}/products', [V1ApiCategoryController::class, 'products'])
         ->name('category.v1.api-category.products.get.api');
     $router->middleware('auth:sanctum')->group(function (Router $router) {
+
+        $router->get('categories', [V1ApiCategoryController::class, 'categories']);
         $router->match(['put', 'patch'], 'categories/{category}/accept', [V1ApiCategoryController::class, 'accept'])
             ->name('category.v1.api-category.accept.put-patch.api');
         $router->match(['put', 'patch'], 'categories/{category}/reject', [V1ApiCategoryController::class, 'reject'])
@@ -37,8 +37,7 @@ Route::prefix('v1')->group(function (Router $router) {
                 ->name('category.v1.api-admin-category.all.get.api');
             $router->get('categories/accepted', [V1ApiAdminCategoryController::class, 'accepted'])
                 ->name('category.v1.api-admin-category.accepted.get.api');
-            $router->get('categories/{category?}', [V1ApiAdminCategoryController::class, 'index'])
-                ->name('category.v1.api-admin-category.index.get.api');
+            $router->get('categories/{category?}', [V1ApiAdminCategoryController::class, 'index']);
             $router->get('categories/{category}/show', [V1ApiAdminCategoryController::class, 'show'])
                 ->name('category.v1.api-admin-category.show.get.api');
             $router->post('categories', [V1ApiAdminCategoryController::class, 'store'])

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Product\Http\Controllers\V1\Api;
+namespace Modules\Product\Http\Controllers\V1\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,6 +23,8 @@ use Modules\Product\Transformers\V1\Api\Admin\AdminProductResource;
 use Modules\Tag\Rules\TagRule;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
+use function config;
+use function trans;
 
 class ApiAdminProductController extends Controller
 {
@@ -35,6 +37,18 @@ class ApiAdminProductController extends Controller
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
             ->addData('products', Product::init()->getAdminIndexPaginate($request))
             ->addData('maximum_price', Product::init()->getMaximumPrice())
+            ->send();
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function stocks(Request $request)
+    {
+        $products = Product::init()->getAdminStocks($request);
+        return ApiResponse::message(trans('product::messages.received_information_successfully'))
+            ->addData('products', ApiPaginationResource::make($products)->additional(['itemsResource' => AdminProductResource::class]))
             ->send();
     }
 
@@ -257,7 +271,7 @@ class ApiAdminProductController extends Controller
             'categories_id' => [
                 'nullable',
                 'array',
-               /* new CategoryRule(Product::class)*/
+                /* new CategoryRule(Product::class)*/
             ],
             'tags_id' => [
                 'nullable',
