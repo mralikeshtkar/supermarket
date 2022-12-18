@@ -34,8 +34,9 @@ class ApiAdminProductController extends Controller
      */
     public function index(Request $request)
     {
+        $products=Product::init()->getAdminIndexPaginate($request);
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
-            ->addData('products', Product::init()->getAdminIndexPaginate($request))
+            ->addData('products', ApiPaginationResource::make($products)->additional(['itemsResource'=>AdminProductResource::class]))
             ->addData('maximum_price', Product::init()->getMaximumPrice())
             ->send();
     }
@@ -459,16 +460,11 @@ class ApiAdminProductController extends Controller
      */
     private function _changeStatus($product, $status): JsonResponse
     {
+        $product = Product::init()->findByColumnOrFail($product);
         try {
-            $product = Product::init()->findByColumnOrFail($product);
             $product = $product->changeStatus($status);
             return ApiResponse::message(trans('product::messages.product_status_was_updated'))
-                ->addData('product', $product)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('product::messages.product_not_found'), Response::HTTP_NOT_FOUND)
-                ->addError('message', $e->getMessage())
-                ->hasError()
+                ->addData('product', new AdminProductResource($product))
                 ->send();
         } catch (Throwable $e) {
             return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)

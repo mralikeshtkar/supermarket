@@ -30,7 +30,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('uses')->default(0);
             $table->text('description')->nullable();
             $table->unsignedTinyInteger('status')->default(DiscountStatus::Pending);
-            $table->unsignedFloat('priority')->nullable();
             $table->timestamps();
         });
         Schema::create('discountables', function (Blueprint $table) {

@@ -19,20 +19,13 @@ class RackRowProductResource extends JsonResource
     public function toArray($request)
     {
         return $this->resource->map(function ($item) {
-            return collect([
-                'id' => $item->id,
-                'name' => $item->name,
-                'slug' => $item->slug,
-                'price' => $item->price,
-//            'final_price' => intval($item->getFinalPriceAttribute()),
-//            'discountAmount' => $item->getDiscountAmountAttribute(),
-            ])->when($item->relationLoaded('pivot'), function (Collection $collection) use ($item){
+            return collect($this->resource)->when($item->relationLoaded('pivot'), function (Collection $collection) use ($item) {
                 $collection->put('pivot', collect($item->pivot)->put('priority', $this->additional['rack_row']->priority));
-            })->when($item->relationLoaded('gallery'), function (Collection $collection)use ($item) {
+            })->when($item->relationLoaded('gallery'), function (Collection $collection) use ($item) {
                 $collection->put('gallery', $item->gallery);
-            })->when($item->relationLoaded('image'), function (Collection $collection)use ($item) {
+            })->when($item->relationLoaded('image'), function (Collection $collection) use ($item) {
                 $collection->put('image', $item->image);
-            })->when($item->relationLoaded('model'), function (Collection $collection)use ($item) {
+            })->when($item->relationLoaded('model'), function (Collection $collection) use ($item) {
                 $collection->put('model', $item->model);
             })->toArray();
         });

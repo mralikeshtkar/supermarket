@@ -326,11 +326,12 @@ class User extends Authenticatable
     }
 
     /**
+     * @param $discount
      * @return CartProductResource
      */
-    public function getCart(): CartProductResource
+    public function getCart($discount = null): CartProductResource
     {
-        return Product::init()->getCartData($this);
+        return Product::init()->getCartData($this,$discount);
     }
 
     /**
@@ -380,7 +381,7 @@ class User extends Authenticatable
     public function getOrders(): LengthAwarePaginator
     {
         return $this->orders()
-            ->with(['user:id,mobile,name','products:id,name', 'products.image', 'address' => function (HasOne $hasOne) {
+            ->with(['user:id,mobile,name', 'products:id,name', 'products.image', 'address' => function (HasOne $hasOne) {
                 $hasOne->withAggregate('city', 'name')
                     ->withAggregate('province AS province_name', 'provinces.name');
             }])->latest()

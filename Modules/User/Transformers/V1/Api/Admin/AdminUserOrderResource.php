@@ -19,11 +19,9 @@ class AdminUserOrderResource extends JsonResource
         return collect([
             'user_id' => $this->resource->user_id,
             'id' => $this->resource->id,
-            'status_id' => $this->resource->status,
             'address_id' => $this->resource->address_id,
             'amount' => $this->resource->amount,
             'formatted_amount' => number_format($this->resource->amount),
-            'translated_status' => $this->resource->getTranslatedStatus(),
             'created_at' => jalaliFormat($this->resource->created_at),
         ])->when($this->resource->relationLoaded('user'), function (Collection $collection) {
             $collection->put('user', $this->resource->user);

@@ -26,8 +26,9 @@ class ApiAdminCategoryController extends Controller
      */
     public function index(Request $request, $category = null)
     {
+        $categories = Category::init()->getAdminIndexPaginate($request, $category);
         return ApiResponse::message(trans('category::messages.received_information_successfully'))
-            ->addData('categories', Category::init()->getAdminIndexPaginate($request, $category))
+            ->addData('categories', ApiPaginationResource::make($categories)->additional(['itemsResource' => AdminCategoryResource::class]))
             ->send();
     }
 
@@ -199,5 +200,19 @@ class ApiAdminCategoryController extends Controller
                 ->addError('message', $e->getMessage())
                 ->send();
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $category
+     * @return JsonResponse
+     */
+    public function changeStatus(Request $request, $category)
+    {
+        $category = Category::init()->findOrFailById($category);
+        $category = $category->changeStatus();
+        return ApiResponse::message(trans("Registration information completed successfully"))
+            ->addData('category', new AdminCategoryResource($category))
+            ->send();
     }
 }

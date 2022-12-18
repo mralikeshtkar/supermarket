@@ -21,6 +21,12 @@ class AdminProductResource extends JsonResource
                 $collection->put('image', $this->resource->image);
             })->when($this->resource->relationLoaded('parentFeatures'), function (Collection $collection) {
                 $collection->put('parentFeatures', $this->resource->parentFeatures);
+            })->when($this->resource->originalIsEquivalent('status'), function (Collection $collection) {
+                $collection->put('status', $this->resource->status)
+                    ->put('translated_status', $this->resource->getTranslatedStatus())
+                    ->put('status_css_class', $this->resource->getStatusClassName());
+            })->when($this->resource->originalIsEquivalent('created_at'), function (Collection $collection) {
+                $collection->put('created_at', verta($this->resource->created_at)->formatJalaliDate());
             });
     }
 }

@@ -155,7 +155,10 @@ class Rack extends Model
         return self::query()
             ->with(['rows' => function (HasMany $hasMany) {
                 $hasMany->withWhereHas('products', function ($builder) {
-                    $builder->with(['image', 'model'])->accepted();
+                    $builder->with(['image', 'model'])
+                        ->select(['products.id', 'products.name', 'products.price',])
+                        ->stock()
+                        ->accepted();
                 })->orderByPriorityAsc()->active();
             }])->orderByPriorityAsc()
             ->accepted()

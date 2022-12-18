@@ -8,4 +8,11 @@ return [
         CategoryStatus::Accepted => "Accepted",
         CategoryStatus::Rejected => "Rejected",
     ],
+    'statuses' => [
+        CategoryStatus::class => [
+            CategoryStatus::Pending => "badge-warning",
+            CategoryStatus::Accepted => "badge-success",
+            CategoryStatus::Rejected => "badge-danger",
+        ],
+    ],
 ];

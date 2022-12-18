@@ -22,10 +22,6 @@ Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
 
         $router->get('categories', [V1ApiCategoryController::class, 'categories']);
-        $router->match(['put', 'patch'], 'categories/{category}/accept', [V1ApiCategoryController::class, 'accept'])
-            ->name('category.v1.api-category.accept.put-patch.api');
-        $router->match(['put', 'patch'], 'categories/{category}/reject', [V1ApiCategoryController::class, 'reject'])
-            ->name('category.v1.api-category.reject.put-patch.api');
         $router->get('categories/{category}/features', [V1ApiCategoryController::class, 'features'])
             ->name('category.v1.api-category.features.get.api');
 
@@ -33,19 +29,14 @@ Route::prefix('v1')->group(function (Router $router) {
 
         $router->group(['prefix' => 'admin'], function (Router $router) {
 
-            $router->get('categories/all', [V1ApiAdminCategoryController::class, 'all'])
-                ->name('category.v1.api-admin-category.all.get.api');
-            $router->get('categories/accepted', [V1ApiAdminCategoryController::class, 'accepted'])
-                ->name('category.v1.api-admin-category.accepted.get.api');
+            $router->get('categories/all', [V1ApiAdminCategoryController::class, 'all']);
+            $router->get('categories/accepted', [V1ApiAdminCategoryController::class, 'accepted']);
             $router->get('categories/{category?}', [V1ApiAdminCategoryController::class, 'index']);
-            $router->get('categories/{category}/show', [V1ApiAdminCategoryController::class, 'show'])
-                ->name('category.v1.api-admin-category.show.get.api');
-            $router->post('categories', [V1ApiAdminCategoryController::class, 'store'])
-                ->name('category.v1.api-admin-category.store.post.api');
-            $router->match(['put', 'patch'], 'categories/{category}', [V1ApiAdminCategoryController::class, 'update'])
-                ->name('category.v1.api-admin-category.update.patch.api');
-            $router->delete('categories/{category}', [V1ApiAdminCategoryController::class, 'destroy'])
-                ->name('category.v1.api-admin-category.destroy.delete.api');
+            $router->get('categories/{category}/show', [V1ApiAdminCategoryController::class, 'show']);
+            $router->post('categories', [V1ApiAdminCategoryController::class, 'store']);
+            $router->match(['put', 'patch'], 'categories/{category}', [V1ApiAdminCategoryController::class, 'update']);
+            $router->delete('categories/{category}', [V1ApiAdminCategoryController::class, 'destroy']);
+            $router->put('categories/{category}/change-status', [V1ApiAdminCategoryController::class, 'changeStatus']);
 
             $router->get('categories/{category}/features/{feature?}', [V1ApiAdminCategoryController::class, 'features']);
 

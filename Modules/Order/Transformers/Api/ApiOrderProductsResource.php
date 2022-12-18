@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Order\Transformers\Api\Admin;
+namespace Modules\Order\Transformers\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -18,8 +18,8 @@ class ApiOrderProductsResource extends JsonResource
         //todo add discount
 //        dd($this->resource->toArray());
         return collect([
-            'id' => $this->resource->id,
             'name' => $this->resource->name,
+            'id' => $this->resource->id,
             'price' => $this->resource->price,
         ])->when($this->resource->relationLoaded('image'), function (Collection $collection) {
             $collection->put('image', $this->resource->image);

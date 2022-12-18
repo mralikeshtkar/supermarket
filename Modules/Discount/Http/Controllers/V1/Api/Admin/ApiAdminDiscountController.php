@@ -44,7 +44,6 @@ class ApiAdminDiscountController extends Controller
                 'discountable_type' => Relation::getMorphedModel(optional($request->discountables)->offsetGet('discountable_type')),
                 'discountable_ids' => optional($request->discountables)->offsetGet('discountable_ids'),
             ],
-            'start_at' => $request->filled('start_at') ? $request->start_at : now()->format('Y/m/d H:i:s'),
         ]);
         ApiResponse::init($request->all(), $this->_validationRules($request), [], trans('discount::validation.attributes'))->validate();
         try {
@@ -66,7 +65,6 @@ class ApiAdminDiscountController extends Controller
     {
 //        ApiResponse::authorize($request->user()->can('update', Discount::class));
         $request->merge([
-            'start_at' => $request->filled('start_at') ? $request->start_at : now()->format('Y/m/d H:i:s'),
             'discountables' => [
                 'discountable_type' => Relation::getMorphedModel(optional($request->discountables)->offsetGet('discountable_type')),
                 'discountable_ids' => optional($request->discountables)->offsetGet('discountable_ids'),
@@ -138,7 +136,6 @@ class ApiAdminDiscountController extends Controller
             'discountables' => ['required', 'array'],
             'discountables.discountable_type' => ['nullable', new DiscountableTypeRule()],
             'discountables.discountable_ids' => ['nullable', new DiscountableIdRule($request)],
-            'priority' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 

@@ -1,20 +1,27 @@
 <?php
 
+use Modules\Order\Enums\OrderInvoiceStatus;
 use Modules\Order\Enums\OrderStatus;
 
 return [
     OrderStatus::class => [
-        OrderStatus::Pending => "Pending",
-        OrderStatus::Success => "Success",
-        OrderStatus::Canceled => "Canceled",
-        OrderStatus::Fail => "Fail",
+        OrderStatus::AwaitingReview => "Awaiting review",
+        OrderStatus::Preparation => "Preparation",
+        OrderStatus::DeliverToDispatcher => "DeliverToDispatcher",
+        OrderStatus::DeliveryToCustomer => "DeliveryToCustomer",
+    ],
+    OrderInvoiceStatus::class => [
+        OrderInvoiceStatus::Pending => "Pending",
+        OrderInvoiceStatus::Success => "Success",
+        OrderInvoiceStatus::Canceled => "Canceled",
+        OrderInvoiceStatus::Fail => "Fail",
     ],
     'statuses' => [
-        OrderStatus::class => [
-            OrderStatus::Pending => "badge-warning",
-            OrderStatus::Success => "badge-success",
-            OrderStatus::Canceled => "badge-danger",
-            OrderStatus::Fail => "badge-danger",
+        OrderInvoiceStatus::class => [
+            OrderInvoiceStatus::Pending => "badge-warning",
+            OrderInvoiceStatus::Success => "badge-success",
+            OrderInvoiceStatus::Canceled => "badge-danger",
+            OrderInvoiceStatus::Fail => "badge-danger",
         ],
     ],
 ];

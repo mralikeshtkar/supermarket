@@ -1,12 +1,19 @@
 <?php
 
+use Modules\Order\Enums\OrderInvoiceStatus;
 use Modules\Order\Enums\OrderStatus;
 
 return [
     OrderStatus::class => [
-        OrderStatus::Pending => "در حال پرداخت",
-        OrderStatus::Success => "موفق",
-        OrderStatus::Canceled => "لغو شده",
-        OrderStatus::Fail => "ناموفق",
+        OrderStatus::AwaitingReview => "در انتطار بررسی",
+        OrderStatus::Preparation => "آماده سازی",
+        OrderStatus::DeliverToDispatcher => "تحویل به پیک ارسال",
+        OrderStatus::DeliveryToCustomer => "تحویل به مشتری",
+    ],
+    OrderInvoiceStatus::class => [
+        OrderInvoiceStatus::Pending => "در حال پرداخت",
+        OrderInvoiceStatus::Success => "موفق",
+        OrderInvoiceStatus::Canceled => "لغو شده",
+        OrderInvoiceStatus::Fail => "ناموفق",
     ],
 ];

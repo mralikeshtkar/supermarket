@@ -6,17 +6,17 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
 /**
- * @method static static AwaitingReview()
- * @method static static Preparation()
- * @method static static DeliverToDispatcher()
- * @method static static DeliveryToCustomer()
+ * @method static static Pending()
+ * @method static static Success()
+ * @method static static Canceled()
+ * @method static static Fail()
  */
-class OrderStatus extends Enum implements LocalizedEnum
+class OrderInvoiceStatus extends Enum implements LocalizedEnum
 {
-    const AwaitingReview = 0;
-    const Preparation = 1;
-    const DeliverToDispatcher = 2;
-    const DeliveryToCustomer = 3;
+    const Pending = 0;
+    const Success = 1;
+    const Canceled = 2;
+    const Fail = 3;
 
     public static function getLocalizationKey(): string
     {

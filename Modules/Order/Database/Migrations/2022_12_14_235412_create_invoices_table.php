@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\Order\Enums\OrderStatus;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use Modules\Order\Enums\OrderInvoiceStatus;
 
 return new class extends Migration {
     /**
@@ -13,20 +13,22 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
                 ->references('id')
                 ->on('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('total');
-            $table->string('discount_amount');
+            $table->foreignId('order_id')
+                ->references('id')
+                ->on('orders')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->string('transactionId');
+            $table->string('gateway');
             $table->string('amount');
-            $table->string('shipping_cost');
-            $table->string('total_cart');
-            $table->json('discount')->nullable();
-            $table->unsignedTinyInteger('status')->default(OrderStatus::AwaitingReview);
+            $table->unsignedTinyInteger('status')->default(OrderInvoiceStatus::Pending);
             $table->timestamps();
         });
     }
@@ -38,6 +40,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('invoices');
     }
 };

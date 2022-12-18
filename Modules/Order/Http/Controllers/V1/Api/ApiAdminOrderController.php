@@ -7,8 +7,9 @@ use BenSampo\Enum\Rules\EnumKey;
 use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Order\Entities\Order;
+use Modules\Order\Enums\OrderInvoiceStatus;
 use Modules\Order\Enums\OrderStatus;
-use Modules\Order\Transformers\Api\Admin\ApiOrderResource;
+use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use OpenApi\Annotations as OA;
 
 class ApiAdminOrderController extends Controller
@@ -100,59 +101,28 @@ class ApiAdminOrderController extends Controller
      */
     public function show($order)
     {
+        $order = Order::init()->selectColumns([
+            'id',
+            'user_id',
+            'total',
+            'discount_amount',
+            'amount',
+            'shipping_cost',
+            'total_cart',
+            'discount',
+            'status',
+            'created_at',
+        ])->withRelationships([
+            'address',
+            'address.city:id,province_id,name',
+            'address.city.province:id,name',
+            'products',
+            'products.image',
+        ])->findOrFailById($order);
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
-            ->addData('order', ApiOrderResource::make(Order::init()->findOrFailById($order, ['address', 'products', 'products.image'])))
+            ->addData('order', ApiAdminOrderResource::make($order))
+            ->addData('statuses', OrderStatus::asSelectArray())
             ->send();
     }
 
-    /**
-     * @OA\Post(
-     *     path="/admin/orders/{id}/change-status",
-     *     summary="تغییر وضعیت سفارش",
-     *     description="تغییر وضعیت سفارش",
-     *     tags={"سفارشات - پنل مدیریت"},
-     *     @OA\Parameter(
-     *         description="شناسه سفارش",
-     *         in="path",
-     *         name="id",
-     *         required=true,
-     *         @OA\Schema(type="number"),
-     *     ),
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"_method","status"},
-     *                 @OA\Property(
-     *                     property="_method",
-     *                     type="string",
-     *                     default="put",
-     *                     enum={"put"},
-     *                     description="این مقدار باید بصورت ثابت شود",
-     *                 ),
-     *                 @OA\Property(
-     *                     property="status",
-     *                     type="string",
-     *                     enum={"Pending","Success","Canceled","Fail"}
-     *                 ),
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="عملیات موفق",
-     *         @OA\JsonContent()
-     *     ),
-     * )
-     */
-    public function changeStatus(Request $request, $order)
-    {
-        $order = Order::init()->findOrFailById($order);
-        ApiResponse::init($request->all(), [
-            'status' => ['required', new EnumKey(OrderStatus::class)]
-        ])->validate();
-        return ApiResponse::message(trans('user::messages.received_information_successfully'))
-            ->addData('order', ApiOrderResource::make($order->changeStatus(OrderStatus::getValue($request->status))))
-            ->send();
-    }
 }

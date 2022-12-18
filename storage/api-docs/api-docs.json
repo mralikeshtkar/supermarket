@@ -127,6 +127,44 @@
                 }
             }
         },
+        "/discounts/check": {
+            "post": {
+                "tags": [
+                    "تخفیف"
+                ],
+                "summary": "بررسی کد تخفیف",
+                "description": "",
+                "operationId": "410aa2cb955160f252d87243d96d997e",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "discount"
+                                ],
+                                "properties": {
+                                    "discount": {
+                                        "description": "کد تخفیف",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "عملیات موفق",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/admin/orders": {
             "get": {
                 "tags": [
@@ -240,69 +278,6 @@
                 }
             }
         },
-        "/admin/orders/{id}/change-status": {
-            "post": {
-                "tags": [
-                    "سفارشات - پنل مدیریت"
-                ],
-                "summary": "تغییر وضعیت سفارش",
-                "description": "تغییر وضعیت سفارش",
-                "operationId": "f2ed1bb67f54e39ea0b5a39da13814d9",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "شناسه سفارش",
-                        "required": true,
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "_method",
-                                    "status"
-                                ],
-                                "properties": {
-                                    "_method": {
-                                        "description": "این مقدار باید بصورت ثابت شود",
-                                        "type": "string",
-                                        "default": "put",
-                                        "enum": [
-                                            "put"
-                                        ]
-                                    },
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "Pending",
-                                            "Success",
-                                            "Canceled",
-                                            "Fail"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "عملیات موفق",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/orders": {
             "post": {
                 "tags": [
@@ -321,6 +296,10 @@
                                 "properties": {
                                     "address_id": {
                                         "description": "شناسه آدرس",
+                                        "type": "string"
+                                    },
+                                    "discount": {
+                                        "description": "کد تخفیف",
                                         "type": "string"
                                     }
                                 },

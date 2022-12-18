@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Rules\MobileRule;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
-use Modules\Order\Transformers\Api\Admin\ApiOrderResource;
+use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use Modules\Permission\Entities\Role;
 use Modules\User\Entities\User;
 use Modules\User\Rules\UniqueMobileRule;

@@ -74,32 +74,6 @@ class ApiCategoryController extends Controller
     }
 
     /**
-     * Change status a category to accepted.
-     *
-     * @param Request $request
-     * @param $slug
-     * @return JsonResponse
-     */
-    public function accept(Request $request, $slug)
-    {
-        ApiResponse::authorize($request->user()->can('action', Permission::class));
-        return $this->_changeStatus($slug, CategoryStatus::Accepted);
-    }
-
-    /**
-     * Change status a category to rejected.
-     *
-     * @param Request $request
-     * @param $slug
-     * @return JsonResponse
-     */
-    public function reject(Request $request, $slug)
-    {
-        ApiResponse::authorize($request->user()->can('action', Permission::class));
-        return $this->_changeStatus($slug, CategoryStatus::Rejected);
-    }
-
-    /**
      * Show category features.
      *
      * @param Request $request
@@ -153,33 +127,5 @@ class ApiCategoryController extends Controller
             ->addData('category', new CategoryResource($category))
             ->addData('filters', new CategoryFilterResource($category->filters()))
             ->send();
-    }
-
-    /**
-     * Manage change status a category.
-     *
-     * @param $slug
-     * @param $status
-     * @return JsonResponse
-     */
-    private function _changeStatus($slug, $status): JsonResponse
-    {
-        try {
-            $category = Category::init()->findOrFailWithSlug($slug);
-            Category::init()->changeStatus($category, $status);
-            return ApiResponse::message(trans('category::messages.category_was_updated'))
-                ->addData('category', [
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    'status' => $category->getStatus(),
-                ])
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendMessage(trans('category::messages.category_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
     }
 }

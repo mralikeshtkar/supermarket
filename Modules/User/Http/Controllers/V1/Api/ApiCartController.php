@@ -5,13 +5,9 @@ namespace Modules\User\Http\Controllers\V1\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Product\Entities\Product;
-use Modules\User\Exceptions\NotEnoughProductStockException;
 use OpenApi\Annotations as OA;
-use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 class ApiCartController extends Controller
 {
@@ -48,8 +44,9 @@ class ApiCartController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::init()->selectColumns(['id'])
+        $product = Product::init()
             ->withScopes(['stock'])
+            ->selectColumns(['id'])
             ->findOrFailById($request->product_id);
         ApiResponse::init($request->all(), [
             'product_id' => ['required', 'exists:products,id'],

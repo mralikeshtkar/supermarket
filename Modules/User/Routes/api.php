@@ -33,8 +33,9 @@ Route::prefix('v1')->group(function (Router $router) {
         $router->post('users/cart', [V1ApiCartController::class, 'store'])
             ->name('user.v1.api-cart.store.post.api');
         $router->middleware('cart')->group(function (Router $router) {
-            $router->post('users/cart/reduce-quantity', [V1ApiCartController::class, 'reduceQuantity'])
-                ->name('user.v1.api-cart.reduceQuantity.post.api');
+
+            $router->post('users/cart/reduce-quantity', [V1ApiCartController::class, 'reduceQuantity']);
+
         });
         $router->group(['prefix' => 'admin'], function (Router $router) {
 

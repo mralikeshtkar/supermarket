@@ -61,6 +61,7 @@ class Product extends Model
 
     protected $casts = [
         'global_discount' => 'array',
+        'price' => 'integer',
         'status' => 'integer',
     ];
 
@@ -80,6 +81,22 @@ class Product extends Model
         static::deleted(function (Product $product) {
             $product->removeAllMedia();
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function getTranslatedStatus(): string
+    {
+        return ProductStatus::getDescription($this->status);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusClassName(): string
+    {
+        return ProductStatus::fromValue($this->status)->getCssClass();
     }
 
     /**
@@ -262,6 +279,7 @@ class Product extends Model
     public function getAdminIndexPaginate(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator|_IH_Product_C|array|LengthAwarePaginator
     {
         return self::query()
+            ->select(['id', 'name', 'price', 'status', 'created_at'])
             ->with('image')
             ->withAggregate('brand', 'name')
             ->latest()
@@ -419,18 +437,19 @@ class Product extends Model
 
     /**
      * @param $user
+     * @param $discount
      * @return CartProductResource
      */
-    public function getCartData($user): CartProductResource
+    public function getCartData($user, $discount = null): CartProductResource
     {
         $cart = collect($user->cart);
         $products = self::query()
             ->select(['id', 'name', 'price'])
-            ->with(['image'])
+            ->with(['image', 'categories:id'])
             ->whereIn('id', $cart->keys()->toArray())
             ->stock()
             ->get();
-        return CartProductResource::make($products)->additional(['cart' => $cart]);
+        return CartProductResource::make($products)->additional(['cart' => $cart, 'discount' => $discount]);
     }
 
     /**
@@ -539,10 +558,7 @@ class Product extends Model
         return $this->orders()->success();
     }
 
-    /**
-     * @return _IH_Media_QB
-     */
-    public function gallery(): _IH_Media_QB
+    public function gallery()
     {
         return $this->media()
             ->select('id', 'model_id', 'model_type', 'disk', 'files')
@@ -712,31 +728,6 @@ class Product extends Model
                     });
             });
         });
-    }
-
-    #endregion
-
-    #region Mutators
-
-    /**
-     * @return string
-     */
-    public function getTranslatedStatusAttribute(): string
-    {
-        return ProductStatus::getDescription($this->status);
-    }
-
-    public function getStatusCssClassAttribute()
-    {
-        return ProductStatus::fromValue($this->status)->getCssClass();
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAtFaAttribute(): string
-    {
-        return Verta::instance($this->created_at)->formatJalaliDate();
     }
 
     #endregion

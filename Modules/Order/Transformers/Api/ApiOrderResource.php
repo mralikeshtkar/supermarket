@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Order\Transformers\Api\Admin;
+namespace Modules\Order\Transformers\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -17,14 +17,11 @@ class ApiOrderResource extends JsonResource
     public function toArray($request)
     {
         return collect([
-            'id' => $this->resource->id,
             'user_id' => $this->resource->user_id,
-            'status_id' => $this->resource->status,
+            'id' => $this->resource->id,
             'address_id' => $this->resource->address_id,
             'amount' => $this->resource->amount,
             'formatted_amount' => number_format($this->resource->amount),
-            'translated_status' => $this->resource->getTranslatedStatus(),
-            'status_css_class' => $this->resource->getCssClassStatus(),
             'created_at' => jalaliFormat($this->resource->created_at),
         ])->when($this->resource->originalIsEquivalent('products_count'), function (Collection $collection) {
             $collection->put('products_count', $this->resource->products_count);
@@ -43,7 +40,7 @@ class ApiOrderResource extends JsonResource
                 $collection->put('city_name', $this->resource->address->city_name);
             })->toArray());
         })->when($this->resource->relationLoaded('products'), function (Collection $collection) {
-            $collection->put('products', ApiOrderProductsResource::collection($this->resource->products));
+            $collection->put('products', ApiAdminOrderProductsResource::collection($this->resource->products));
         })->toArray();
     }
 }

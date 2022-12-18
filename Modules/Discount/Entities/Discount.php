@@ -15,7 +15,9 @@ use Illuminate\Support\Arr;
 use Modules\Category\Entities\Category;
 use Modules\Discount\Database\factories\DiscountFactory;
 use Modules\Discount\Enums\DiscountStatus;
+use Modules\Discount\Exceptions\DiscountIsInvalidException;
 use Modules\Product\Entities\Product;
+use Symfony\Component\HttpFoundation\Response;
 
 class Discount extends Model
 {
@@ -34,7 +36,6 @@ class Discount extends Model
         'uses',
         'description',
         'status',
-        'priority',
     ];
 
     protected $casts = [
@@ -71,7 +72,7 @@ class Discount extends Model
     {
         return self::query()
             ->select(['id', 'code', 'status', 'amount', 'is_percent', 'start_at', 'expire_at', 'usage_limitation', 'uses', 'description',])
-            ->with('products:id')
+            ->with(['products:id', 'categories:id'])
             ->when($request->filled('code'), function (Builder $builder) use ($request) {
                 $builder->where('code', 'LIKE', '%' . $request->code . '%');
             })->latest()
@@ -100,13 +101,12 @@ class Discount extends Model
             'user_id' => $request->user()->id,
             'code' => $request->code,
             'amount' => $request->amount,
-            'is_percent' => $request->filled('is_percent') ? $request->is_percent : true,
+            'is_percent' => $request->get('is_percent',true),
             'start_at' => $request->filled('start_at') ? Verta::parseFormat('Y/n/j H:i', $request->start_at) : null,
             'expire_at' => $request->filled('expire_at') ? Verta::parseFormat('Y/n/j H:i', $request->expire_at) : null,
             'usage_limitation' => $request->usage_limitation,
             'uses' => $request->filled('uses') ? $request->uses : 0,
             'description' => $request->description,
-            'priority' => $request->priority,
         ]);
         $discount->when(Arr::get($request->discountables, 'discountable_type'), function (Builder $builder) use ($discount, $request) {
             $discount->discountables(Arr::get($request->discountables, 'discountable_type'))->sync(Arr::get($request->discountables, 'discountable_ids', []));
@@ -145,6 +145,28 @@ class Discount extends Model
     }
 
     /**
+     * @param $code
+     * @return mixed
+     * @throws DiscountIsInvalidException
+     */
+    public function findValidDiscountByCode($code): mixed
+    {
+        $discount = self::query()->select($this->selected_columns)
+            ->with($this->with_relationships)
+            ->scopes($this->with_scopes)
+            ->where('code', $code)
+            ->usageLimitationGreaterThanZeroOrNull()
+            ->codeIsStartedOrNull()
+            ->codeDoesntExpireOrNull()
+            ->accepted()
+            ->orderByAmountDesc()
+            ->orderByIsPercentDesc()
+            ->first();
+        if ($discount) return $discount;
+        else throw new DiscountIsInvalidException(trans("Discount is invalid"), Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * @param $discount
      * @return mixed
      */
@@ -170,8 +192,12 @@ class Discount extends Model
             'usage_limitation' => $request->usage_limitation,
             'uses' => $request->filled('uses') ? $request->uses : $this->uses,
             'description' => $request->description,
-            'priority' => $request->priority,
         ]);
+        $this->products()->sync([]);
+        $this->categories()->sync([]);
+        if (Arr::get($request->discountables, 'discountable_type')) {
+            $this->discountables(Arr::get($request->discountables, 'discountable_type'))->sync(Arr::get($request->discountables, 'discountable_ids', []));
+        }
     }
 
     /**
@@ -273,7 +299,7 @@ class Discount extends Model
     {
         $builder->where(function (Builder $builder) {
             $builder->whereNull('usage_limitation')
-                ->orWhere('usage_limitation', '>=', 0);
+                ->orWhereColumn('usage_limitation', '>', 'uses');
         });
     }
 
@@ -361,9 +387,18 @@ class Discount extends Model
      * @param Builder $builder
      * @return void
      */
-    public function scopeOrderPriority(Builder $builder)
+    public function scopeOrderByAmountDesc(Builder $builder)
     {
-        $builder->orderByDesc('priority');
+        $builder->orderByDesc('amount');
+    }
+
+    /**
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeOrderByIsPercentDesc(Builder $builder)
+    {
+        $builder->orderByDesc('is_percent');
     }
 
     #endregion

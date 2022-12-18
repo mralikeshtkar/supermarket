@@ -53,6 +53,15 @@ class Category extends Model
     #region Methods
 
     /**
+     * @return Model|Builder
+     */
+    public function changeStatus(): Model|Builder
+    {
+        $this->update(['status' => CategoryStatus::fromValue($this->status)->is(CategoryStatus::Accepted) ? CategoryStatus::Rejected : CategoryStatus::Accepted]);
+        return $this->selectColumns(['id', 'status'])->findOrFailById($this->id);
+    }
+
+    /**
      * Check is exists categories with specified ids where status is accepted and categories count with these rules equals to ids count.
      *
      * @param array $ids
@@ -112,6 +121,8 @@ class Category extends Model
             ->when($request->filled('search'), function (Builder $builder) use ($request) {
                 $builder->where('name', 'LIKE', '%' . $request->search . '%')
                     ->orWhere('slug', 'LIKE', '%' . $request->search . '%');
+            })->when($request->filled('categories') && is_array($request->categories), function (Builder $builder) use ($request) {
+                $builder->orWhereIn('id', $request->categories);
             })->accepted()
             ->get();
     }
@@ -123,7 +134,8 @@ class Category extends Model
      */
     public function getAdminIndexPaginate(Request $request, $category = null): LengthAwarePaginator
     {
-        return self::query()/*
+        return self::query()
+            ->select(['id', 'name', 'slug', 'status', 'parent_id'])
             ->with('image')
             ->latest()
             ->when($request->filled('name'), function (Builder $builder) use ($request) {
@@ -133,7 +145,7 @@ class Category extends Model
                 $builder->where('parent_id', $category);
             }, function (Builder $builder) use ($category) {
                 $builder->whereNull('parent_id');
-            })*/->paginate(2);
+            })->paginate();
     }
 
     /**
@@ -193,20 +205,6 @@ class Category extends Model
     }
 
     /**
-     * Change status category with specified status.
-     *
-     * @param $category
-     * @param $status
-     * @return mixed
-     */
-    public function changeStatus($category, $status): mixed
-    {
-        return $category->update([
-            'status' => $status,
-        ]);
-    }
-
-    /**
      * Destroy a category.
      *
      * @param $category
@@ -218,13 +216,19 @@ class Category extends Model
     }
 
     /**
-     * Get translated status.
-     *
-     * @return mixed
+     * @return string
      */
-    public function getStatus(): mixed
+    public function getTranslatedStatus(): string
     {
-        return CategoryStatus::fromValue($this->getAttribute('status'))->description;
+        return CategoryStatus::getDescription($this->status);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusClassName(): string
+    {
+        return CategoryStatus::coerce($this->status)->getCssClass();
     }
 
     /**

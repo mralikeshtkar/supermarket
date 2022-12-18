@@ -18,6 +18,12 @@ use Modules\Discount\Http\Controllers\V1\Api\ApiDiscountController as V1ApiDisco
 Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
 
+        $router->middleware('cart')->group(function (Router $router) {
+
+            $router->post('discounts/check', [V1ApiDiscountController::class, 'check']);
+
+        });
+
         $router->group(['prefix' => 'admin'], function (Router $router) {
 
             $router->get('discounts', [V1ApiAdminDiscountController::class, 'index']);

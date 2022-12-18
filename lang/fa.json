@@ -4,6 +4,8 @@
     "Shopping is disabled": "خرید غیرفعال است",
     "Error in operation": "خطا در انجام عملیات",
     ":attribute not found": ":attribute پیدا نشد",
+    "Discount is invalid": "کد تخفیف معتبر نمیباشد",
+    "The discount code cannot be used for this shopping cart": "کد تخفیف برای این سبد خرید قابل استفاده نمی باشد",
     "Order": "سفارش",
     "created": "ثبت اطلاعات",
     "updated": "بروزرسانی اطلاعات",

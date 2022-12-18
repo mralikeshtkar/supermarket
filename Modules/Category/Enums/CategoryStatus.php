@@ -15,4 +15,9 @@ class CategoryStatus extends Enum implements LocalizedEnum
     {
         return 'category::enums.' . static::class;
     }
+
+    public function getCssClass()
+    {
+        return trans('category::enums.statuses.' . static::class . '.' . $this->value);
+    }
 }
