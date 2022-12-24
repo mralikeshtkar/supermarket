@@ -27,7 +27,7 @@ class RackRowProductResource extends JsonResource
                 $collection->put('image', $item->image);
             })->when($item->relationLoaded('model'), function (Collection $collection) use ($item) {
                 $collection->put('model', $item->model);
-            })->toArray();
+            });
         })->toArray();
         dd($array,array_values($array));
         return array_values($array);
