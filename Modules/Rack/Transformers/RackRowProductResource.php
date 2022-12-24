@@ -18,7 +18,7 @@ class RackRowProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        $array = collect($this->resource)->map(function ($item) {
+        $array = $this->resource->map(function ($item) {
             return collect($this->resource)->when($item->relationLoaded('pivot'), function (Collection $collection) use ($item) {
                 $collection->put('pivot', collect($item->pivot)->put('priority', $this->additional['rack_row']->priority));
             })->when($item->relationLoaded('gallery'), function (Collection $collection) use ($item) {
@@ -29,7 +29,7 @@ class RackRowProductResource extends JsonResource
                 $collection->put('model', $item->model);
             });
         })->toArray();
-        dd($array,array_values($array));
+        dd($array,$this->resource);
         return array_values($array);
     }
 
