@@ -14,10 +14,6 @@
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Storeroom\Entities\StoreroomEntrance;
 
-Route::get('/', function () {
-
-    dd(\Modules\Product\Entities\Product::first()->toArray());
-});
 Route::get('token', function () {
 
     return \Modules\User\Entities\User::first()->createToken('auth_token')->plainTextToken;

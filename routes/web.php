@@ -14,5 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $data = [
+        'name' => 'علی'
+    ];
+//    return view('factor',$data);
+    $pdf = PDF::loadView('factor', $data);
+    return $pdf->download(now()->toDateTimeString().'-test.pdf');
+    return \niklasravnsborg\LaravelPdf\Facades\Pdf::loadView('factor', ['name' => "علی"])->download('test.pdf');
     return view('welcome');
 });
