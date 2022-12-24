@@ -29,6 +29,7 @@ class RackRowProductResource extends JsonResource
                 $collection->put('model', $item->model);
             })->toArray();
         })->toArray();
+        dd($array,array_values($array));
         return array_values($array);
     }
 
