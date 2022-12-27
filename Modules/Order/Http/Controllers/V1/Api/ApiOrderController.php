@@ -53,7 +53,7 @@ class ApiOrderController extends Controller
         ])->validate();
         try {
             return DB::transaction(function () use ($request) {
-                return Order::init()->store($request,);
+                return Order::init()->store($request);
             });
         } catch (\Throwable $e) {
             return $e;

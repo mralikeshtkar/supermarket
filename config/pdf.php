@@ -23,8 +23,8 @@ return [
     'font_path' => base_path('resources/fonts/'),
     'font_data' => [
         'iran' => [
-            'R' => 'Farhang2-Regular.ttf',
-            'B' => 'Farhang2-Bold.ttf',
+            'R' => 'IRANYekanRegular.ttf',
+            'B' => 'IRANYekanBold.ttf',
             'useOTL' => 0xFF,
         ]
     ]

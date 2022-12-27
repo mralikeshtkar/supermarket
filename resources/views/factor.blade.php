@@ -31,19 +31,22 @@
         .w-30{
             width: 30%;
         }
+        table, td, th {
+            border: 1px solid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
     </style>
 </head>
 <body>
 <div class="pdf-head">فاکتور فروش</div>
 <div class="overflow-hidden">
-    <div class="float-right w-70">
-        <div class="">خریدار: علی کشتکار</div>
-        <div class="">آدرس: رشت، خیابان امام</div>
-    </div>
-    <div class="float-left w-30" dir="ltr">
-        <div>شماره سفارش: {{ enToFa(12345) }}</div>
-        <div>تاریخ: {{ enToFa(verta()->formatJalaliDate()) }}</div>
-    </div>
+    <div class="" style="width: 38px">فروشنده</div>
+    <div class="float-right">a</div>
+    <div class="float-left">c</div>
 </div>
 </body>
 </html>
