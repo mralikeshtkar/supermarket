@@ -334,7 +334,6 @@ class Product extends Model
 
     public function store($request)
     {
-        dd($request->all());
         return DB::transaction(function () use ($request) {
             $product = self::query()->create([
                 'user_id' => $request->user()->id,
