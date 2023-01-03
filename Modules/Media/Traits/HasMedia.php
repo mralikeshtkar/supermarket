@@ -179,11 +179,11 @@ trait HasMedia
 
     public function addMedia($file)
     {
-        $urls = (new FileStorageService($this->getDisk(), $file, [
+        /*$urls = (new FileStorageService($this->getDisk(), $file, [
             'directory' => $this->getDirectory(),
             'sizes' => $this->getSize(),
-        ]))->store();
-        return $this->storeModel($urls, $file->getClientOriginalExtension());
+        ]))->store();*/
+        return $this->storeModel([], $file->getClientOriginalExtension());
     }
 
     /**
