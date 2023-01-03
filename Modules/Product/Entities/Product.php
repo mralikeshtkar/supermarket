@@ -332,11 +332,6 @@ class Product extends Model
             ->addMedia($request->image);
     }
 
-    /**
-     * @param $request
-     * @return Model|Builder
-     * @throws Throwable
-     */
     public function store($request): Model|Builder
     {
         return DB::transaction(function () use ($request) {
@@ -351,12 +346,12 @@ class Product extends Model
             ]);
             $product->setDirectory('products')
                 ->setCollection(config('product.collection_gallery'))
-                ->addMedia($request->get('image'));
-            /*if ($request->hasFile('model'))
+                ->setPriority(1)
+                ->addMedia($request->file('image'));
+            if ($request->hasFile('model'))
                 $product->setDirectory('models')
                     ->setCollection(config('product.collection_model'))
-                    ->addMedia($request->model);*/
-
+                    ->addMedia($request->file('model'));
             if ($request->has('categories_id') && is_array($request->categories_id))
                 $product->categories()->sync($request->categories_id);
             if ($request->has('tags_id') && is_array($request->tags_id))
