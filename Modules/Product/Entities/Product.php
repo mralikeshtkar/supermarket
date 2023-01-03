@@ -349,7 +349,7 @@ class Product extends Model
                 'price' => $request->price,
                 'status' => ProductStatus::Pending,
             ]);
-            /*$product->setDirectory('products')
+            $product->setDirectory('products')
                 ->setCollection(config('product.collection_gallery'))
                 ->setPriority(1)
                 ->addMedia($request->image);
@@ -357,8 +357,11 @@ class Product extends Model
                 $product->setDirectory('models')
                     ->setCollection(config('product.collection_model'))
                     ->addMedia($request->model);
-            $product->categories()->sync($request->get('categories_id', []));
-            $product->tags()->sync($request->get('tags_id', []));*/
+
+            if ($request->has('categories_id') && is_array($request->categories_id))
+                $product->categories()->sync($request->categories_id);
+            if ($request->has('tags_id') && is_array($request->tags_id))
+            $product->tags()->sync($request->tags_id);
             return $product;
         });
     }
