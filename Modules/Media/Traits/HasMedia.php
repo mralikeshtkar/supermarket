@@ -176,13 +176,10 @@ trait HasMedia
         return $this;
     }
 
-    /**
-     * @param $file
-     * @return Model|Media
-     */
-    public function addMedia($file): Model|Media
+
+    public function addMedia($file)
     {
-        dd($file);
+        return \response()->json(['file'=>$file]);
         $urls = (new FileStorageService($this->getDisk(), $file, [
             'directory' => $this->getDirectory(),
             'sizes' => $this->getSize(),
