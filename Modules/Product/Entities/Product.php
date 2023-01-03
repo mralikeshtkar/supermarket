@@ -344,8 +344,8 @@ class Product extends Model
                 'price' => $request->price,
                 'status' => ProductStatus::Pending,
             ]);
-            return $product->setDirectory('products')
-                ->setCollection(config('product.collection_gallery'))
+            return $product/*->setDirectory('products')
+                ->setCollection(config('product.collection_gallery'))*/
                 //->setPriority(1)
                 ->addMedia($request->file('image'));
             /*if ($request->hasFile('model'))
