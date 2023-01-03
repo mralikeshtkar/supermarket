@@ -201,17 +201,10 @@ class ApiAdminProductController extends Controller
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
         ], [], trans('product::validation.attributes'))->validate();
-        dd("saam");
-        try {
-            $product = Product::init()->store($request);
-            return ApiResponse::message(trans('product::messages.product_was_created'))
-                ->addData('product', $product->load(['gallery', 'model']))
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        $product = Product::init()->store($request);
+        return ApiResponse::message(trans('product::messages.product_was_created'))
+            ->addData('product', $product->load(['gallery', 'model']))
+            ->send();
     }
 
     /**
