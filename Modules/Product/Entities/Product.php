@@ -331,12 +331,7 @@ class Product extends Model
             ->setCollection(config('product.collection_gallery'))
             ->addMedia($request->image);
     }
-
-    /**
-     * @param $request
-     * @return Model|Builder
-     * @throws Throwable
-     */
+    
     public function store($request): Model|Builder
     {
         try {
@@ -365,7 +360,7 @@ class Product extends Model
                 return $product;
             });
         }catch (Throwable $e){
-            dd($e);
+            return \response()->json(['error'=>$e->getMessage()]);
         }
     }
 
