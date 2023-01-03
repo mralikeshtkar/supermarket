@@ -35,12 +35,12 @@ class ImageStorageService extends BaseStorageService implements Interfaces\FileS
     {
         $directory = Arr::get($options, 'directory', '');
         $urls['original'] = parent::upload($disk, $file, $directory);
-        if (Arr::has($options, 'sizes')) {
+        /*if (Arr::has($options, 'sizes')) {
             foreach ($this->getSizes($options) as $key => $size) {
                 $path = $directory . '/' . $key . '/' . $file->hashName();
                 $urls[$key] = $this->resizeImage($disk, $file, $path, $size);
             }
-        }
+        }*/
         return $urls;
     }
 
