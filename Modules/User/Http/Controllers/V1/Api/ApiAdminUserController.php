@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Rules\MobileRule;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
+use Modules\Core\Transformers\V1\Admin\AdminSidebarResource;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use Modules\Permission\Entities\Role;
+use Modules\Permission\Transformers\V1\Admin\AdminCheckUserPermissionAccessResource;
 use Modules\User\Entities\User;
 use Modules\User\Rules\UniqueMobileRule;
 use Modules\User\Transformers\V1\Api\Admin\AdminUserOrderResource;
@@ -28,6 +30,8 @@ class ApiAdminUserController extends Controller
     {
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('user', User::init()->getUser($request))
+            ->addData('permissions', new AdminCheckUserPermissionAccessResource($request->user()))
+            ->addData('sidebar', new AdminSidebarResource($request->user()))
             ->send();
     }
 

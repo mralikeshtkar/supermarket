@@ -29,4 +29,9 @@ class RolePolicy
     {
         return $user->hasPermissionTo(Permissions::MANAGE_PERMISSIONS);
     }
+
+    public function destroy(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_PERMISSIONS);
+    }
 }

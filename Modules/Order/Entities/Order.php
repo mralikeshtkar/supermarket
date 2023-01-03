@@ -216,6 +216,15 @@ class Order extends Model
         return $this;
     }
 
+    /**
+     * @param $status
+     * @return bool
+     */
+    public function changeStatus($status): bool
+    {
+        return $this->update(['status'=>$status]);
+    }
+
     #endregion
 
     #region Relations

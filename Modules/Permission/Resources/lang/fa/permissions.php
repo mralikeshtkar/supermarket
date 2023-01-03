@@ -4,8 +4,9 @@ use Modules\Permission\Enums\Permissions;
 
 return [
     Permissions::MANAGE_PERMISSIONS => "مدیریت مجوزها",
-    Permissions::MANAGE_CATEGORIES => "مدیریت دسته‌ها",
     Permissions::MANAGE_PRODUCTS => "مدیریت محصولات",
+    Permissions::MANAGE_PRODUCT_UNITS => "مدیریت واحدهای محصول",
+    /*Permissions::MANAGE_CATEGORIES => "مدیریت دسته‌ها",
     Permissions::MANAGE_TAGS => "مدیریت برچسب‌ها",
     Permissions::MANAGE_COMMENTS => "مدیریت دیدگاه‌ها",
     Permissions::MANAGE_FEATURES => "مدیریت ویژگی‌ها",
@@ -14,5 +15,5 @@ return [
     Permissions::MANAGE_CITIES => "مدیریت شهرها",
     Permissions::MANAGE_ADDRESSES => "مدیریت مدیریت",
     Permissions::MANAGE_BRANDS => "مدیریت برندها",
-    Permissions::MANAGE_DISCOUNTS => "مدیریت تخفیف‌ها",
+    Permissions::MANAGE_DISCOUNTS => "مدیریت تخفیف‌ها",*/
 ];

@@ -17,7 +17,11 @@ class Role extends \Spatie\Permission\Models\Role
 {
     #region Constants
 
-//    protected $appends = ['is_super_admin'];
+    private array $selected_columns = ['*'];
+
+    private array $with_relationships = [];
+
+    private array $with_scopes = [];
 
     #endregion
 
@@ -61,12 +65,11 @@ class Role extends \Spatie\Permission\Models\Role
     public function getAdminIndexPaginate(Request $request): array|LengthAwarePaginator|_IH_Role_C|\LaravelIdea\Helper\Spatie\Permission\Models\_IH_Role_C
     {
         return self::query()
-            ->with('permissions')
+            ->with('permissions:id,name')
             ->when($request->filled('name'), function (Builder $builder) use ($request) {
                 $builder->where('name', 'LIKE', '%' . $request->name . '%')
                     ->orWhere('name_fa', 'LIKE', '%' . $request->name . '%');
-            })->paginate()
-            ->appends($request->only('name'));
+            })->paginate();
     }
 
     /**
@@ -110,6 +113,36 @@ class Role extends \Spatie\Permission\Models\Role
         ]);
         $role->syncPermissions($request->get('permissions', []));
         return $role->load('permissions');
+    }
+
+    /**
+     * @param array $columns
+     * @return $this
+     */
+    public function selectColumns(array $columns): static
+    {
+        $this->selected_columns = $columns;
+        return $this;
+    }
+
+    /**
+     * @param array $relations
+     * @return $this
+     */
+    public function withRelationships(array $relations): static
+    {
+        $this->with_relationships = $relations;
+        return $this;
+    }
+
+    /**
+     * @param array $scopes
+     * @return $this
+     */
+    public function withScopes(array $scopes): static
+    {
+        $this->with_scopes = $scopes;
+        return $this;
     }
 
     /**

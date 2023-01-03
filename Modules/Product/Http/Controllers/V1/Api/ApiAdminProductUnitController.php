@@ -23,6 +23,7 @@ class ApiAdminProductUnitController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', ProductUnit::class));
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
             ->addData('productUnits', ProductUnit::init()->getAdminIndexPaginate($request))
             ->send();
@@ -45,6 +46,7 @@ class ApiAdminProductUnitController extends Controller
      */
     public function store(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('store', ProductUnit::class));
         ApiResponse::init($request->all(), [
             'title' => ['required', 'string', 'unique:product_units,title'],
             'status' => ['nullable', new EnumValue(ProductUnitStatus::class)],
@@ -67,68 +69,48 @@ class ApiAdminProductUnitController extends Controller
      */
     public function update(Request $request, $productUnit)
     {
-        try {
-            $productUnit = ProductUnit::init()->findOrFailById($productUnit);
-            ApiResponse::init($request->all(), [
-                'title' => ['required', 'string', 'unique:product_units,title,' . $productUnit->id],
-                'status' => ['nullable', new EnumValue(ProductUnitStatus::class)],
-            ])->validate();
-            $productUnit->updateUnit($request);
-            return ApiResponse::sendMessage(trans('product::messages.product_unit_was_updated'));
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('product::messages.product_unit_not_found'), Response::HTTP_NOT_FOUND)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        } catch (HttpResponseException $e) {
-            return $e->getResponse();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('update', ProductUnit::class));
+        $productUnit = ProductUnit::init()->findOrFailById($productUnit);
+        ApiResponse::init($request->all(), [
+            'title' => ['required', 'string', 'unique:product_units,title,' . $productUnit->id],
+            'status' => ['nullable', new EnumValue(ProductUnitStatus::class)],
+        ])->validate();
+        $productUnit->updateUnit($request);
+        return ApiResponse::sendMessage(trans('product::messages.product_unit_was_updated'));
     }
 
     /**
+     * @param Request $request
      * @param $productUnit
      * @return JsonResponse
      */
-    public function destroy($productUnit)
+    public function destroy(Request $request,$productUnit)
     {
-        try {
-            $unit = ProductUnit::init()->findOrFailById($productUnit);
-            $unit->destroyUnit();
-            return ApiResponse::message(trans('product::messages.product_was_deleted'))
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('product::messages.product_unit_not_found'), Response::HTTP_NOT_FOUND)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('destroy', ProductUnit::class));
+        $unit = ProductUnit::init()->findOrFailById($productUnit);
+        $unit->destroyUnit();
+        return ApiResponse::message(trans('product::messages.product_was_deleted'))->send();
     }
 
     /**
+     * @param Request $request
      * @param $productUnit
      * @return JsonResponse
      */
-    public function accept($productUnit)
+    public function accept(Request $request,$productUnit)
     {
+        ApiResponse::authorize($request->user()->can('manage', ProductUnit::class));
         return $this->_changeStatus($productUnit, ProductUnitStatus::Accepted);
     }
 
     /**
+     * @param Request $request
      * @param $productUnit
      * @return JsonResponse
      */
-    public function reject($productUnit)
+    public function reject(Request $request,$productUnit)
     {
+        ApiResponse::authorize($request->user()->can('manage', ProductUnit::class));
         return $this->_changeStatus($productUnit, ProductUnitStatus::Rejected);
     }
 
@@ -139,22 +121,10 @@ class ApiAdminProductUnitController extends Controller
      */
     private function _changeStatus($productUnit, $status)
     {
-        try {
-            $productUnit = ProductUnit::init()->findOrFailById($productUnit);
-            $productUnit = $productUnit->changeStatus($status);
-            return ApiResponse::message(trans('product::messages.product_unit_status_was_updated'))
-                ->addData('productUnit', $productUnit)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('product::messages.product_unit_not_found'), Response::HTTP_NOT_FOUND)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        $productUnit = ProductUnit::init()->findOrFailById($productUnit);
+        $productUnit = $productUnit->changeStatus($status);
+        return ApiResponse::message(trans('product::messages.product_unit_status_was_updated'))
+            ->addData('productUnit', $productUnit)
+            ->send();
     }
 }

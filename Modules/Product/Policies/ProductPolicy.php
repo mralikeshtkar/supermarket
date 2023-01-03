@@ -15,6 +15,11 @@ class ProductPolicy
         return $user->hasPermissionTo(Permissions::MANAGE_PRODUCTS);
     }
 
+    public function show(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_PRODUCTS);
+    }
+
     public function store(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_PRODUCTS);

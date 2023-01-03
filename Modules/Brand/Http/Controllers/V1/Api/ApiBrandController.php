@@ -49,7 +49,7 @@ class ApiBrandController extends Controller
      */
     public function store(Request $request)
     {
-//        ApiResponse::authorize($request->user()->can('store', Brand::class));
+//        uthorize($request->user()->can('store', Brand::class));
         $request->merge([
             'slug' => Str::slug($request->slug),
             'name_en' => ucfirst($request->name_en),

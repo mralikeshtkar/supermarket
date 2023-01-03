@@ -4,6 +4,8 @@ namespace Modules\Order\Http\Controllers\V1\Api;
 
 use App\Http\Controllers\Controller;
 use BenSampo\Enum\Rules\EnumKey;
+use BenSampo\Enum\Rules\EnumValue;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Order\Entities\Order;
@@ -123,6 +125,21 @@ class ApiAdminOrderController extends Controller
             ->addData('order', ApiAdminOrderResource::make($order))
             ->addData('statuses', OrderStatus::asSelectArray())
             ->send();
+    }
+
+    /**
+     * @param Request $request
+     * @param $order
+     * @return JsonResponse
+     */
+    public function changeStatus(Request $request, $order)
+    {
+        $order = Order::init()->selectColumns(['id'])->findOrFailById($order);
+        ApiResponse::init($request->all(),[
+            'status'=>['required',new EnumValue(OrderStatus::class)]
+        ])->validate();
+        $order->changeStatus($request->status);
+        return ApiResponse::message(trans('The operation was done successfully'))->send();
     }
 
 }
