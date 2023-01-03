@@ -346,12 +346,12 @@ class Product extends Model
             ]);
             $product->setDirectory('products')
                 ->setCollection(config('product.collection_gallery'))
-                ->setPriority(1)
+                //->setPriority(1)
                 ->addMedia($request->file('image'));
-            if ($request->hasFile('model'))
+            /*if ($request->hasFile('model'))
                 $product->setDirectory('models')
                     ->setCollection(config('product.collection_model'))
-                    ->addMedia($request->file('model'));
+                    ->addMedia($request->file('model'));*/
             if ($request->has('categories_id') && is_array($request->categories_id))
                 $product->categories()->sync($request->categories_id);
             if ($request->has('tags_id') && is_array($request->tags_id))

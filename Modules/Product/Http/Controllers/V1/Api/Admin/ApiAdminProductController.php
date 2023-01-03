@@ -150,7 +150,6 @@ class ApiAdminProductController extends Controller
 
     public function store(Request $request)
     {
-        return $request->all();
         //ApiResponse::authorize($request->user()->can('store', Product::class));
         //$request->merge(['slug' => Str::slug($request->get('slug'))]);
         ApiResponse::init($request->all(), [
