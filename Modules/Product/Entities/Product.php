@@ -334,30 +334,28 @@ class Product extends Model
 
     public function store($request): Model|Builder
     {
-        return DB::transaction(function () use ($request) {
-            $product = self::query()->create([
-                'user_id' => $request->user()->id,
-                'brand_id' => $request->brand_id,
-                'unit_id' => $request->unit_id,
-                'name' => $request->name,
-                'slug' => $request->slug,
-                'price' => $request->price,
-                'status' => ProductStatus::Pending,
-            ]);
-            $product->setDirectory('products')
-                ->setCollection(config('product.collection_gallery'))
-                ->setPriority(1)
-                ->addMedia($request->file('image'));
-            if ($request->hasFile('model'))
-                $product->setDirectory('models')
-                    ->setCollection(config('product.collection_model'))
-                    ->addMedia($request->file('model'));
-            if ($request->has('categories_id') && is_array($request->categories_id))
-                $product->categories()->sync($request->categories_id);
-            if ($request->has('tags_id') && is_array($request->tags_id))
+        $product = self::query()->create([
+            'user_id' => $request->user()->id,
+            'brand_id' => $request->brand_id,
+            'unit_id' => $request->unit_id,
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'price' => $request->price,
+            'status' => ProductStatus::Pending,
+        ]);
+        $product->setDirectory('products')
+            ->setCollection(config('product.collection_gallery'))
+            ->setPriority(1)
+            ->addMedia($request->file('image'));
+        if ($request->hasFile('model'))
+            $product->setDirectory('models')
+                ->setCollection(config('product.collection_model'))
+                ->addMedia($request->file('model'));
+        if ($request->has('categories_id') && is_array($request->categories_id))
+            $product->categories()->sync($request->categories_id);
+        if ($request->has('tags_id') && is_array($request->tags_id))
             $product->tags()->sync($request->tags_id);
-            return $product;
-        });
+        return $product;
     }
 
     /**
