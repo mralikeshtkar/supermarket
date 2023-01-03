@@ -349,7 +349,7 @@ class Product extends Model
                 'price' => $request->price,
                 'status' => ProductStatus::Pending,
             ]);
-            $product->setDirectory('products')
+            /*$product->setDirectory('products')
                 ->setCollection(config('product.collection_gallery'))
                 ->setPriority(1)
                 ->addMedia($request->image);
@@ -358,8 +358,8 @@ class Product extends Model
                     ->setCollection(config('product.collection_model'))
                     ->addMedia($request->model);
             $product->categories()->sync($request->get('categories_id', []));
-            $product->tags()->sync($request->get('tags_id', []));
-            return $product->load('gallery');
+            $product->tags()->sync($request->get('tags_id', []));*/
+            return $product;
         });
     }
 
