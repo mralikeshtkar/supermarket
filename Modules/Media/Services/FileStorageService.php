@@ -33,9 +33,10 @@ class FileStorageService
 
     private function getHandler()
     {
-        return collect(config('media.handlers'))->firstWhere(function ($handler, $key) {
-                return in_array($this->file->getClientOriginalExtension(), Arr::get($handler, 'extensions'));
-            }) ?? config('media.default');
+        if ($handler = collect(config('media.handlers'))->firstWhere(function ($handler, $key) {
+            return in_array($this->file->getClientOriginalExtension(), Arr::get($handler, 'extensions'));
+        })) return $handler;
+        else return config('media.default');
     }
 
     private function getHandlerStorageService(): mixed

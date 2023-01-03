@@ -179,7 +179,6 @@ trait HasMedia
 
     public function addMedia($file)
     {
-        return \response()->json(['file'=>$file]);
         $urls = (new FileStorageService($this->getDisk(), $file, [
             'directory' => $this->getDirectory(),
             'sizes' => $this->getSize(),
