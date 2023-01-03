@@ -9,7 +9,6 @@ class ImageStorageService extends BaseStorageService implements Interfaces\FileS
 {
     public function store(string $disk, $file, array $options = []): array
     {
-        return [];
         return $this->prepareUrl($disk, $file, $options);
     }
 
