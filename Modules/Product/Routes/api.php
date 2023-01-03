@@ -25,10 +25,9 @@ Route::prefix('v1')->group(function (Router $router) {
         $router->group(['prefix' => 'admin'], function (Router $router) {
 
             /* Product routes  */
+            $router->post('products', [V1ApiAdminProductController::class, 'store']);
             $router->get('products', [V1ApiAdminProductController::class, 'index'])
                 ->name('product.v1.api-admin-product.index.get.api');
-            $router->post('products', [V1ApiAdminProductController::class, 'store'])
-                ->name('product.v1.api-admin-product.store.post.api');
             $router->get('products/search-all', [V1ApiAdminProductController::class, 'searchAll'])
                 ->name('product.v1.api-admin-product.search-all.get.api');
             $router->get('products/only-accepted', [V1ApiAdminProductController::class, 'onlyAccepted']);
