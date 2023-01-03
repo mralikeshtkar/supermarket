@@ -182,7 +182,6 @@ trait HasMedia
      */
     public function addMedia($file): Model|Media
     {
-        dd($file);
         $urls = (new FileStorageService($this->getDisk(), $file, [
             'directory' => $this->getDirectory(),
             'sizes' => $this->getSize(),
