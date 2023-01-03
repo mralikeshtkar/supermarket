@@ -195,7 +195,7 @@ class ApiAdminProductController extends Controller
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
         ], [], trans('product::validation.attributes'))->validate();
-        $product = Product::init()->store($request);
+        return $product = Product::init()->store($request);
         return ApiResponse::message(trans('product::messages.product_was_created'))
             ->send();
     }
