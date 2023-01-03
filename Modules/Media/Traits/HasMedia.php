@@ -236,7 +236,7 @@ trait HasMedia
             'files' => $urls,
             'collection' => $this->getCollection(),
             'extension' => $extension,
-            'priority' => $this->getPriority(),
+            'priority' => 0,
         ]);
     }
 
