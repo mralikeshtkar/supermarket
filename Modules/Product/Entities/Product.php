@@ -334,6 +334,7 @@ class Product extends Model
 
     public function store($request): Model|Builder
     {
+        dd($request->all(),$request->file('image'),$request->file('model'));
         $product = self::query()->create([
             'user_id' => $request->user()->id,
             'brand_id' => $request->brand_id,
