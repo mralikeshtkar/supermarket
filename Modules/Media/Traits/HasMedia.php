@@ -176,17 +176,14 @@ trait HasMedia
         return $this;
     }
 
-    /**
-     * @param $file
-     * @return Model|Media
-     */
-    public function addMedia($file): Model|Media
+
+    public function addMedia($file)
     {
         $urls = (new FileStorageService($this->getDisk(), $file, [
             'directory' => $this->getDirectory(),
             'sizes' => $this->getSize(),
         ]))->store();
-        return $this->storeModel($urls, $file->getClientOriginalExtension());
+        //return $this->storeModel($urls, $file->getClientOriginalExtension());
     }
 
     /**
@@ -236,7 +233,7 @@ trait HasMedia
             'files' => $urls,
             'collection' => $this->getCollection(),
             'extension' => $extension,
-            'priority' => 0,
+            'priority' => $this->getPriority(),
         ]);
     }
 
