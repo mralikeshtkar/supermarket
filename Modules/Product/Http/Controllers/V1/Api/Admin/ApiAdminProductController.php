@@ -150,6 +150,7 @@ class ApiAdminProductController extends Controller
 
     public function store(Request $request)
     {
+        return $request->all();
         //ApiResponse::authorize($request->user()->can('store', Product::class));
         //$request->merge(['slug' => Str::slug($request->get('slug'))]);
         ApiResponse::init($request->all(), [
@@ -195,7 +196,6 @@ class ApiAdminProductController extends Controller
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
         ], [], trans('product::validation.attributes'))->validate();
-        dd("salam");
         $product = Product::init()->store($request);
         return ApiResponse::message(trans('product::messages.product_was_created'))
             ->send();
