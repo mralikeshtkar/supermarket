@@ -148,16 +148,11 @@ class ApiAdminProductController extends Controller
         }
     }
 
-    /**
-     * Permitted user can store a product.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function store(Request $request)
     {
+        dd("salam");
         //ApiResponse::authorize($request->user()->can('store', Product::class));
-        $request->merge(['slug' => Str::slug($request->get('slug'))]);
+        //$request->merge(['slug' => Str::slug($request->get('slug'))]);
         ApiResponse::init($request->all(), [
             'name' => [
                 'required',
