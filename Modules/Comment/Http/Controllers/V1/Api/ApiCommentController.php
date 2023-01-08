@@ -45,6 +45,7 @@ class ApiCommentController extends Controller
             $commentable->storeComment($request);
             return ApiResponse::message(trans('comment::messages.comment_was_created'))->send();
         } catch (Throwable $e) {
+            dd($e);
             return ApiResponse::message(trans('comment::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
                 ->hasError()
                 ->send();

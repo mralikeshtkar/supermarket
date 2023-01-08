@@ -9,10 +9,11 @@ class Permissions extends Enum
     const MANAGE_PERMISSIONS ="manage permission";
     const MANAGE_PRODUCTS ="manage products";
     const MANAGE_PRODUCT_UNITS ="manage product units";
+    const MANAGE_SPECIAL_PRODUCTS ="manage special products";
+    const MANAGE_COMMENTS ="manage comments";
 
     /*const MANAGE_CATEGORIES ="manage categories";
     const MANAGE_TAGS ="manage tags";
-    const MANAGE_COMMENTS ="manage comments";
     const MANAGE_FEATURES ="manage features";
     const MANAGE_ATTRIBUTES ="manage attributes";
     const MANAGE_PROVINCES ="manage provinces";
