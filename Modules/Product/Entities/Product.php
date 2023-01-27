@@ -538,7 +538,23 @@ class Product extends Model
             ->with(['model', 'image'])
             ->withCount('successOrders')
             ->orderByDesc('success_orders_count')
-            ->paginate();
+            ->paginate($this->perPage);
+    }
+
+    /**
+     * @param Request $request
+     * @param $tag_ids
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getSimilarProducts(Request $request, $tag_ids): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return self::query()
+            ->select(['id', 'name', 'price'])
+            ->with(['model', 'image'])
+            ->withCount(['tags' => function ($q) use ($tag_ids) {
+                $q->whereIn('id', $tag_ids);
+            }])->orderByDesc('tags_count')
+            ->paginate($request->get('perPage', $this->perPage));
     }
 
     #endregion

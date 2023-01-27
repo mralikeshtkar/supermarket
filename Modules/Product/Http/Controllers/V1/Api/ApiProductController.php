@@ -200,4 +200,14 @@ class ApiProductController extends Controller
             ->addData('products', ApiPaginationResource::make($mostSellingProducts)->additional(['itemsResource' => ProductResource::class]))
             ->send();
     }
+
+    public function similar(Request $request, $product)
+    {
+        $product=Product::init()->selectColumns(['id'])
+            ->withRelationships(['tags:id'])->findOrFailById($product);
+        $products = $product->getSimilarProducts($request,$product->tags->pluck('id')->toArray());
+        return ApiResponse::message(trans('product::messages.received_information_successfully'))
+            ->addData('products', ApiPaginationResource::make($products)->additional(['itemsResource' => ProductResource::class]))
+            ->send();
+    }
 }

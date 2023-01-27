@@ -103,6 +103,7 @@ Route::prefix('v1')->group(function (Router $router) {
         $router->get('products/latest/seen', [V1ApiProductController::class, 'latestSeen']);
         $router->match(['put', 'patch'], 'products/{product}/change-status', [V1ApiProductController::class, 'changeStatus']);
         $router->get('products/{product}', [V1ApiProductController::class, 'show']);
+        $router->get('products/{product}/similar', [V1ApiProductController::class, 'similar']);
         $router->get('products/{category?}', [V1ApiProductController::class, 'index']);
         $router->get('products/{product}/attributes', [V1ApiProductController::class, 'attributes']);
         $router->get('products/compare/{product1}/{product2}', [V1ApiProductController::class, 'compare']);
