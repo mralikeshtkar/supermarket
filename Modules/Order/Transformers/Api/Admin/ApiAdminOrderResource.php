@@ -18,6 +18,8 @@ class ApiAdminOrderResource extends JsonResource
     {
         return collect($this->resource)->when($this->resource->originalIsEquivalent('created_at'), function (Collection $collection) {
             $collection->put('created_at', jalaliFormat($this->resource->created_at));
+        })->when(array_key_exists('delivery_at',$this->resource->getAttributes()) && $this->resource->delivery_at, function (Collection $collection) {
+            $collection->put('delivery_at_datepicker', jalaliFormat($this->resource->delivery_at,'Y/n/j H:i'));
         })->when($this->resource->originalIsEquivalent('products_count'), function (Collection $collection) {
             $collection->put('products_count', $this->resource->products_count);
         })->when($this->resource->relationLoaded('address'), function (Collection $collection) {

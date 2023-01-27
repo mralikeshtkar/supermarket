@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Modules\Address\Entities\Address;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Order\Entities\Order;
@@ -48,7 +49,7 @@ class ApiOrderController extends Controller
     public function store(Request $request)
     {
         ApiResponse::init($request->all(), [
-            'address_id' => ['required', 'exists:' . Address::class . ',id'],
+            'address_id' => ['required', Rule::exists(Address::class,'id')->where('user_id',$request->user()->id)],
             'discount' => ['nullable', 'string'],
         ])->validate();
         try {

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Product\Entities\Product;
+use Modules\Product\Entities\ProductUnit;
 use Modules\Product\Entities\Special;
 use Modules\Product\Transformers\V1\Api\Admin\AdminSpecialProductsResource;
 use Throwable;
@@ -22,6 +23,7 @@ class ApiAdminSpecialProductController extends Controller
      */
     public function addProduct(Request $request, $product)
     {
+        ApiResponse::authorize($request->user()->can('manage', Special::class));
         $product = Product::init()->findOrFailById($product);
         Special::init()->addProduct($request, $product);
         return ApiResponse::message(trans("product_registration_as_a_special_product_was_successfully_completed"))
@@ -35,6 +37,7 @@ class ApiAdminSpecialProductController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Special::class));
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
             ->addData('specialProducts', ApiPaginationResource::make(Special::init()->getAdminIndexPaginate($request))->additional(['itemsResource' => AdminSpecialProductsResource::class]))
             ->send();
@@ -46,6 +49,7 @@ class ApiAdminSpecialProductController extends Controller
      */
     public function changeSort(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Special::class));
         ApiResponse::init($request->all(), [
             'specials' => ['required', 'array'],
             'specials.*' => ['exists:' . Special::class . ',id'],
@@ -69,6 +73,7 @@ class ApiAdminSpecialProductController extends Controller
      */
     public function destroy(Request $request, $special)
     {
+        ApiResponse::authorize($request->user()->can('manage', Special::class));
         $special = Special::init()->findOrFailById($special);
         $special->destroyItem();
         return ApiResponse::message(trans('product::messages.special_product_successfully_removed'))

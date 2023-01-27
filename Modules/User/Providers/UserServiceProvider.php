@@ -3,10 +3,11 @@
 namespace Modules\User\Providers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 use Modules\User\Entities\User;
 use Modules\User\Http\Middleware\Cart;
+use Modules\User\Policies\UserPolicy;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -34,6 +35,7 @@ class UserServiceProvider extends ServiceProvider
         Relation::morphMap([
             'user' => User::class,
         ]);
+        Gate::policy(User::class,UserPolicy::class);
         $this->app['router']->aliasMiddleware('cart',Cart::class);
     }
 

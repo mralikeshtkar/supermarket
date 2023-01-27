@@ -15,17 +15,27 @@ class BrandPolicy
         return $user->hasPermissionTo(Permissions::MANAGE_BRANDS);
     }
 
-    public function store(User $user): bool
+    public function show(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_BRANDS);
     }
 
-    public function update(User $user): bool
+    public function create(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_BRANDS);
+    }
+
+    public function edit(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_BRANDS);
     }
 
     public function destroy(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_BRANDS);
+    }
+
+    public function changeStatus(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_BRANDS);
     }

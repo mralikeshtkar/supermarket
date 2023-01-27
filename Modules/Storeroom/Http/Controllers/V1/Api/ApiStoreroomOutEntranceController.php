@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Storeroom\Entities\Storeroom;
 use Modules\Storeroom\Entities\StoreroomOutEntrance;
 use Modules\Storeroom\Rules\StoreroomOutProductRule;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ class ApiStoreroomOutEntranceController extends Controller
 {
     public function update(Request $request, $storeroom_out_entrance)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         ApiResponse::init($request->all(), [
             'products' => ['required', 'array', 'min:1'],
             'products.*' => ['required', new StoreroomOutProductRule()],
@@ -32,7 +34,7 @@ class ApiStoreroomOutEntranceController extends Controller
             $storeroom_out_entrance = StoreroomOutEntrance::init()->findByIdOrFail($storeroom_out_entrance);
             $storeroom_out_entrance = $storeroom_out_entrance->updateProducts($request);
             return ApiResponse::message(trans('storeroom::messages.storeroom_out_entrance_was_updated'))
-                ->addData('storeroom_out_entrance',$storeroom_out_entrance)
+                ->addData('storeroom_out_entrance', $storeroom_out_entrance)
                 ->send();
         } catch (ModelNotFoundException $e) {
             return ApiResponse::sendError(trans('storeroom::messages.storeroom_out_entrance_not_found'), Response::HTTP_NOT_FOUND);

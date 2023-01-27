@@ -2,8 +2,11 @@
 
 namespace Modules\LogActivity\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\LogActivity\Entities\LogActivity;
+use Modules\LogActivity\Policies\LogActivityPolicy;
 
 class LogActivityServiceProvider extends ServiceProvider
 {
@@ -28,6 +31,7 @@ class LogActivityServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        Gate::policy(LogActivity::class,LogActivityPolicy::class);
     }
 
     /**

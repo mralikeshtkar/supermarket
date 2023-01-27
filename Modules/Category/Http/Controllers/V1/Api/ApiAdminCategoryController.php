@@ -4,7 +4,6 @@ namespace Modules\Category\Http\Controllers\V1\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -26,6 +25,7 @@ class ApiAdminCategoryController extends Controller
      */
     public function index(Request $request, $category = null)
     {
+        ApiResponse::authorize($request->user()->can('manage', Category::class));
         $categories = Category::init()->getAdminIndexPaginate($request, $category);
         return ApiResponse::message(trans('category::messages.received_information_successfully'))
             ->addData('categories', ApiPaginationResource::make($categories)->additional(['itemsResource' => AdminCategoryResource::class]))
@@ -33,23 +33,17 @@ class ApiAdminCategoryController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $category
      * @return JsonResponse
      */
-    public function show($category)
+    public function show(Request $request, $category)
     {
-        try {
-            $category = Category::init()->findOrFailById($category);
-            return ApiResponse::message(trans('category::messages.received_information_successfully'))
-                ->addData('category', $category)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendMessage(trans('category::messages.category_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('show', Category::class));
+        $category = Category::init()->findOrFailById($category);
+        return ApiResponse::message(trans('category::messages.received_information_successfully'))
+            ->addData('category', $category)
+            ->send();
     }
 
     /**
@@ -57,15 +51,9 @@ class ApiAdminCategoryController extends Controller
      */
     public function all()
     {
-        try {
-            return ApiResponse::message(trans('category::messages.received_information_successfully'))
-                ->addData('categories', Category::init()->allCategories())
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        return ApiResponse::message(trans('category::messages.received_information_successfully'))
+            ->addData('categories', Category::init()->allCategories())
+            ->send();
     }
 
     /**
@@ -76,6 +64,7 @@ class ApiAdminCategoryController extends Controller
      */
     public function features(Request $request, $category, $feature = null)
     {
+        ApiResponse::authorize($request->user()->can('manage', Feature::class));
         $category = Category::init()->findOrFailById($category);
         if ($feature) $feature = Feature::init()->findByColumnOrFail($feature);
         $parent_features = $category->features()->select([
@@ -103,6 +92,7 @@ class ApiAdminCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('create', Category::class));
         ApiResponse::init($request->all(), [
             'name' => ['required', 'string', 'unique:' . Category::class . ',name'],
             'slug' => ['required', 'string', 'unique:' . Category::class . ',slug'],
@@ -122,14 +112,13 @@ class ApiAdminCategoryController extends Controller
     }
 
     /**
-     * Update a category.
-     *
      * @param Request $request
-     * @param $slug
+     * @param $category
      * @return JsonResponse
      */
     public function update(Request $request, $category)
     {
+        ApiResponse::authorize($request->user()->can('edit', Category::class));
         ApiResponse::init($request->all(), [
             'name' => [
                 'required',
@@ -148,19 +137,11 @@ class ApiAdminCategoryController extends Controller
                 Rule::exists(Category::class, 'id'),
             ],
         ], [], trans('category::validation.attributes'))->validate();
-        try {
-            $category = Category::init()->findOrFailById($category);
-            $category = Category::init()->updateCategory($category, $request);
-            return ApiResponse::message(trans('category::messages.category_was_updated'))
-                ->addData('category', $category)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendMessage(trans('category::messages.category_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        $category = Category::init()->findOrFailById($category);
+        $category = Category::init()->updateCategory($category, $request);
+        return ApiResponse::message(trans('category::messages.category_was_updated'))
+            ->addData('category', $category)
+            ->send();
     }
 
     /**
@@ -172,17 +153,10 @@ class ApiAdminCategoryController extends Controller
      */
     public function destroy(Request $request, $category)
     {
-        try {
-            $category = Category::init()->findOrFailById($category);
-            Category::init()->destroyCategory($category);
-            return ApiResponse::message(trans('category::messages.category_was_deleted'))->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendMessage(trans('category::messages.category_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('destroy', Category::class));
+        $category = Category::init()->findOrFailById($category);
+        Category::init()->destroyCategory($category);
+        return ApiResponse::message(trans('category::messages.category_was_deleted'))->send();
     }
 
     /**
@@ -209,6 +183,7 @@ class ApiAdminCategoryController extends Controller
      */
     public function changeStatus(Request $request, $category)
     {
+        ApiResponse::authorize($request->user()->can('changeStatus', Category::class));
         $category = Category::init()->findOrFailById($category);
         $category = $category->changeStatus();
         return ApiResponse::message(trans("Registration information completed successfully"))

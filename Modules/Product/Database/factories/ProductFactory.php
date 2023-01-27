@@ -151,6 +151,7 @@ class ProductFactory extends Factory
         return collect(File::allFiles(public_path('/storage/products')))->map(fn($item) => [
             'original' => 'products/' . basename($item),
             '400' => 'products/400/' . basename($item),
+            '600' => 'products/400/' . basename($item),
         ])->random();
     }
 }

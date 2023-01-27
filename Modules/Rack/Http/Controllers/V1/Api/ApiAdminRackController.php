@@ -23,30 +23,24 @@ class ApiAdminRackController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Rack::class));
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
             ->addData('racks', Rack::init()->getAdminIndex($request))
             ->send();
     }
 
     /**
+     * @param Request $request
      * @param $rack
      * @return JsonResponse
      */
-    public function show($rack)
+    public function show(Request $request,$rack)
     {
-        try {
-            $rack = Rack::init()->findByIdOrFail($rack, ['rows']);
-            return ApiResponse::message(trans('rack::messages.received_information_successfully'))
-                ->addData('rack', $rack)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendError(trans('rack::messages.rack_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('rack::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('manage', Rack::class));
+        $rack = Rack::init()->findByIdOrFail($rack, ['rows']);
+        return ApiResponse::message(trans('rack::messages.received_information_successfully'))
+            ->addData('rack', $rack)
+            ->send();
     }
 
     /**
@@ -55,7 +49,7 @@ class ApiAdminRackController extends Controller
      */
     public function store(Request $request)
     {
-        ApiResponse::authorize($request->user()->can('store', Rack::class));
+        ApiResponse::authorize($request->user()->can('create', Rack::class));
         ApiResponse::init($request->all(), [
             'title' => ['required', 'string', 'unique:' . Rack::class . ',title'],
             'url' => ['nullable', 'url'],
@@ -81,26 +75,17 @@ class ApiAdminRackController extends Controller
      */
     public function update(Request $request, $rack)
     {
-        ApiResponse::authorize($request->user()->can('update', Rack::class));
+        ApiResponse::authorize($request->user()->can('edit', Rack::class));
         ApiResponse::init($request->all(), [
             'title' => ['required', 'string', 'unique:' . Rack::class . ',title,' . $rack],
             'url' => ['nullable', 'url'],
             'description' => ['nullable', 'string'],
         ])->validate();
-        try {
-            $rack = Rack::init()->findByIdOrFail($rack);
-            $rack->updateRack($request);
-            return ApiResponse::message(trans('rack::messages.rack_was_updated'))
-                ->addData('racks', Rack::init()->getAdminIndex($request))
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendError(trans('rack::messages.rack_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('rack::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        $rack = Rack::init()->findByIdOrFail($rack);
+        $rack->updateRack($request);
+        return ApiResponse::message(trans('rack::messages.rack_was_updated'))
+            ->addData('racks', Rack::init()->getAdminIndex($request))
+            ->send();
     }
 
     /**
@@ -109,19 +94,13 @@ class ApiAdminRackController extends Controller
      */
     public function changeSort(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('changeSort', Rack::class));
         ApiResponse::init($request->all(), [
             'rack_ids' => ['required', 'array'],
             'rack_ids.*' => ['exists:' . Rack::class . ',id'],
         ])->validate();
-        try {
-            Rack::init()->changeSort($request->rack_ids);
-            return ApiResponse::message(trans('rack::messages.received_information_successfully'))->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('rack::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        Rack::init()->changeSort($request->rack_ids);
+        return ApiResponse::message(trans('rack::messages.received_information_successfully'))->send();
     }
 
     /**
@@ -131,6 +110,7 @@ class ApiAdminRackController extends Controller
      */
     public function changeSortRows(Request $request, $rack)
     {
+        ApiResponse::authorize($request->user()->can('changeSortRows', Rack::class));
         ApiResponse::init($request->all(), [
             'rack_row_ids' => ['required', 'array'],
             'rack_row_ids.*' => [Rule::exists(RackRow::class, 'id')->where('rack_id', $rack)],
@@ -156,6 +136,7 @@ class ApiAdminRackController extends Controller
      */
     public function accept(Request $request, $rack)
     {
+        ApiResponse::authorize($request->user()->can('changeStatus', Rack::class));
         return $this->_changeStatus($rack, RackStatus::Accepted);
     }
 
@@ -166,25 +147,18 @@ class ApiAdminRackController extends Controller
      */
     public function reject(Request $request, $rack)
     {
+        ApiResponse::authorize($request->user()->can('changeStatus', Rack::class));
         return $this->_changeStatus($rack, RackStatus::Rejected);
     }
 
     public function destroy(Request $request, $rack)
     {
-        try {
-            $rack = Rack::init()->findByIdOrFail($rack);
-            $rack->destroyRack();
-            return ApiResponse::message(trans('rack::messages.rack_was_deleted'))
-                ->addData('racks', Rack::init()->getAdminIndex($request))
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendError(trans('rack::messages.rack_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('rack::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('destroy', Rack::class));
+        $rack = Rack::init()->findByIdOrFail($rack);
+        $rack->destroyRack();
+        return ApiResponse::message(trans('rack::messages.rack_was_deleted'))
+            ->addData('racks', Rack::init()->getAdminIndex($request))
+            ->send();
     }
 
     /**
@@ -194,19 +168,10 @@ class ApiAdminRackController extends Controller
      */
     private function _changeStatus($rack, $status): JsonResponse
     {
-        try {
-            $rack = Rack::init()->findByIdOrFail($rack);
-            $rack = $rack->changeStatus($status);
-            return ApiResponse::message(trans('rack::messages.rack_status_was_changed'))
-                ->addData('rack', $rack)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::sendError(trans('rack::messages.rack_not_found'), Response::HTTP_NOT_FOUND);
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('rack::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        $rack = Rack::init()->findByIdOrFail($rack);
+        $rack = $rack->changeStatus($status);
+        return ApiResponse::message(trans('rack::messages.rack_status_was_changed'))
+            ->addData('rack', $rack)
+            ->send();
     }
 }

@@ -9,7 +9,7 @@
             "url": "http://127.0.0.1:8000/api/v1"
         },
         {
-            "url": "https://ario.jcoders.ir/api"
+            "url": "https://ario.jcoders.ir/api/v1"
         }
     ],
     "paths": {

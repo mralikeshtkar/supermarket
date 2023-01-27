@@ -1,0 +1,13 @@
+{
+    "name": "Poster",
+    "alias": "poster",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Poster\\Providers\\PosterServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

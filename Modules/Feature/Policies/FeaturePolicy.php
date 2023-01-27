@@ -15,7 +15,22 @@ class FeaturePolicy
         return $user->hasPermissionTo(Permissions::MANAGE_FEATURES);
     }
 
-    public function store(User $user): bool
+    public function create(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_FEATURES);
+    }
+
+    public function edit(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_FEATURES);
+    }
+
+    public function show(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_FEATURES);
+    }
+
+    public function destroy(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_FEATURES);
     }

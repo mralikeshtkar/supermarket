@@ -23,7 +23,7 @@ class RackPolicy
      * @param User $user
      * @return bool
      */
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
     }
@@ -32,7 +32,52 @@ class RackPolicy
      * @param User $user
      * @return bool
      */
-    public function update(User $user): bool
+    public function edit(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function changeSort(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function changeStatus(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function changeSortRows(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function destroy(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function manageRackRows(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_RACKS);
     }

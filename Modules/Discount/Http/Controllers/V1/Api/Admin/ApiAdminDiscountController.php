@@ -26,6 +26,7 @@ class ApiAdminDiscountController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Discount::class));
         $discounts = Discount::init()->getAdminIndexPaginate($request);
         return ApiResponse::message(trans("discount::messages.received_information_successfully"))
             ->addData('discounts', ApiPaginationResource::make($discounts)->additional(['itemsResource' => AdminDiscountResource::class]))
@@ -38,7 +39,7 @@ class ApiAdminDiscountController extends Controller
      */
     public function store(Request $request)
     {
-//        ApiResponse::authorize($request->user()->can('store', Discount::class));
+        ApiResponse::authorize($request->user()->can('create', Discount::class));
         $request->merge([
             'discountables' => [
                 'discountable_type' => Relation::getMorphedModel(optional($request->discountables)->offsetGet('discountable_type')),
@@ -46,14 +47,8 @@ class ApiAdminDiscountController extends Controller
             ],
         ]);
         ApiResponse::init($request->all(), $this->_validationRules($request), [], trans('discount::validation.attributes'))->validate();
-        try {
-            Discount::init()->store($request);
-            return ApiResponse::message(trans('discount::messages.discount_was_created'))->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('discount::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        Discount::init()->store($request);
+        return ApiResponse::message(trans('discount::messages.discount_was_created'))->send();
     }
 
     /**
@@ -63,7 +58,7 @@ class ApiAdminDiscountController extends Controller
      */
     public function update(Request $request, $discount)
     {
-//        ApiResponse::authorize($request->user()->can('update', Discount::class));
+        ApiResponse::authorize($request->user()->can('edit', Discount::class));
         $request->merge([
             'discountables' => [
                 'discountable_type' => Relation::getMorphedModel(optional($request->discountables)->offsetGet('discountable_type')),
@@ -111,6 +106,7 @@ class ApiAdminDiscountController extends Controller
      */
     public function changeStatus(Request $request, $discount)
     {
+        ApiResponse::authorize($request->user()->can('changeStatus', Discount::class));
         $discount = Discount::init()->selectColumns(['id', 'status'])->findOrFailById($discount);
         $discount = $discount->changeStatus($discount);
         return ApiResponse::message(trans("Registration information completed successfully"))

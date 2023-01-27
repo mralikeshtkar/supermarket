@@ -3,9 +3,11 @@
 namespace Modules\Setting\Providers;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Setting\Entities\Setting;
+use Modules\Setting\Policies\SettingPolicy;
 
 class SettingServiceProvider extends ServiceProvider
 {
@@ -33,6 +35,7 @@ class SettingServiceProvider extends ServiceProvider
         Cache::macro('setting', function () {
             return Cache::get(Setting::SETTING_CACHE_KEY, collect());
         });
+        Gate::policy(Setting::class,SettingPolicy::class);
     }
 
     /**

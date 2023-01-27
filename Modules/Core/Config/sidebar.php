@@ -16,6 +16,7 @@ return [
         "permissions" => [
             Permissions::MANAGE_PRODUCTS,
             Permissions::MANAGE_PRODUCT_UNITS,
+            Permissions::MANAGE_SPECIAL_PRODUCTS,
         ],
         "submenus" => [
             [
@@ -51,6 +52,9 @@ return [
             [
                 "title" => "محصولات ویژه",
                 "icon" => "simple-icon-diamond",
+                "permissions" => [
+                    Permissions::MANAGE_SPECIAL_PRODUCTS,
+                ],
                 "href" => [
                     "name" => "special-products.index",
                 ],
@@ -61,7 +65,7 @@ return [
         "title" => "سفارشات",
         "icon" => "simple-icon-bag",
         "permissions" => [
-            Permissions::MANAGE_PERMISSIONS,
+            Permissions::MANAGE_ORDERS,
         ],
         "href" => [
             "name" => "orders.index",
@@ -94,7 +98,7 @@ return [
         "title" => "کاربران",
         "icon" => "simple-icon-people",
         "permissions" => [
-            Permissions::MANAGE_PERMISSIONS,
+            Permissions::MANAGE_USERS,
         ],
         "submenus" => [
             [
@@ -123,6 +127,9 @@ return [
     [
         "title" => "نظرات",
         "icon" => "simple-icon-bubbles",
+        "permissions" => [
+            Permissions::MANAGE_COMMENTS,
+        ],
         "href" => [
             "name" => "comments.index",
         ],
@@ -154,7 +161,7 @@ return [
         "title" => "دسته بندی‌ها",
         "icon" => "simple-icon-organization",
         "permissions" => [
-            Permissions::MANAGE_PERMISSIONS,
+            Permissions::MANAGE_CATEGORIES,
         ],
         "submenus" => [
             [
@@ -176,6 +183,9 @@ return [
     [
         "title" => "تخفیف‌ها",
         "icon" => "simple-icon-present",
+        "permissions" => [
+            Permissions::MANAGE_DISCOUNTS,
+        ],
         "href" => [
             "name" => "discounts.index",
         ],
@@ -184,7 +194,7 @@ return [
         "title" => "برچسب‌ها",
         "icon" => "simple-icon-paper-clip",
         "permissions" => [
-            Permissions::MANAGE_PERMISSIONS,
+            Permissions::MANAGE_TAGS,
         ],
         "submenus" => [
             [
@@ -206,6 +216,9 @@ return [
     [
         "title" => "قفسه‌ها",
         "icon" => "simple-icon-layers",
+        "permissions" => [
+            Permissions::MANAGE_RACKS,
+        ],
         "href" => [
             "name" => "racks.index",
         ],
@@ -214,7 +227,7 @@ return [
         "title" => "انبارها",
         "icon" => "simple-icon-share-alt",
         "permissions" => [
-            Permissions::MANAGE_PERMISSIONS,
+            Permissions::MANAGE_STOREROOMS,
         ],
         "submenus" => [
             [
@@ -236,12 +249,18 @@ return [
     [
         "title" => "گزارش فعالیت مدیران",
         "icon" => "simple-icon-calendar",
+        "permissions" => [
+            Permissions::MANAGE_LOG_ACTIVITIES,
+        ],
         "href" => [
             "name" => "activities.index",
         ],
     ],
     [
         "title" => "تنظیمات",
+        "permissions" => [
+            Permissions::MANAGE_SETTINGS,
+        ],
         "icon" => "simple-icon-settings",
         "href" => [
             "name" => "settings.index",

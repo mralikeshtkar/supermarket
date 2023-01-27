@@ -42,7 +42,7 @@ class ApiAdminBrandController extends Controller
      */
     public function store(Request $request)
     {
-        ApiResponse::authorize($request->user()->can('store', Brand::class));
+        ApiResponse::authorize($request->user()->can('create', Brand::class));
         $request->merge([
             'slug' => Str::slug($request->slug),
             'name_en' => ucfirst($request->name_en),
@@ -72,7 +72,7 @@ class ApiAdminBrandController extends Controller
      */
     public function show(Request $request, $brand)
     {
-        ApiResponse::authorize($request->user()->can('update', Brand::class));
+        ApiResponse::authorize($request->user()->can('show', Brand::class));
         try {
             $brand = Brand::init()->findByColumnOrFail($brand, 'id');
             return ApiResponse::message(trans('brand::messages.received_information_successfully'))
@@ -94,7 +94,7 @@ class ApiAdminBrandController extends Controller
      */
     public function update(Request $request, $brand)
     {
-        ApiResponse::authorize($request->user()->can('update', Brand::class));
+        ApiResponse::authorize($request->user()->can('edit', Brand::class));
         $request->merge([
             'slug' => Str::slug($request->slug),
             'name_en' => ucfirst($request->name_en),
@@ -127,7 +127,7 @@ class ApiAdminBrandController extends Controller
      */
     public function accept(Request $request, $brand)
     {
-        ApiResponse::authorize($request->user()->can('manage', Brand::class));
+        ApiResponse::authorize($request->user()->can('changeStatus', Brand::class));
         return $this->_changeStatus($request, $brand, BrandStatus::Accepted());
     }
 
@@ -138,7 +138,7 @@ class ApiAdminBrandController extends Controller
      */
     public function reject(Request $request, $brand)
     {
-        ApiResponse::authorize($request->user()->can('manage', Brand::class));
+        ApiResponse::authorize($request->user()->can('changeStatus', Brand::class));
         return $this->_changeStatus($request, $brand, BrandStatus::Rejected());
     }
 

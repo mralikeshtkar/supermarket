@@ -10,17 +10,27 @@ class DiscountPolicy
 {
     use HandlesAuthorization;
 
-    public function store(User $user): bool
+    public function manage(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_DISCOUNTS);
     }
 
-    public function update(User $user): bool
+    public function create(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_DISCOUNTS);
+    }
+
+    public function edit(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_DISCOUNTS);
     }
 
     public function destroy(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_DISCOUNTS);
+    }
+
+    public function changeStatus(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_DISCOUNTS);
     }

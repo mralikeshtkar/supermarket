@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasRelationships;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Modules\Media\Entities\Media;
@@ -207,6 +208,14 @@ trait HasMedia
     public function media(): MorphMany
     {
         return $this->morphMany(Media::class, 'model');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function singleMedia(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'model');
     }
 
     /**

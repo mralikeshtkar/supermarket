@@ -14,6 +14,15 @@ class StoreroomPolicy
      * @param User $user
      * @return bool
      */
+    public function manage(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_STOREROOMS);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function create(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_STOREROOMS);
@@ -23,7 +32,7 @@ class StoreroomPolicy
      * @param User $user
      * @return bool
      */
-    public function update(User $user): bool
+    public function edit(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_STOREROOMS);
     }

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->json('cart')->nullable();
             $table->json('last_seen_products')->nullable();
             $table->boolean('is_blocked')->default(false);
+            $table->string('point')->default(0);
             $table->timestamps();
         });
     }

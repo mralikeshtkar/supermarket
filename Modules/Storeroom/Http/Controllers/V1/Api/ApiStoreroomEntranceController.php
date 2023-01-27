@@ -17,6 +17,7 @@ class ApiStoreroomEntranceController extends Controller
 {
     public function update(Request $request, $storeroom_entrance)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         ApiResponse::init($request->all(), [
             'products' => ['required', 'array', 'min:1'],
             'products.*.id' => ['required','distinct', 'exists:products,id'],

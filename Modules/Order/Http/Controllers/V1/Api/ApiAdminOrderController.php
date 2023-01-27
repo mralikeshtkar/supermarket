@@ -3,15 +3,15 @@
 namespace Modules\Order\Http\Controllers\V1\Api;
 
 use App\Http\Controllers\Controller;
-use BenSampo\Enum\Rules\EnumKey;
 use BenSampo\Enum\Rules\EnumValue;
+use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Order\Entities\Order;
-use Modules\Order\Enums\OrderInvoiceStatus;
 use Modules\Order\Enums\OrderStatus;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use OpenApi\Annotations as OA;
 
 class ApiAdminOrderController extends Controller
@@ -76,6 +76,7 @@ class ApiAdminOrderController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Order::class));
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('orders', Order::init()->getAdminIndexPaginate($request))
             ->send();
@@ -101,8 +102,9 @@ class ApiAdminOrderController extends Controller
      *     ),
      * )
      */
-    public function show($order)
+    public function show(Request $request, $order)
     {
+        ApiResponse::authorize($request->user()->can('show', Order::class));
         $order = Order::init()->selectColumns([
             'id',
             'user_id',
@@ -114,6 +116,7 @@ class ApiAdminOrderController extends Controller
             'discount',
             'status',
             'created_at',
+            'delivery_at',
         ])->withRelationships([
             'address',
             'address.city:id,province_id,name',
@@ -124,6 +127,7 @@ class ApiAdminOrderController extends Controller
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('order', ApiAdminOrderResource::make($order))
             ->addData('statuses', OrderStatus::asSelectArray())
+            ->addData('min_delivery_date', Verta::now()->format('Y/n/j H:i'))
             ->send();
     }
 
@@ -134,12 +138,41 @@ class ApiAdminOrderController extends Controller
      */
     public function changeStatus(Request $request, $order)
     {
+        ApiResponse::authorize($request->user()->can('changeStatus', Order::class));
         $order = Order::init()->selectColumns(['id'])->findOrFailById($order);
-        ApiResponse::init($request->all(),[
-            'status'=>['required',new EnumValue(OrderStatus::class)]
+        ApiResponse::init($request->all(), [
+            'status' => ['required', new EnumValue(OrderStatus::class)]
         ])->validate();
         $order->changeStatus($request->status);
         return ApiResponse::message(trans('The operation was done successfully'))->send();
+    }
+
+    /**
+     * @param Request $request
+     * @param $order
+     * @return JsonResponse
+     */
+    public function deliveryDate(Request $request, $order)
+    {
+        ApiResponse::authorize($request->user()->can('deliveryDate', Order::class));
+        $order = Order::init()->selectColumns(['id'])->findOrFailById($order);
+        ApiResponse::init($request->all(), [
+            'date' => ['nullable', 'jdatetime:Y/n/j H:i', 'jdatetime_after:' . Verta::now()->format('Y/n/j H:i') . ',Y/n/j H:i'],
+        ])->validate();
+        $request->merge(['date' => $request->filled('date') ? Verta::parseFormat('Y/n/j H:i', $request->date)->datetime() : null]);
+        $order->updateDeliveryDate($request->date);
+        $order = Order::init()->selectColumns(['id', 'delivery_at',])->findOrFailById($order->id);
+        return ApiResponse::message(trans('The operation was done successfully'))
+            ->addData('order', ApiAdminOrderResource::make($order))
+            ->send();
+    }
+
+    public function factor(Request $request, $order)
+    {
+        ApiResponse::authorize($request->user()->can('factor', Order::class));
+        $order = Order::init()->selectColumns(['id'])->findOrFailById($order);
+        $pdf = PDF::loadView('factor', [], [], );
+        $pdf->download(now()->toDateTimeString() . '-test.pdf');
     }
 
 }

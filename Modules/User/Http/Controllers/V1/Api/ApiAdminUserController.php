@@ -28,6 +28,7 @@ class ApiAdminUserController extends Controller
      */
     public function user(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', User::class));
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('user', User::init()->getUser($request))
             ->addData('permissions', new AdminCheckUserPermissionAccessResource($request->user()))
@@ -41,17 +42,20 @@ class ApiAdminUserController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', User::class));
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('users', ApiPaginationResource::make(User::init()->getAdminIndexPaginate($request))->additional(['itemsResource' => AdminUserResource::class]))
             ->send();
     }
 
     /**
+     * @param Request $request
      * @param $user
      * @return JsonResponse
      */
-    public function show($user)
+    public function show(Request $request, $user)
     {
+        ApiResponse::authorize($request->user()->can('show', User::class));
         $user = User::init()->selectColumns(['id', 'mobile', 'email', 'name', 'password', 'is_blocked'])
             ->withRelationships(['roles'])
             ->findOrFailById($user);
@@ -74,6 +78,7 @@ class ApiAdminUserController extends Controller
      */
     public function store(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('create', User::class));
         ApiResponse::init($request->all(), [
             'name' => ['nullable', 'string'],
             'mobile' => ['required', new MobileRule(), new UniqueMobileRule()],
@@ -98,12 +103,14 @@ class ApiAdminUserController extends Controller
      */
     public function update(Request $request, $user)
     {
+        ApiResponse::authorize($request->user()->can('edit', User::class));
         ApiResponse::init($request->all(), [
             'name' => ['nullable', 'string'],
             'mobile' => ['required', new MobileRule(), new UniqueMobileRule($user)],
             'email' => ['nullable', 'email'],
             'role' => ['nullable', 'exists:roles,name'],
             'is_blocked' => ['nullable', 'boolean'],
+            'point' => ['nullable', 'numeric', 'min:0'],
         ])->validate();
         $request->merge(['is_blocked' => $request->filled('is_blocked')]);
         try {
@@ -132,23 +139,12 @@ class ApiAdminUserController extends Controller
      */
     public function destroy(Request $request, $user)
     {
-        try {
-            $user = User::init()->findOrFailById($user);
-            $user->deleteUser();
-            return ApiResponse::message(trans('user::messages.user_was_deleted'))
-                ->addData('user', $user)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('user::messages.user_not_found'), Response::HTTP_NOT_FOUND)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('user::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->hasError()
-                ->addError('message', $e->getMessage())
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('destroy', User::class));
+        $user = User::init()->findOrFailById($user);
+        $user->deleteUser();
+        return ApiResponse::message(trans('user::messages.user_was_deleted'))
+            ->addData('user', $user)
+            ->send();
     }
 
     /**
@@ -157,6 +153,7 @@ class ApiAdminUserController extends Controller
      */
     public function online(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', User::class));
         $users = User::init()->getOnlineUsers();
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('users', ApiPaginationResource::make($users)->additional(['itemsResource' => AdminUserResource::class]))
@@ -170,6 +167,7 @@ class ApiAdminUserController extends Controller
      */
     public function cart(Request $request, $user)
     {
+        ApiResponse::authorize($request->user()->can('manage', User::class));
         $user = User::init()->selectColumns(['id', 'cart'])->findOrFailById($user);
         $cart = $user->getCart();
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
@@ -184,6 +182,7 @@ class ApiAdminUserController extends Controller
      */
     public function orders(Request $request, $user)
     {
+        ApiResponse::authorize($request->user()->can('manage', User::class));
         $user = User::init()->selectColumns(['id'])->findOrFailById($user);
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('orders', ApiPaginationResource::make($user->getOrders())->additional(['itemsResource' => AdminUserOrderResource::class]))

@@ -3,17 +3,20 @@
 use Modules\Permission\Enums\Permissions;
 
 return [
-    Permissions::MANAGE_PERMISSIONS => "manage permissions",
-    Permissions::MANAGE_PRODUCTS => "manage products",
-    Permissions::MANAGE_PRODUCT_UNITS => "manage product unit",
-    /*Permissions::MANAGE_CATEGORIES => "manage categories",
-    Permissions::MANAGE_TAGS => "manage tags",
-    Permissions::MANAGE_COMMENTS => "manage comments",
-    Permissions::MANAGE_FEATURES => "manage features",
-    Permissions::MANAGE_ATTRIBUTES => "manage attributes",
-    Permissions::MANAGE_PROVINCES => "manage provinces",
-    Permissions::MANAGE_CITIES => "manage cities",
-    Permissions::MANAGE_ADDRESSES => "manage addresses",
-    Permissions::MANAGE_BRANDS => "manage brands",
-    Permissions::MANAGE_DISCOUNTS => "manage discounts",*/
+    Permissions::MANAGE_PERMISSIONS => "Manage permissions",
+    Permissions::MANAGE_PRODUCTS => "Manage products",
+    Permissions::MANAGE_PRODUCT_UNITS => "Manage product units",
+    Permissions::MANAGE_SPECIAL_PRODUCTS => "Manage special products",
+    Permissions::MANAGE_COMMENTS => "Manage comments",
+    Permissions::MANAGE_CATEGORIES => "Manage categories",
+    Permissions::MANAGE_TAGS => "Manage tags",
+    Permissions::MANAGE_DISCOUNTS => "Manage discounts",
+    Permissions::MANAGE_BRANDS => "Manage brands",
+    Permissions::MANAGE_RACKS => "Manage racks",
+    Permissions::MANAGE_FEATURES => "Manage features",
+    Permissions::MANAGE_STOREROOMS => "Manage storerooms",
+    Permissions::MANAGE_USERS => "Manage users",
+    Permissions::MANAGE_SETTINGS => "Manage settings",
+    Permissions::MANAGE_LOG_ACTIVITIES => "Manage log activities",
+    Permissions::MANAGE_ORDERS => "Manage orders",
 ];

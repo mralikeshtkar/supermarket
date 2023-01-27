@@ -2,8 +2,11 @@
 
 namespace Modules\Order\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Order\Entities\Order;
+use Modules\Order\Policies\OrderPolicy;
 
 class OrderServiceProvider extends ServiceProvider
 {
@@ -28,6 +31,7 @@ class OrderServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        Gate::policy(Order::class,OrderPolicy::class);
     }
 
     /**

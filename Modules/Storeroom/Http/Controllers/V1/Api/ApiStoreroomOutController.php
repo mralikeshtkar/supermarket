@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Storeroom\Entities\Storeroom;
 use Modules\Storeroom\Entities\StoreroomOut;
 use Modules\Storeroom\Rules\StoreroomOutProductRule;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,7 @@ class ApiStoreroomOutController extends Controller
      */
     public function store(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         ApiResponse::init($request->all(), [
             'products' => ['required', 'array', 'min:1'],
             'products.*.storeroom_entrance_id' => ['required', 'numeric'],

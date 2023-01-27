@@ -26,7 +26,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function store(Request $request, $rack)
     {
-        ApiResponse::authorize($request->user()->can('create', RackRow::class));
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         ApiResponse::init($request->all(), [
             'title' => ['required', 'string'],
             'number_limit' => ['required', 'numeric', 'min:0'],
@@ -55,6 +55,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function show($rack_row)
     {
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         try {
             $rack_row = RackRow::init()->findByIdOrFail($rack_row, ['products', 'products.image']);
             return ApiResponse::message(trans('rack::messages.received_information_successfully'))
@@ -88,7 +89,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function update(Request $request, $rack_row)
     {
-        ApiResponse::authorize($request->user()->can('update', RackRow::class));
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         ApiResponse::init($request->all(), [
             'title' => ['required', 'string'],
             'number_limit' => ['required', 'numeric', 'min:0'],
@@ -117,6 +118,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function destroy(Request $request, $rack_row)
     {
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         ApiResponse::init($request->all(), [
             'rack_id' => ['required', 'exists:' . Rack::class . ',id'],
         ])->validate();
@@ -143,6 +145,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function attach(Request $request, $rack_row)
     {
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         ApiResponse::init($request->all(), [
             'product_id' => ['required', /*new ProductNotExistsInRackRowRule($rack_row)*/]
         ], [], [
@@ -171,6 +174,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function detach(Request $request, $rack_row)
     {
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         ApiResponse::init($request->all(), [
             'product_id' => ['required', new ProductExistsInRackRowRule($rack_row)]
         ], [], [
@@ -199,6 +203,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function active(Request $request, $rack_row)
     {
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         return $this->_changeStatus($rack_row, RackRowStatus::Active);
     }
 
@@ -209,6 +214,7 @@ class ApiAdminRackRowController extends Controller
      */
     public function inactive(Request $request, $rack_row)
     {
+        ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         return $this->_changeStatus($rack_row, RackRowStatus::Inactive);
     }
 

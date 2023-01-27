@@ -24,6 +24,8 @@ Route::prefix('v1')->group(function (Router $router) {
             $router->get('orders', [V1ApiAdminOrderController::class, 'index']);
             $router->get('orders/{order}', [V1ApiAdminOrderController::class, 'show']);
             $router->put('orders/{order}/change-status', [V1ApiAdminOrderController::class, 'changeStatus']);
+            $router->patch('orders/{order}/delivery-date', [V1ApiAdminOrderController::class, 'deliveryDate']);
+            $router->get('orders/{order}/factor', [V1ApiAdminOrderController::class, 'factor']);
         });
 
         $router->middleware('cart')->group(function (Router $router) {

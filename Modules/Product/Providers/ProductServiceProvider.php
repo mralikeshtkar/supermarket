@@ -9,8 +9,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Product\Entities\Product;
 use Modules\Product\Entities\ProductUnit;
+use Modules\Product\Entities\Special;
 use Modules\Product\Policies\ProductPolicy;
 use Modules\Product\Policies\ProductUnitPolicy;
+use Modules\Product\Policies\SpecialProductPolicy;
 
 class ProductServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,7 @@ class ProductServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
         Gate::policy(Product::class, ProductPolicy::class);
         Gate::policy(ProductUnit::class, ProductUnitPolicy::class);
+        Gate::policy(Special::class, SpecialProductPolicy::class);
         Relation::morphMap([
             Product::MORPH_CLASS => Product::class,
         ]);

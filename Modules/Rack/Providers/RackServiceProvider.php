@@ -2,13 +2,11 @@
 
 namespace Modules\Rack\Providers;
 
+use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 use Modules\Rack\Entities\Rack;
-use Modules\Rack\Entities\RackRow;
 use Modules\Rack\Policies\RackPolicy;
-use Modules\Rack\Policies\RackRowPolicy;
 
 class RackServiceProvider extends ServiceProvider
 {
@@ -122,6 +120,5 @@ class RackServiceProvider extends ServiceProvider
     private function _registerPolicies(): void
     {
         Gate::policy(Rack::class, RackPolicy::class);
-        Gate::policy(RackRow::class, RackRowPolicy::class);
     }
 }

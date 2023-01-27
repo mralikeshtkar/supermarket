@@ -47,6 +47,8 @@ class ApiAddressController extends Controller
             'address' => ['required', 'string'],
             'postal_code' => ['required', new PostalCodeRule()],
             'mobile' => ['required', new MobileRule()],
+            'latitude' => 'nullable|between:-90,90',
+            'longitude' => 'nullable|between:-180,180'
         ], [], trans('address::validation.attributes.' . Address::class))->validate();
         try {
             $address = Address::init()->store($request);
@@ -105,6 +107,8 @@ class ApiAddressController extends Controller
             'address' => ['required', 'string'],
             'postal_code' => ['required', new PostalCodeRule()],
             'mobile' => ['required', new MobileRule()],
+            'latitude' => 'nullable|between:-90,90',
+            'longitude' => 'nullable|between:-180,180'
         ], [], trans('address::validation.attributes.' . Province::class))->validate();
         try {
             $address = Address::init()->findByColumnOrFail($address);

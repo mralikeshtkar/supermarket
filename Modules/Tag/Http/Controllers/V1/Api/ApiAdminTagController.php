@@ -39,6 +39,7 @@ class ApiAdminTagController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Tag::class));
         try {
             return ApiResponse::message(trans('tag::messages.received_information_successfully'))
                 ->addData('tags', Tag::init()->getAdminIndexPaginate($request))
@@ -52,27 +53,17 @@ class ApiAdminTagController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $tag
      * @return JsonResponse
      */
-    public function show($tag)
+    public function show(Request $request, $tag)
     {
-        try {
-            $tag = Tag::init()->findOrFailById($tag);
-            return ApiResponse::message(trans('tag::messages.received_information_successfully'))
-                ->addData('tag',$tag)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('tag::messages.tag_not_found'), Response::HTTP_NOT_FOUND)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('tag::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('show', Tag::class));
+        $tag = Tag::init()->findOrFailById($tag);
+        return ApiResponse::message(trans('tag::messages.received_information_successfully'))
+            ->addData('tag', $tag)
+            ->send();
     }
 
     /**
@@ -84,21 +75,10 @@ class ApiAdminTagController extends Controller
      */
     public function destroy(Request $request, $tag)
     {
-        try {
-            $tag = Tag::init()->findOrFailById($tag);
-            Tag::init()->destroyTag($tag);
-            return ApiResponse::message(trans('tag::messages.tag_was_deleted'))->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('tag::messages.tag_not_found'), Response::HTTP_NOT_FOUND)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('tag::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        ApiResponse::authorize($request->user()->can('destroy', Tag::class));
+        $tag = Tag::init()->findOrFailById($tag);
+        Tag::init()->destroyTag($tag);
+        return ApiResponse::message(trans('tag::messages.tag_was_deleted'))->send();
     }
 
     /**
@@ -109,23 +89,17 @@ class ApiAdminTagController extends Controller
      */
     public function store(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('store', Tag::class));
         $request->merge(['slug' => Str::slug($request->get('slug'))]);
         ApiResponse::init($request->all(), [
             'name' => ['required', 'string', 'unique:' . Tag::class . ',name'],
             'slug' => ['required', 'string', 'unique:' . Tag::class . ',slug'],
         ], [], trans('tag::validation.attributes'))->validate();
-        try {
-            $tag = Tag::init()->store($request);
-            return ApiResponse::message(trans('tag::messages.tag_was_created'))
-                ->addData('name', $tag->name)
-                ->addData('slug', $tag->slug)
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('category::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        $tag = Tag::init()->store($request);
+        return ApiResponse::message(trans('tag::messages.tag_was_created'))
+            ->addData('name', $tag->name)
+            ->addData('slug', $tag->slug)
+            ->send();
     }
 
     /**
@@ -135,28 +109,17 @@ class ApiAdminTagController extends Controller
      */
     public function update(Request $request, $tag)
     {
+        ApiResponse::authorize($request->user()->can('edit', Tag::class));
         $request->merge(['slug' => Str::slug($request->get('slug'))]);
         ApiResponse::init($request->all(), [
             'name' => ['required', 'string', Rule::unique(Tag::class, 'name')->ignore($tag)],
             'slug' => ['required', 'string', Rule::unique(Tag::class, 'slug')->ignore($tag)],
         ], [], trans('tag::validation.attributes'))->validate();
-        try {
-            $tag = Tag::init()->findOrFailById($tag);
-            $tag = Tag::init()->updateTag($tag, $request);
-            return ApiResponse::message(trans('tag::messages.tag_was_updated'))
-                ->addData('name', $tag->name)
-                ->addData('slug', $tag->slug)
-                ->send();
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::message(trans('tag::messages.tag_not_found'), Response::HTTP_NOT_FOUND)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        } catch (Throwable $e) {
-            return ApiResponse::message(trans('tag::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
-                ->addError('message', $e->getMessage())
-                ->hasError()
-                ->send();
-        }
+        $tag = Tag::init()->findOrFailById($tag);
+        $tag = Tag::init()->updateTag($tag, $request);
+        return ApiResponse::message(trans('tag::messages.tag_was_updated'))
+            ->addData('name', $tag->name)
+            ->addData('slug', $tag->slug)
+            ->send();
     }
 }

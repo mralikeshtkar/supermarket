@@ -15,12 +15,17 @@ class TagPolicy
         return $user->hasPermissionTo(Permissions::MANAGE_TAGS);
     }
 
+    public function show(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_TAGS);
+    }
+
     public function store(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_TAGS);
     }
 
-    public function update(User $user): bool
+    public function edit(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_TAGS);
     }

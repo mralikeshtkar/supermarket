@@ -27,7 +27,7 @@ class ApiFeatureController extends Controller
      */
     public function store(Request $request)
     {
-//        ApiResponse::authorize($request->user()->can('store', Feature::class));
+        ApiResponse::authorize($request->user()->can('create', Feature::class));
         $request->merge(['featureable' => [
             'id' => optional($request->featureable)['id'],
             'type' => Relation::getMorphedModel(strtolower(optional($request->featureable)['type'])),
@@ -61,7 +61,7 @@ class ApiFeatureController extends Controller
      */
     public function update(Request $request, $feature)
     {
-//        ApiResponse::authorize($request->user()->can('update', Feature::class));
+        ApiResponse::authorize($request->user()->can('edit', Feature::class));
         ApiResponse::init($request->all(), [
             'parent_id' => ['bail', 'nullable', 'exists:' . Feature::class . ',id'],
             'title' => ['bail', 'required', 'string'],
@@ -112,6 +112,7 @@ class ApiFeatureController extends Controller
      */
     public function destroy(Request $request, $feature)
     {
+        ApiResponse::authorize($request->user()->can('destroy', Feature::class));
         $feature = Feature::init()->findByColumnOrFail($feature);
         $feature->destroyItem();
         return ApiResponse::message(trans('feature::messages.feature_was_deleted'))->send();
@@ -151,7 +152,7 @@ class ApiFeatureController extends Controller
      */
     public function storeOptions(Request $request, $feature)
     {
-//        ApiResponse::authorize($request->user()->can('manage', Feature::class));
+        ApiResponse::authorize($request->user()->can('manage', Feature::class));
         ApiResponse::init($request->all(), [
             'option_value' => ['required', 'string'],
         ])->validate();
@@ -178,6 +179,7 @@ class ApiFeatureController extends Controller
      */
     public function destroyOptions(Request $request, $feature, $option)
     {
+        ApiResponse::authorize($request->user()->can('manage', Feature::class));
         $option = FeatureOption::init()->findOrFailByIdAndFeatureId($option, $feature);
         $option->destroyItem();
         return ApiResponse::message(trans('feature::messages.attribute_option_was_deleted'))->send();

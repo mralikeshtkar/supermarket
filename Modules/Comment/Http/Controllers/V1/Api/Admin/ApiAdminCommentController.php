@@ -27,6 +27,7 @@ class ApiAdminCommentController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Comment::class));
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
             ->addData('comments', ApiPaginationResource::make(Comment::init()->getAdminIndexPaginate($request))->additional(['itemsResource' => AdminCommentResource::class]))
             ->send();
@@ -39,6 +40,7 @@ class ApiAdminCommentController extends Controller
      */
     public function show(Request $request, $comment)
     {
+        ApiResponse::authorize($request->user()->can('show', Comment::class));
         $comment = Comment::init()->findByIdOrFail($comment);
         return ApiResponse::message(trans('product::messages.received_information_successfully'))
             ->addData('comment', new AdminCommentResource($comment))
@@ -52,6 +54,7 @@ class ApiAdminCommentController extends Controller
      */
     public function update(Request $request, $comment)
     {
+        ApiResponse::authorize($request->user()->can('edit', Comment::class));
         $comment = Comment::init()->findForShow($comment);
         $request->merge(['commentable' => [
             'type' => Relation::getMorphedModel(strtolower(optional($request->commentable)['type'])),
@@ -79,6 +82,7 @@ class ApiAdminCommentController extends Controller
      */
     public function destroy(Request $request, $comment)
     {
+        ApiResponse::authorize($request->user()->can('destroy', Comment::class));
         $comment = Comment::init()->findByIdOrFail($comment);
         $comment->destroyItem();
         return ApiResponse::message(trans('comment::messages.comment_was_deleted'))->send();
@@ -91,7 +95,7 @@ class ApiAdminCommentController extends Controller
      */
     public function changeStatus(Request $request, $comment)
     {
-//        ApiResponse::authorize($request->user()->can('changeStatus', Comment::class));
+        ApiResponse::authorize($request->user()->can('changeStatus', Comment::class));
         $comment = Comment::init()->findByIdOrFail($comment);
         try {
             $comment = $comment->updateStatus();

@@ -16,5 +16,10 @@
     "Storeroom": true,
     "Order": true,
     "Setting": true,
-    "LogActivity": true
+    "LogActivity": true,
+    "Dashboard": true,
+    "News": true,
+    "Vote": true,
+    "Advertisement": true,
+    "Poster": true
 }

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -23,15 +24,12 @@ use LaravelIdea\Helper\Modules\User\Entities\_IH_User_C;
 use LaravelIdea\Helper\Modules\User\Entities\_IH_User_QB;
 use Modules\Address\Entities\Address;
 use Modules\Core\Responses\Api\ApiResponse;
-use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Entities\Order;
 use Modules\Product\Entities\Product;
 use Modules\Product\Transformers\V1\Api\CartProductResource;
 use Modules\Setting\Entities\Setting;
 use Modules\User\Database\factories\UserFactory;
-use Modules\User\Exceptions\NotEnoughProductInCartException;
-use Modules\User\Exceptions\NotEnoughProductStockException;
-use Modules\User\Transformers\V1\Api\ApiUserOrderResource;
+use Modules\Vote\Entities\VoteItem;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Traits\HasRoles;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,6 +48,7 @@ class User extends Authenticatable
         'cart',
         'last_seen_products',
         'is_blocked',
+        'point',
     ];
 
     protected $guard_name = 'sanctum';
@@ -158,6 +157,7 @@ class User extends Authenticatable
             'mobile' => to_valid_mobile_number($request->mobile),
             'email' => $request->email,
             'is_blocked' => $request->is_blocked,
+            'point' => $request->point,
         ]);
         if ($request->filled('role')) $this->assignRole($request->role);
         return $this->refresh();
@@ -191,6 +191,7 @@ class User extends Authenticatable
             'name' => $request->name,
             'mobile' => to_valid_mobile_number($request->mobile),
             'email' => $request->email,
+            'point' => $request->point,
         ]);
     }
 
@@ -403,7 +404,7 @@ class User extends Authenticatable
 
     public function findOrFailAddressById($address)
     {
-        return $this->addresses()->findOrFail($address);
+        return $this->addresses()->where('id',$address)->firstOrFail();
     }
 
     /**
@@ -486,6 +487,15 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function voteItems(): BelongsToMany
+    {
+        return $this->belongsToMany(VoteItem::class,'vote_item_user')
+            ->withTimestamps();
     }
 
     #endregion

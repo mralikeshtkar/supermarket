@@ -44,10 +44,12 @@ class Order extends Model
         'total_cart',
         'discount',
         'status',
+        'delivery_at',
     ];
 
     protected $casts = [
         'status' => 'int',
+        'delivery_at' => 'datetime',
     ];
 
     private array $selected_columns = ['*'];
@@ -222,7 +224,16 @@ class Order extends Model
      */
     public function changeStatus($status): bool
     {
-        return $this->update(['status'=>$status]);
+        return $this->update(['status' => $status]);
+    }
+
+    /**
+     * @param $date
+     * @return bool
+     */
+    public function updateDeliveryDate($date): bool
+    {
+        return $this->update(['delivery_at' => $date]);
     }
 
     #endregion

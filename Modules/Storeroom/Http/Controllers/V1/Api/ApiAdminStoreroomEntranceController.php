@@ -24,6 +24,7 @@ class ApiAdminStoreroomEntranceController extends Controller
      */
     public function index(Request $request, $storeroom)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         try {
             $storeroom = Storeroom::init()->findByIdOrFail($storeroom);
             return ApiResponse::message(trans('storeroom::messages.received_information_successfully'))
@@ -45,6 +46,7 @@ class ApiAdminStoreroomEntranceController extends Controller
      */
     public function store(Request $request, $storeroom)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         ApiResponse::init($request->all(), [
             'products' => ['required', 'array', 'min:1'],
             'products.*.id' => ['required', 'distinct', 'exists:products,id'],
@@ -76,6 +78,7 @@ class ApiAdminStoreroomEntranceController extends Controller
      */
     public function products(Request $request, $entrance)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         try {
             $entrance = StoreroomEntrance::init()->findByIdOrFail($entrance);
             return ApiResponse::message(trans('storeroom::messages.received_information_successfully'))
@@ -97,6 +100,7 @@ class ApiAdminStoreroomEntranceController extends Controller
      */
     public function updateProduct(Request $request, $entrance)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         ApiResponse::init($request->all(), [
             'products' => ['required', 'array', 'min:1'],
             'products.*.id' => ['required', 'exists:products,id', new ProductExistsInEntranceRule($entrance)],
@@ -120,6 +124,7 @@ class ApiAdminStoreroomEntranceController extends Controller
 
     public function destroyProduct(Request $request, $entrance)
     {
+        ApiResponse::authorize($request->user()->can('manage', Storeroom::class));
         try {
             $entrance = StoreroomEntrance::init()->findByIdOrFail($entrance);
             ApiResponse::init($request->all(), [

@@ -15,12 +15,17 @@ class CategoryPolicy
         return $user->hasPermissionTo(Permissions::MANAGE_CATEGORIES);
     }
 
-    public function store(User $user): bool
+    public function show(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_CATEGORIES);
     }
 
-    public function update(User $user): bool
+    public function create(User $user): bool
+    {
+        return $user->hasPermissionTo(Permissions::MANAGE_CATEGORIES);
+    }
+
+    public function edit(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_CATEGORIES);
     }
@@ -30,7 +35,7 @@ class CategoryPolicy
         return $user->hasPermissionTo(Permissions::MANAGE_CATEGORIES);
     }
 
-    public function action(User $user): bool
+    public function changeStatus(User $user): bool
     {
         return $user->hasPermissionTo(Permissions::MANAGE_CATEGORIES);
     }

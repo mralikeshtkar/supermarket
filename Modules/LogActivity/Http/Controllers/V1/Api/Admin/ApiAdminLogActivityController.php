@@ -19,6 +19,7 @@ class ApiAdminLogActivityController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', LogActivity::class));
         $log_activities = LogActivity::init()->getAdminIndexPaginate($request);
         return ApiResponse::message(trans('Received information successfully'))
             ->addData('activities', ApiPaginationResource::make($log_activities)->additional(['itemsResource' => AdminLogActivityResource::class]))

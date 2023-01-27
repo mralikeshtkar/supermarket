@@ -283,7 +283,13 @@ class Product extends Model
             ->with('image')
             ->withAggregate('brand', 'name')
             ->latest()
-            ->paginate(5);
+            ->when($request->filled('name'), function (Builder $builder) use ($request) {
+                $builder->where('name', 'LIKE', '%' . $request->name . '%');
+            })->when($request->filled('min'), function (Builder $builder) use ($request) {
+                $builder->where('price', '>=', $request->min);
+            })->when($request->filled('max'), function (Builder $builder) use ($request) {
+                $builder->where('price', '<=', $request->max);
+            })->paginate(5);
     }
 
     /**
@@ -355,7 +361,7 @@ class Product extends Model
             if ($request->has('categories_id') && is_array($request->categories_id))
                 $product->categories()->sync($request->categories_id);
             if ($request->has('tags_id') && is_array($request->tags_id))
-            $product->tags()->sync($request->tags_id);
+                $product->tags()->sync($request->tags_id);
             return $product;
         });
     }

@@ -24,6 +24,8 @@ class Address extends Model
         'mobile',
         'address',
         'postal_code',
+        'latitude',
+        'longitude',
     ];
 
     #endregion
@@ -61,6 +63,8 @@ class Address extends Model
             'mobile' => to_valid_mobile_number($request->mobile),
             'address' => $request->address,
             'postal_code' => $request->postal_code,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
     }
 
@@ -81,10 +85,10 @@ class Address extends Model
      * @param $column
      * @return Model|Builder
      */
-    public function findByColumnOrFail($id, $column='id'): Model|Builder
+    public function findByColumnOrFail($id, $column = 'id'): Model|Builder
     {
         return self::query()
-            ->where($column,$id)
+            ->where($column, $id)
             ->firstOrFail();
     }
 
@@ -113,6 +117,8 @@ class Address extends Model
             'mobile' => to_valid_mobile_number($request->mobile),
             'address' => $request->address,
             'postal_code' => $request->postal_code,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
         return $this->refresh();
     }

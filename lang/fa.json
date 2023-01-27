@@ -2,6 +2,7 @@
     "Registration information completed successfully": "ثبت اطلاعات با موفقیت انجام شد",
     "Received information successfully": "دریافت اطلاعات با موفقیت انجام شد",
     "The operation was done successfully": "عملیات به موفقیت انجام شد",
+    "Internal server error": "خطای سمت سرور",
     "Shopping is disabled": "خرید غیرفعال است",
     "Error in operation": "خطا در انجام عملیات",
     ":attribute not found": ":attribute پیدا نشد",
@@ -162,6 +163,7 @@
     "You may not delete your personal team.": "نمیتوانید تیم خودتان را حذف کنید.",
     "This password does not match our records.": "این رمز عبور با اطلاعات ما مطابق نیست.",
     "The :attribute must be a valid role.": "فیلد :attribute باید یک نقش درست باشد.",
+    "You have already participated in this survey": "شما قبلا در این نظرسنجی شرکت کرده اید",
     "The :attribute must be at least :length characters and contain at least one special character.": "فیلد :attribute باید حداقل :length کاراکتر و شامل یک کاراکتر مخصوص باشد.",
     "The :attribute must be at least :length characters and contain at least one uppercase character and one special character.": "فیلد :attribute باید حداقل :length کاراکتر و شامل یک کاراکتر مخصوص و یک حرف بزرگ باشد.",
     "The :attribute must be at least :length characters and contain at least one uppercase character, one number, and one special character.": "فیلد :attribute باید حداقل :length کاراکتر، یک کاراکتر مخصوص، یک حرف بزرگ و یک عدد باشد."

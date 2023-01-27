@@ -18,8 +18,9 @@ class ApiAdminSettingController extends Controller
      */
     public function index(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Setting::class));
         return ApiResponse::message(trans("Received information successfully"))
-            ->addData('settings', AdminSettingResource::make(Cache::get(Setting::SETTING_CACHE_KEY,collect())))
+            ->addData('settings', AdminSettingResource::make(Cache::get(Setting::SETTING_CACHE_KEY, collect())))
             ->send();
     }
 
@@ -29,10 +30,11 @@ class ApiAdminSettingController extends Controller
      */
     public function store(Request $request)
     {
+        ApiResponse::authorize($request->user()->can('manage', Setting::class));
         ApiResponse::init($request->all(), Setting::SETTING_RULES)->validate();
         Setting::init()->store($request);
         return ApiResponse::message(trans("Registration information completed successfully"))
-            ->addData('settings', AdminSettingResource::make(Cache::get(Setting::SETTING_CACHE_KEY,collect())))
+            ->addData('settings', AdminSettingResource::make(Cache::get(Setting::SETTING_CACHE_KEY, collect())))
             ->send();
     }
 }

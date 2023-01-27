@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->string('total_cart');
             $table->json('discount')->nullable();
             $table->unsignedTinyInteger('status')->default(OrderStatus::AwaitingReview);
+            $table->timestamp('delivery_at')->nullable();
             $table->timestamps();
         });
     }

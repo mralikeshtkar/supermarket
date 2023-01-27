@@ -3,6 +3,7 @@
 namespace Modules\Order\Entities;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\Enums\OrderInvoiceStatus;
@@ -28,6 +29,25 @@ class Invoice extends Model
     #endregion
 
     #region Methods
+
+    /**
+     * @return Invoice
+     */
+    public static function init(): Invoice
+    {
+        return new self();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTotalOrderCountGroupByStatus(): \Illuminate\Support\Collection
+    {
+        return self::query()
+            ->selectRaw('COUNT(*) AS invoices_count,order_id,status')
+            ->groupBy(['order_id', 'status'])
+            ->pluck('status', 'invoices_count');
+    }
 
     /**
      * Get translated status.
