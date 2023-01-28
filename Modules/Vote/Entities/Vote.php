@@ -79,14 +79,20 @@ class Vote extends Model
 
     /**
      * @param Request $request
-     * @return void
+     * @return Vote
      */
-    public function store(Request $request)
+    public function store(Request $request): Vote
     {
-        return self::query()->create([
+        /** @var Vote $vote */
+        $vote = self::query()->create([
             'vote_id' => $request->vote_id,
             'title' => $request->title,
+            'status' => $request->status,
         ]);
+        $vote->items()->createMany(array_map(function ($item) {
+            return ['title' => $item];
+        }, $request->items));
+        return $vote;
     }
 
     /**
@@ -98,6 +104,7 @@ class Vote extends Model
         return $this->update([
             'vote_id' => $request->vote_id,
             'title' => $request->title,
+            'status' => $request->status,
         ]);
     }
 
@@ -172,8 +179,8 @@ class Vote extends Model
      */
     public function selectedItem(): HasOne|Builder
     {
-        return $this->item()->whereHas('users',function ($q){
-            $q->where('users.id',auth()->id());
+        return $this->item()->whereHas('users', function ($q) {
+            $q->where('users.id', auth()->id());
         });
     }
 
@@ -230,8 +237,8 @@ class Vote extends Model
      */
     public function scopeSelectedItemId(Builder $builder)
     {
-        $builder->with(['selectedItem'=>function($q){
-            $q->select(['id','vote_id']);
+        $builder->with(['selectedItem' => function ($q) {
+            $q->select(['id', 'vote_id']);
         }]);
     }
 
