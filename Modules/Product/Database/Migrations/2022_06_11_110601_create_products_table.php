@@ -36,7 +36,6 @@ return new class extends Migration {
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->string('price');
-            $table->string('price');
             $table->string('old_price')->nullable();
             $table->string('additional_price')->nullable();
             $table->boolean('delivery_is_free')->default(false);
