@@ -132,7 +132,11 @@ class NewsCategory extends Model
         return self::query()->select($this->selected_columns)
             ->with($this->with_relationships)
             ->scopes($this->with_scopes)
-            ->get();
+            ->when($newsCategory, function (Builder $builder) use ($newsCategory) {
+                $builder->where('parent_id', $newsCategory);
+            }, function ($builder) use ($newsCategory) {
+                $builder->parent();
+            })->get();
     }
 
     /**
