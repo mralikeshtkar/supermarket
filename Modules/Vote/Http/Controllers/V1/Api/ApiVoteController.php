@@ -17,10 +17,10 @@ class ApiVoteController extends Controller
      */
     public function index(Request $request)
     {
-        $votes = Vote::init()->selectColumns(['id', 'title', 'description', 'created_at'])
-            ->withScopes(['itemUsersCount','selectedItemId'])
+        $votes = Vote::init()->selectColumns(['id', 'title', 'description','status', 'created_at'])
+            ->withScopes(['itemUsersCount','active','selectedItemId'])
             ->withRelationships(['items' => function ($q) {
-                $q->select(['id', 'vote_id', 'title'])->withCount('users');
+                
             }])->paginateAdmin($request);
         return ApiResponse::message(trans("Received information successfully"))
             ->addData('vote', ApiAdminVoteResource::collection($votes))
