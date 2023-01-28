@@ -133,7 +133,7 @@ class NewsCategory extends Model
             ->with($this->with_relationships)
             ->scopes($this->with_scopes)
             ->when($newsCategory, function (Builder $builder) use ($newsCategory) {
-                $builder->where('parent_id', $newsCategory);
+                //$builder->where('parent_id', $newsCategory);
             }, function ($builder) use ($newsCategory) {
                 $builder->parent();
             })->get();
