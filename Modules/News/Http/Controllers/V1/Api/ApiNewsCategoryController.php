@@ -16,7 +16,7 @@ class ApiNewsCategoryController extends Controller
     public function index(Request $request, $newsCategory = null)
     {
         if ($newsCategory) $newsCategory = NewsCategory::init()->selectColumns(['id'])->findOrFailById($newsCategory)->id;
-        $newsCategories = NewsCategory::init()->selectColumns(['id', 'title'])
+        $newsCategories = NewsCategory::init()->selectColumns(['id', 'title','parent_id'])
             ->withScopes(['accepted'])
             ->getIndex($request, $newsCategory);
         return ApiResponse::message(trans("Received information successfully"))
