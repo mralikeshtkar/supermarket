@@ -21,7 +21,7 @@ return new class extends Migration {
                 ->on('users')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignId('news_category_id')
+            $table->foreignId('parent_id')
                 ->nullable()
                 ->references('id')
                 ->on('news_categories')
