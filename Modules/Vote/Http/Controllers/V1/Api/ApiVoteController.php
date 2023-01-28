@@ -24,7 +24,7 @@ class ApiVoteController extends Controller
             ->withRelationships(['items' => function ($q) {
                 $q->select(['id', 'vote_id', 'title'])->withCount('users');
             }])->paginateAdmin($request);
-        $resource = ApiPaginationResource::make($votes)->additional(['itemsResource' => ApiVoteResource::class])
+        $resource = ApiPaginationResource::make($votes)->additional(['itemsResource' => ApiVoteResource::class]);
         return ApiResponse::message(trans("Received information successfully"))
             ->addData('votes', $resource)
             ->send();
