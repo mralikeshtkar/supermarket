@@ -25,6 +25,7 @@ class OrderAddress extends Model
         'mobile',
         'address',
         'postal_code',
+        'type',
     ];
 
     #endregion

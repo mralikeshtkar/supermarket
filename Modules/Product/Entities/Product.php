@@ -57,12 +57,18 @@ class Product extends Model
         'slug',
         'price',
         'status',
+        'old_price',
+        'additional_price',
+        'delivery_is_free',
+        'has_tax_exemption',
     ];
 
     protected $casts = [
         'global_discount' => 'array',
         'price' => 'integer',
         'status' => 'integer',
+        'delivery_is_free' => 'bool',
+        'has_tax_exemption' => 'bool',
     ];
 
     private array $selected_columns = ['*'];
@@ -170,6 +176,8 @@ class Product extends Model
                     });
                 })->when($request->filled('search'), function (Builder $builder) use ($request) {
                     $builder->where('name', 'LIKE', '%' . $request->search . '%');
+                })->when($request->filled('brands'), function (Builder $builder) use ($request) {
+                    $builder->whereIn('brand_id', $request->brands);
                 })->when($request->filled('filters'), function (Builder $builder) use ($request) {
                     $builder->whereHas('attributes', function (Builder $builder) use ($request) {
                         foreach ($request->filters as $filter => $attributes) {
@@ -341,6 +349,7 @@ class Product extends Model
     public function store($request)
     {
         return DB::transaction(function () use ($request) {
+            /** @var Request $request */
             $product = self::query()->create([
                 'user_id' => $request->user()->id,
                 'brand_id' => $request->brand_id,
@@ -349,6 +358,10 @@ class Product extends Model
                 'slug' => $request->slug,
                 'price' => $request->price,
                 'status' => ProductStatus::Pending,
+                'old_price' => $request->old_price,
+                'additional_price' => $request->additional_price,
+                'delivery_is_free' => $request->filled('delivery_is_free'),
+                'has_tax_exemption' => $request->filled('has_tax_exemption'),
             ]);
             $product->setDirectory('products')
                 ->setCollection(config('product.collection_gallery'))
@@ -411,6 +424,10 @@ class Product extends Model
             'name' => $request->name,
             'slug' => $request->slug,
             'price' => $request->price,
+            'old_price' => $request->old_price,
+            'additional_price' => $request->additional_price,
+            'delivery_is_free' => $request->filled('delivery_is_free'),
+            'has_tax_exemption' => $request->filled('has_tax_exemption'),
         ]);
         $product->when($request->hasFile('image'), function () use ($request, $product) {
             $product->setDirectory('products')

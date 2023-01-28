@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Modules\Product\Enums\FaqStatus;
 
 return new class extends Migration
 {
@@ -13,23 +14,26 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_addresses', function (Blueprint $table) {
+        Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')
+            $table->foreignId('user_id')
                 ->references('id')
-                ->on('orders')
+                ->on('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignId('city_id')
+            $table->foreignId('product_id')
                 ->references('id')
-                ->on('cities')
+                ->on('products')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('name');
-            $table->string('mobile');
-            $table->text('address');
-            $table->string('postal_code');
-            $table->string('type');
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->references('id')
+                ->on('faqs')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+            $table->text('body');
+            $table->string('status')->default(FaqStatus::Pending);
             $table->timestamps();
         });
     }
@@ -41,6 +45,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_addresses');
+        Schema::dropIfExists('faqs');
     }
 };

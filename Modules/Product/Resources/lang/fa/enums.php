@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Product\Enums\FaqStatus;
 use Modules\Product\Enums\ProductStatus;
 use Modules\Product\Enums\ProductUnitStatus;
 
@@ -13,5 +14,10 @@ return [
         ProductUnitStatus::Pending => "در حال بررسی",
         ProductUnitStatus::Accepted => "تایید شده",
         ProductUnitStatus::Rejected => "رد شده",
+    ],
+    FaqStatus::class => [
+        FaqStatus::Pending => "در حال بررسی",
+        FaqStatus::Accepted => "تایید شده",
+        FaqStatus::Rejected => "رد شده",
     ],
 ];

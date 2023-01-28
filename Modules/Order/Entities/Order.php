@@ -18,6 +18,7 @@ use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Discount\Entities\Discount;
 use Modules\Discount\Exceptions\DiscountIsInvalidException;
+use Modules\Order\Enums\OrderAddressType;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use Modules\Product\Entities\Product;
 use Modules\Setting\Entities\Setting;
@@ -98,6 +99,10 @@ class Order extends Model
                 ->findValidDiscountByCode($request->discount);
         else
             $discount = null;
+        if ($request->filled('factor_id'))
+            $factor = $request->user()->findOrFailAddressById($request->factor_id);
+        else
+            $factor = null;
         $cart = collect($request->user()->getCart($discount)->toArray($request));
         $address = $request->user()->findOrFailAddressById($request->address_id);
         if (Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_INACTIVATE_BUY_BUTTON, false)) return ApiResponse::sendError(trans("Shopping is disabled"), Response::HTTP_BAD_REQUEST);
@@ -118,7 +123,18 @@ class Order extends Model
             'mobile' => $address->mobile,
             'address' => $address->address,
             'postal_code' => $address->postal_code,
+            'type' => OrderAddressType::Normal,
         ]);
+        if ($factor){
+            $order->factor()->create([
+                'city_id' => $factor->city_id,
+                'name' => $factor->name,
+                'mobile' => $factor->mobile,
+                'address' => $factor->address,
+                'postal_code' => $factor->postal_code,
+                'type' => OrderAddressType::Factor,
+            ]);
+        }
         $order->products()->attach($cart->get('products')->mapWithKeys(function ($item) {
             return [$item['id'] => [
                 'quantity' => $item['quantity'],
@@ -263,7 +279,18 @@ class Order extends Model
     public function address(): HasOne
     {
         return $this->hasOne(OrderAddress::class)
-            ->select(['id', 'order_id', 'city_id', 'name', 'mobile', 'address', 'postal_code']);
+            ->select(['id', 'order_id', 'city_id', 'name', 'mobile', 'address', 'postal_code'])
+            ->where('type', OrderAddressType::Normal);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function factor(): HasOne
+    {
+        return $this->hasOne(OrderAddress::class)
+            ->select(['id', 'order_id', 'city_id', 'name', 'mobile', 'address', 'postal_code'])
+            ->where('type', OrderAddressType::Factor);
     }
 
     /**

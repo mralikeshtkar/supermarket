@@ -92,10 +92,10 @@ class Advertisement extends Model
      */
     public function paginateAdmin(Request $request): LengthAwarePaginator
     {
-        return self::query()
+        return self::query()->select($this->selected_columns)
             ->with($this->with_relationships)
             ->scopes($this->with_scopes)
-            ->paginate($request->get('perPage', 10), $this->selected_columns);
+            ->paginate($request->get('perPage', 10));
     }
 
     /**
@@ -117,12 +117,12 @@ class Advertisement extends Model
      */
     public function getIndexPaginate(Request $request): LengthAwarePaginator
     {
-        return self::query()
+        return self::query()->select($this->selected_columns)
             ->with($this->with_relationships)
             ->scopes($this->with_scopes)
             ->when($request->filled('places'), function ($q) use ($request) {
                 $q->whereIn('place', $request->places);
-            })->paginate($request->get('perPage'), $this->selected_columns);
+            })->paginate($request->get('perPage'));
     }
 
     /**

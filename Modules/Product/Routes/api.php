@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Routing\Router;
+use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminFaqController as V1ApiAdminFaqController;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminProductAttributeController as V1ApiAdminProductAttributeController;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminProductCartController as V1ApiAdminProductCartController;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminProductController as V1ApiAdminProductController;
 use Modules\Product\Http\Controllers\V1\Api\Admin\ApiAdminSpecialProductController as V1ApiAdminSpecialProductController;
 use Modules\Product\Http\Controllers\V1\Api\ApiAdminProductUnitController as V1ApiAdminProductUnitController;
+use Modules\Product\Http\Controllers\V1\Api\ApiFaqController as V1ApiFaqController;
 use Modules\Product\Http\Controllers\V1\Api\ApiProductController as V1ApiProductController;
 use Modules\Product\Http\Controllers\V1\Api\ApiSpecialProductController as V1ApiSpecialProductController;
 
@@ -22,6 +24,7 @@ use Modules\Product\Http\Controllers\V1\Api\ApiSpecialProductController as V1Api
 
 Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
+
         $router->group(['prefix' => 'admin'], function (Router $router) {
 
             /* Product routes  */
@@ -97,7 +100,21 @@ Route::prefix('v1')->group(function (Router $router) {
             /* Product stocks */
             $router->get('storeroom/products/stocks', [V1ApiAdminProductController::class, 'stocks']);
             $router->get('storeroom/products/all-stocks', [V1ApiAdminProductController::class, 'allStocks']);
+
+            /* Faqs */
+            $router->get('products/{product}/faqs/{faq?}', [V1ApiAdminFaqController::class, 'index']);
+            $router->get('faqs/{faq}', [V1ApiAdminFaqController::class, 'show']);
+            $router->put('faqs/{faq}', [V1ApiAdminFaqController::class, 'update']);
+            $router->delete('faqs/{faq}', [V1ApiAdminFaqController::class, 'destroy']);
+            $router->get('faqs/{faq}/replies', [V1ApiAdminFaqController::class, 'replies']);
+
         });
+
+        /* Faqs */
+        $router->get('products/{product}/faqs', [V1ApiFaqController::class, 'index']);
+        $router->get('faqs/{faq}/replies', [V1ApiFaqController::class, 'replies']);
+        $router->post('products/{product}/faqs', [V1ApiFaqController::class, 'store']);
+
         $router->get('products/most-selling-products', [V1ApiProductController::class, 'mostSellingProducts']);
         $router->get('products/latest', [V1ApiProductController::class, 'latest']);
         $router->get('products/latest/seen', [V1ApiProductController::class, 'latestSeen']);

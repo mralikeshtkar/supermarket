@@ -105,10 +105,11 @@ class News extends Model
      */
     public function paginateAdmin(Request $request): LengthAwarePaginator
     {
-        return self::query()->with($this->with_relationships)
+        return self::query()->select($this->selected_columns)
+            ->with($this->with_relationships)
             ->scopes($this->with_scopes)
             ->latest()
-            ->paginate($request->get('perPage', 10),$this->selected_columns);
+            ->paginate($request->get('perPage', 10));
     }
 
     /**

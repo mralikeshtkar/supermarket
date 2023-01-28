@@ -86,10 +86,10 @@ class Poster extends Model
      */
     public function paginateAdmin(Request $request): LengthAwarePaginator
     {
-        return self::query()
+        return self::query()->select($this->selected_columns)
             ->with($this->with_relationships)
             ->scopes($this->with_scopes)
-            ->paginate($request->get('perPage', 10), $this->selected_columns);
+            ->paginate($request->get('perPage', 10));
     }
 
     /**
@@ -111,10 +111,10 @@ class Poster extends Model
      */
     public function getIndexPaginate(Request $request): LengthAwarePaginator
     {
-        return self::query()
+        return self::query()->select($this->selected_columns)
             ->with($this->with_relationships)
             ->scopes($this->with_scopes)
-            ->paginate($request->get('perPage'), $this->selected_columns);
+            ->paginate($request->get('perPage'));
     }
 
     /**

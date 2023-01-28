@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Product\Enums\FaqStatus;
 use Modules\Product\Enums\ProductStatus;
 use Modules\Product\Enums\ProductUnitStatus;
 
@@ -13,6 +14,11 @@ return [
         ProductUnitStatus::Pending => "Pending",
         ProductUnitStatus::Accepted => "Accepted",
         ProductUnitStatus::Rejected => "Rejected",
+    ],
+    FaqStatus::class => [
+        FaqStatus::Pending => "Pending",
+        FaqStatus::Accepted => "Accepted",
+        FaqStatus::Rejected => "Rejected",
     ],
     'statuses'=>[
         ProductStatus::class => [
