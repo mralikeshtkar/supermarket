@@ -19,7 +19,7 @@ class ApiAdminNewsCategoryResource extends JsonResource
         return collect($this->resource)->when(array_key_exists('created_at', $this->resource->getAttributes()), function (Collection $collection) {
             $collection->put('created_at', verta($this->resource->created_at)->formatJalaliDate());
         })->when(array_key_exists('status', $this->resource->getAttributes()), function (Collection $collection) {
-            $collection->put('status', NewsCommentStatus::getDescription($this->resource->status));
+            $collection->put('status_translated', NewsCommentStatus::getDescription($this->resource->status));
         });
     }
 }

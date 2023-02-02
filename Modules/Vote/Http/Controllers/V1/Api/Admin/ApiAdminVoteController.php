@@ -26,6 +26,9 @@ class ApiAdminVoteController extends Controller
         $resource = ApiPaginationResource::make($votes)->additional(['itemsResource' => ApiAdminVoteResource::class]);
         return ApiResponse::message(trans("The operation was done successfully"))
             ->addData('votes', $resource)
+            ->addData('statuses', collect(VoteStatus::asArray())->map(function ($item){
+                return ['value'=>$item,'title'=>VoteStatus::getDescription($item)];
+            })->values()->toArray())
             ->send();
     }
 
@@ -56,7 +59,7 @@ class ApiAdminVoteController extends Controller
             'title' => ['required', 'string'],
             'description' => ['nullable', 'string'],
             'status' => ['required', new EnumValue(VoteStatus::class)],
-            'items' => ['required', 'array', 'min:2'],
+            'items' => ['nullable', 'array', 'min:2'],
             'items.*' => ['required', 'string'],
         ])->validate();
         try {

@@ -32,7 +32,7 @@ Route::prefix('v1')->group(function (Router $router) {
 
             /* Vote items */
             $router->post('vote-items',[V1ApiAdminVoteItemController::class,'store']);
-            $router->post('vote-items/{voteItem}',[V1ApiAdminVoteItemController::class,'update']);
+            $router->put('vote-items/{voteItem}',[V1ApiAdminVoteItemController::class,'update']);
             $router->delete('vote-items/{voteItem}',[V1ApiAdminVoteItemController::class,'destroy']);
 
         });

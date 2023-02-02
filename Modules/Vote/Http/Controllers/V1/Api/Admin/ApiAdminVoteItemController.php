@@ -21,7 +21,7 @@ class ApiAdminVoteItemController extends Controller
             'vote_id' => ['required', 'exists:' . Vote::class . ',id'],
             'title' => ['required', 'string'],
         ])->validate();
-        Vote::init()->store($request);
+        VoteItem::init()->store($request);
         return ApiResponse::message(trans("The operation was done successfully"))->send();
     }
 

@@ -29,6 +29,12 @@ class ApiAdminPosterController extends Controller
         $resource = ApiPaginationResource::make($posters)->additional(['itemsResource' => ApiAdminPosterResource::class]);
         return ApiResponse::message(trans("The operation was done successfully"))
             ->addData('advertisements', $resource)
+            ->addData('statuses', collect(PosterStatus::asArray())->map(function ($item) {
+                return [
+                    'title' => PosterStatus::getDescription($item),
+                    'value' => $item,
+                ];
+            })->values())
             ->send();
     }
 

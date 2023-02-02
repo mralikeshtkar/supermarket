@@ -30,7 +30,18 @@ class ApiAdminAdvertisementController extends Controller
         $resource = ApiPaginationResource::make($advertisements)->additional(['itemsResource' => ApiAdminAdvertisementResource::class]);
         return ApiResponse::message(trans("The operation was done successfully"))
             ->addData('advertisements', $resource)
-            ->send();
+            ->addData('places', collect(AdvertisementPlace::asArray())->map(function ($item) {
+                return [
+                    'title' => AdvertisementPlace::getDescription($item),
+                    'value' => $item,
+                ];
+            })->values())
+            ->addData('statuses', collect(AdvertisementStatus::asArray())->map(function ($item) {
+                return [
+                    'title' => AdvertisementStatus::getDescription($item),
+                    'value' => $item,
+                ];
+            })->values())->send();
     }
 
     /**
@@ -84,7 +95,7 @@ class ApiAdminAdvertisementController extends Controller
             'status' => ['required', new EnumValue(AdvertisementStatus::class)],
         ])->validate();
         try {
-            return DB::transaction(function () use ($request,$advertisement) {
+            return DB::transaction(function () use ($request, $advertisement) {
                 $advertisement->updateRow($request);
                 return ApiResponse::message(trans("The operation was done successfully"), Response::HTTP_CREATED)->send();
             });
@@ -103,7 +114,7 @@ class ApiAdminAdvertisementController extends Controller
         /** @var Advertisement $advertisement */
         $advertisement = Advertisement::init()->withRelationships(['image'])->findOrFailById($advertisement);
         try {
-            return DB::transaction(function () use ($request,$advertisement) {
+            return DB::transaction(function () use ($request, $advertisement) {
                 $advertisement->destroyRow($request);
                 return ApiResponse::message(trans("The operation was done successfully"), Response::HTTP_CREATED)->send();
             });

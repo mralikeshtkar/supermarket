@@ -19,4 +19,7 @@ return [
     Permissions::MANAGE_SETTINGS => "Manage settings",
     Permissions::MANAGE_LOG_ACTIVITIES => "Manage log activities",
     Permissions::MANAGE_ORDERS => "Manage orders",
+    Permissions::MANAGE_ADVERTISEMENTS => "Manage advertisements",
+    Permissions::MANAGE_POSTERS => "Manage posters",
+    Permissions::MANAGE_NEWS => "Manage news",
 ];

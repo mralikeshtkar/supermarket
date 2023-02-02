@@ -22,12 +22,19 @@ class ApiAdminNewsController extends Controller
      */
     public function index(Request $request)
     {
-        $news = News::init()->selectColumns(['id', 'user_id', 'category_id', 'title', 'body', 'created_at'])
+        $news = News::init()->selectColumns(['id', 'user_id', 'category_id', 'title', 'body','status', 'created_at'])
             ->withRelationships(['user:id,name,email', 'newsCategory:id,title'])
             ->paginateAdmin($request);
         $resource = ApiPaginationResource::make($news)->additional(['itemsResource' => ApiAdminNewsResource::class]);
         return ApiResponse::message(trans("The operation was done successfully"))
             ->addData('news', $resource)
+            ->addData('newsCategories', NewsCategory::init()->selectColumns(['id','title'])->withScopes(['accepted'])->getData())
+            ->addData('statuses', collect(NewsStatus::asArray())->map(function ($item) {
+                return [
+                    'title' => NewsStatus::getDescription($item),
+                    'value' => $item,
+                ];
+            })->values())
             ->send();
     }
 
@@ -59,7 +66,8 @@ class ApiAdminNewsController extends Controller
         ApiResponse::init($request->all(), [
             'title' => ['required', 'string'],
             'body' => ['required', 'string'],
-            'news_category_id' => ['required', new EnumValue(NewsStatus::class)],
+            'news_category_id' => ['nullable', new EnumValue(NewsStatus::class)],
+            'status' => ['required', new EnumValue(NewsStatus::class)],
         ])->validate();
         $news->updateRow($request);
         return ApiResponse::message(trans("The operation was done successfully"))->send();

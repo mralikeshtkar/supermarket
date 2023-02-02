@@ -16,10 +16,6 @@ class AdminSettingResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->resource->mapWithKeys(function ($item, $key) {
-            return [
-                $key => in_array($key, Setting::SETTING_BOOLEAN) ? boolval($item) : $item,
-            ];
-        });
+        return $this->resource;
     }
 }

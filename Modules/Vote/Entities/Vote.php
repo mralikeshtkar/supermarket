@@ -89,9 +89,10 @@ class Vote extends Model
             'title' => $request->title,
             'status' => $request->status,
         ]);
-        $vote->items()->createMany(array_map(function ($item) {
-            return ['title' => $item];
-        }, $request->items));
+        if ($request->filled('items'))
+            $vote->items()->createMany(array_map(function ($item) {
+                return ['title' => $item];
+            }, $request->items));
         return $vote;
     }
 

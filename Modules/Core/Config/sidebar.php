@@ -135,6 +135,59 @@ return [
         ],
     ],
     [
+        "title" => "تبلیغات",
+        "icon" => "simple-icon-bubbles",
+        "permissions" => [
+            Permissions::MANAGE_ADVERTISEMENTS,
+        ],
+        "href" => [
+            "name" => "advertisements.index",
+        ],
+    ],
+    [
+        "title" => "پوسترها",
+        "icon" => "simple-icon-bubbles",
+        "permissions" => [
+            Permissions::MANAGE_POSTERS,
+        ],
+        "href" => [
+            "name" => "posters.index",
+        ],
+    ],
+    [
+        "title" => "نظرسنجی ها",
+        "icon" => "simple-icon-bubbles",
+        "permissions" => [
+            Permissions::MANAGE_POSTERS,
+        ],
+        "href" => [
+            "name" => "votes.index",
+        ],
+    ],
+    [
+        "title" => "اخبار",
+        "icon" => "simple-icon-bubbles",
+        "permissions" => [
+            Permissions::MANAGE_NEWS,
+        ],
+        "submenus" => [
+            [
+                "title" => "مدیریت اخبار",
+                "icon" => "simple-icon-drawer",
+                "href" => [
+                    "name" => "news.index",
+                ],
+            ],
+            [
+                "title" => "دسته های اخبار",
+                "icon" => "simple-icon-star",
+                "href" => [
+                    "name" => "news-categories.index",
+                ],
+            ],
+        ],
+    ],
+    [
         "title" => "نقش‌های کاربری",
         "icon" => "simple-icon-directions",
         "permissions" => [

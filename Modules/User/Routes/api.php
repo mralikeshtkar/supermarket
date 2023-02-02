@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function (Router $router) {
         $router->post('users/like', [V1ApiUserController::class, 'like']);
         $router->post('users/dislike', [V1ApiUserController::class, 'dislike']);
         $router->get('users/favourites', [V1ApiUserController::class, 'favourites']);
+        $router->get('users/{user}/favourites', [V1ApiUserController::class, 'userFavourites']);
     });
     $router->middleware('auth:sanctum')->group(function (Router $router) {
         $router->get('user/orders', [V1ApiUserController::class, 'orders']);

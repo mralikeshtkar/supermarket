@@ -25,6 +25,7 @@ Route::prefix('v1')->group(function (Router $router) {
         });
 
         $router->get('check-store-is-open', [V1ApiSettingController::class, 'checkStoreIsOpen']);
+        $router->get('settings', [V1ApiSettingController::class, 'index']);
 
     });
 });

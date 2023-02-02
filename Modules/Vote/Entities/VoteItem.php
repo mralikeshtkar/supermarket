@@ -53,7 +53,7 @@ class VoteItem extends Model
      */
     public function getPercentOfTotal($users_count, $item_users_count): float
     {
-        return round(($users_count / $item_users_count) * 100,1);
+        return $item_users_count ? round(($users_count / $item_users_count) * 100,1) : 0;
     }
 
     /**
@@ -70,20 +70,14 @@ class VoteItem extends Model
 
     /**
      * @param Request $request
-     * @return void
+     * @return Builder|Model
      */
-    public function store(Request $request)
+    public function store(Request $request): Model|Builder
     {
-        /** @var Vote $vote */
-        $vote = self::query()->create([
-            'user_id' => $request->user()->id,
+        return self::query()->create([
+            'vote_id' => $request->vote_id,
             'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
         ]);
-        $vote->items()->createMany(array_map(function ($item) {
-            return ['title' => $item];
-        }, $request->items));
     }
 
     /**
@@ -102,9 +96,8 @@ class VoteItem extends Model
     public function updateRow(Request $request): bool
     {
         return $this->update([
+            'vote_id' => $request->vote_id,
             'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
         ]);
     }
 

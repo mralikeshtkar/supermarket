@@ -23,7 +23,12 @@ class Invoice extends Model
         'transactionId',
         'gateway',
         'amount',
+        'is_pay_in_person',
         'status',
+    ];
+
+    protected $casts = [
+        'is_pay_in_person' => 'bool',
     ];
 
     #endregion

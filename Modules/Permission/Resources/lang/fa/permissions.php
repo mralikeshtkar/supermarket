@@ -19,4 +19,7 @@ return [
     Permissions::MANAGE_SETTINGS => "مدیریت تنظیمات",
     Permissions::MANAGE_LOG_ACTIVITIES => "مدیریت گزارش فعالیت‌ها",
     Permissions::MANAGE_ORDERS => "مدیریت سفارشات",
+    Permissions::MANAGE_ADVERTISEMENTS => "مدیریت تبلیغات",
+    Permissions::MANAGE_POSTERS => "مدیریت پوسترها",
+    Permissions::MANAGE_NEWS => "مدیریت اخبار",
 ];

@@ -31,6 +31,8 @@ class AddressFactory extends Factory
             'mobile' => $this->faker->numerify('+989#########'),
             'address'=>$this->faker->sentence(10),
             'postal_code'=>$this->faker->numerify('##########'),
+            'latitude'=>$this->faker->numberBetween(-90,90),
+            'longitude'=>$this->faker->numberBetween(-180,180),
         ];
     }
 }

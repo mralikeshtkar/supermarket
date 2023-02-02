@@ -22,17 +22,24 @@ class CartProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        $shipping_cost = Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_SHIPPING_COST, 0);
         $products = $this->resource->map(function ($item) {
             $quantity = collect(collect($this->additional['cart'])->get($item->id))->get('quantity');
+            $additional_price = $item->additional_price ?? 0;
             return collect($item->toArray())
                 ->put('quantity', $quantity)
                 ->put('unit_price', $item->final_price)
-                ->put('sum_price', $item->final_price * $quantity)
+                ->put('additional_price', $additional_price)
+                ->put('delivery_is_free', $item->delivery_is_free)
+                ->put('sum_price', ($item->final_price * $quantity) + $additional_price)
                 ->when($item->relationLoaded('image'), function (Collection $collection) use ($item) {
                     $collection->put('image', $item->image);
                 });
         });
+        if ($products->pluck('delivery_is_free')->contains(true)) {
+            $shipping_cost = 0;
+        } else {
+            $shipping_cost = Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_SHIPPING_COST, 0);
+        }
         $total_cart = $products && $products->count() ? $products->sum('sum_price') : 0;
         $total_price = $total_cart + $shipping_cost;
         $result = collect([
@@ -65,6 +72,17 @@ class CartProductResource extends JsonResource
                 $result->put('discount_amount', $discount_amount)
                     ->put('total_price', $this->_calculateTotalPrice($total_price, $discount_amount));
             }
+        }
+        $onlinePayDiscount = Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_ONLINE_PAY_DISCOUNT, 0);
+        if (!$request->filled('is_pay_in_person') && $onlinePayDiscount) {
+            $onlinePayDiscountAmount = ($result->total_price / 100) * $onlinePayDiscount;
+            $result->when($result->has('discount_amount'), function (Collection $collection) use ($onlinePayDiscountAmount, $result) {
+                $collection->put('discount_amount', $result->discount_amount + $onlinePayDiscountAmount)
+                    ->put('total_price', $result->total_price - $onlinePayDiscountAmount);
+            }, function (Collection $collection) use ($onlinePayDiscountAmount, $result) {
+                $collection->put('discount_amount', $onlinePayDiscountAmount)
+                    ->put('total_price', $result->total_price - $onlinePayDiscountAmount);
+            });
         }
         return $result;
     }

@@ -464,7 +464,7 @@ class Product extends Model
     {
         $cart = collect($user->cart);
         $products = self::query()
-            ->select(['id', 'name', 'price'])
+            ->select(['id', 'name', 'price','additional_price','delivery_is_free'])
             ->with(['image', 'categories:id'])
             ->whereIn('id', $cart->keys()->toArray())
             ->stock()

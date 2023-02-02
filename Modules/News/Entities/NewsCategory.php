@@ -123,6 +123,17 @@ class NewsCategory extends Model
     }
 
     /**
+     * @return Collection|array
+     */
+    public function getData(): Collection|array
+    {
+        return self::query()->select($this->selected_columns)
+            ->with($this->with_relationships)
+            ->scopes($this->with_scopes)
+            ->get();
+    }
+
+    /**
      * @param Request $request
      * @param $newsCategory
      * @return Collection|array

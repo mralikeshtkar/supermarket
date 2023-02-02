@@ -12,6 +12,13 @@ use OpenApi\Annotations as OA;
 
 class ApiSettingController extends Controller
 {
+    public function index(Request $request)
+    {
+        return ApiResponse::message(trans("Received information successfully"))
+            ->addData('settings', Cache::get(Setting::SETTING_CACHE_KEY,collect()))
+            ->send();
+    }
+
     /**
      *
      * @OA\Get (
@@ -29,7 +36,7 @@ class ApiSettingController extends Controller
     public function checkStoreIsOpen(Request $request)
     {
         return ApiResponse::message(trans("Received information successfully"))
-            ->addData('is_open', boolval(Cache::get(Setting::SETTING_CACHE_KEY,collect(),collect())->get(Setting::SETTING_SHOP_IS_OPEN, true)))
+            ->addData('is_open', boolval(Cache::get(Setting::SETTING_CACHE_KEY,collect())->get(Setting::SETTING_SHOP_IS_OPEN, true)))
             ->send();
     }
 }

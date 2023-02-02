@@ -107,7 +107,7 @@ class Order extends Model
         $address = $request->user()->findOrFailAddressById($request->address_id);
         if (Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_INACTIVATE_BUY_BUTTON, false)) return ApiResponse::sendError(trans("Shopping is disabled"), Response::HTTP_BAD_REQUEST);
         if ($this->_checkTotalPriceIsNotGreaterThanMinimum($cart)) return ApiResponse::sendError(trans("order::messages.setting_minimum_cart_price", ["price" => number_format($this->_getMinimumCartPrice())]), Response::HTTP_BAD_REQUEST);
-//        $request->user()->clearCart();
+        $request->user()->clearCart();
         $order = self::query()->create([
             'user_id' => $request->user()->id,
             'amount' => $cart->get('total_price'),
@@ -125,7 +125,7 @@ class Order extends Model
             'postal_code' => $address->postal_code,
             'type' => OrderAddressType::Normal,
         ]);
-        if ($factor){
+        if ($factor) {
             $order->factor()->create([
                 'city_id' => $factor->city_id,
                 'name' => $factor->name,
@@ -141,17 +141,25 @@ class Order extends Model
                 'unit_price' => $item['unit_price'],
             ]];
         }));
-        $payment = Payment::purchase(
-            (new InvoicePayment)->amount($cart->get('total_price')),
-            function ($driver, $transactionId) use ($order, $cart, $request) {
-                $order->invoices()->create([
-                    'user_id' => $request->user()->id,
-                    'transactionId' => $transactionId,
-                    'gateway' => class_basename($driver),
-                    'amount' => $cart->get('total_price'),
-                ]);
-            }
-        )->pay();
+        if ($request->filled('is_pay_in_person')) {
+            $payment = $order->invoices()->create([
+                'user_id' => $request->user()->id,
+                'is_pay_in_person' => true,
+                'amount' => $cart->get('total_price'),
+            ]);
+        } else {
+            $payment = Payment::purchase(
+                (new InvoicePayment)->amount($cart->get('total_price')),
+                function ($driver, $transactionId) use ($order, $cart, $request) {
+                    $order->invoices()->create([
+                        'user_id' => $request->user()->id,
+                        'transactionId' => $transactionId,
+                        'gateway' => class_basename($driver),
+                        'amount' => $cart->get('total_price'),
+                    ]);
+                }
+            )->pay();
+        }
         return ApiResponse::message(trans('Registration information completed successfully'))
             ->addData('order', ApiAdminOrderResource::make($order))
             ->addData('payment', $payment)

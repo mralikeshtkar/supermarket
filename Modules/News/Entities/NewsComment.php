@@ -99,6 +99,21 @@ class NewsComment extends Model
     }
 
     /**
+     * @param Request $request
+     * @param $news
+     * @return LengthAwarePaginator
+     */
+    public function paginateAdminByNewsId(Request $request,$news): LengthAwarePaginator
+    {
+        return self::query()->select($this->selected_columns)
+            ->with($this->with_relationships)
+            ->scopes($this->with_scopes)
+            ->latest()
+            ->where('news_id',$news)
+            ->paginate($request->get('perPage', 10));
+    }
+
+    /**
      * @return NewsCommentFactory
      */
     protected static function newFactory(): NewsCommentFactory

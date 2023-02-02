@@ -19,7 +19,7 @@ class ApiAdminVoteResource extends JsonResource
         return collect($this->resource)->when(array_key_exists('created_at', $this->resource->getAttributes()), function (Collection $collection) {
             $collection->put('created_at', verta($this->resource->created_at)->formatJalaliDate());
         })->when(array_key_exists('status', $this->resource->getAttributes()), function (Collection $collection) {
-            $collection->put('status', VoteStatus::getDescription($this->resource->status));
+            $collection->put('status_translated', VoteStatus::getDescription($this->resource->status));
         })->when($this->resource->relationLoaded('items'), function (Collection $collection) {
             $collection->put('items', ApiAdminVoteItemResource::collection($this->resource->items,['item_users_count'=>$this->resource->item_users_count]));
         })->when($this->resource->relationLoaded('selectedItem'), function (Collection $collection) {

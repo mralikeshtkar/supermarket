@@ -377,6 +377,19 @@ class User extends Authenticatable
     }
 
     /**
+     * @param Request $request
+     * @return LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|array|\LaravelIdea\Helper\Modules\Address\Entities\_IH_Address_C
+     */
+    public function getUserFavourites(Request $request): LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|array|\LaravelIdea\Helper\Modules\Address\Entities\_IH_Address_C
+    {
+        return $this->favourites()
+            ->select(['id','name','price'])
+            ->with(['image', 'model'])
+            ->latest()
+            ->paginate();
+    }
+
+    /**
      * @return LengthAwarePaginator
      */
     public function getOrders(): LengthAwarePaginator
@@ -496,6 +509,19 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(VoteItem::class,'vote_item_user')
             ->withTimestamps();
+    }
+
+    #endregion
+
+    #region Scopes
+
+    /**
+     * @param Builder $builder
+     * @return void
+     */
+    public function scopeIsNotBlocked(Builder $builder)
+    {
+        $builder->where('is_blocked',false);
     }
 
     #endregion

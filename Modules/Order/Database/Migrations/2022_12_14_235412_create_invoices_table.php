@@ -25,9 +25,10 @@ return new class extends Migration {
                 ->on('orders')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('transactionId');
-            $table->string('gateway');
+            $table->string('transactionId')->nullable();
+            $table->string('gateway')->nullable();
             $table->string('amount');
+            $table->boolean('is_pay_in_person')->default(false);
             $table->unsignedTinyInteger('status')->default(OrderInvoiceStatus::Pending);
             $table->timestamps();
         });

@@ -22,6 +22,9 @@ class Permissions extends Enum
     const MANAGE_SETTINGS ="manage settings";
     const MANAGE_LOG_ACTIVITIES ="manage log activities";
     const MANAGE_ORDERS ="manage orders";
+    const MANAGE_ADVERTISEMENTS ="manage advertisements";
+    const MANAGE_POSTERS ="manage posters";
+    const MANAGE_NEWS ="manage news";
 
     /*
     const MANAGE_PROVINCES ="manage provinces";

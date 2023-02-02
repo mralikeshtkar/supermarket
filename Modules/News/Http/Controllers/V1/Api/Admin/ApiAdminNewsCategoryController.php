@@ -20,11 +20,14 @@ class ApiAdminNewsCategoryController extends Controller
     public function index(Request $request, $newsCategory = null)
     {
         if ($newsCategory) $newsCategory = NewsCategory::init()->selectColumns(['id'])->findOrFailById($newsCategory)->id;
-        $newCategories = NewsCategory::init()->selectColumns(['id', 'title', 'parent_id'])
+        $newCategories = NewsCategory::init()->selectColumns(['id', 'title', 'parent_id','status'])
             ->paginateAdmin($request, $newsCategory);
         $resource = ApiPaginationResource::make($newCategories)->additional(['itemsResource' => ApiAdminNewsCategoryResource::class]);
         return ApiResponse::message(trans("Received information successfully"))
             ->addData('newCategories', $resource)
+            ->addData('statuses', collect(NewsCategoryStatus::asArray())->map(function ($item){
+                return ['value'=>$item,'title'=>NewsCategoryStatus::getDescription($item)];
+            })->values()->toArray())
             ->send();
     }
 

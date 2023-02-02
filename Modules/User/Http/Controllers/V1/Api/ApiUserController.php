@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
+use Modules\Product\Transformers\V1\Api\ProductResource;
+use Modules\User\Entities\User;
 use Modules\User\Rules\FavouritableRule;
 use Modules\User\Transformers\V1\Api\ApiUserOrderResource;
 use OpenApi\Annotations as OA;
@@ -161,6 +163,23 @@ class ApiUserController extends Controller
     {
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
             ->addData('favourites', $request->user()->getFavourites($request))
+            ->send();
+    }
+
+    /**
+     * @param Request $request
+     * @param $user
+     * @return JsonResponse
+     */
+    public function userFavourites(Request $request, $user)
+    {
+        $user = User::init()->selectColumns(['id'])
+            ->withScopes(['isNotBlocked'])
+            ->findOrFailById($user);
+        $products = $user->getUserFavourites($request);
+        $resource = ApiPaginationResource::make($products)->additional(['itemsResource' => ProductResource::class]);
+        return ApiResponse::message(trans("Received information successfully"))
+            ->addData('products', $resource)
             ->send();
     }
 

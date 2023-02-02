@@ -44,9 +44,7 @@
 <body>
 <div class="pdf-head">فاکتور فروش</div>
 <div class="overflow-hidden">
-    <div class="" style="width: 38px">فروشنده</div>
-    <div class="float-right">a</div>
-    <div class="float-left">c</div>
+    <div class="">شماره فاکتور: {{ $order->id }}</div>
 </div>
 </body>
 </html>

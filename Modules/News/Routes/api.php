@@ -33,12 +33,12 @@ Route::prefix('v1')->group(function (Router $router) {
 
             /* News categories */
             $router->get('news-categories/{newsCategory?}', [V1ApiAdminNewsCategoryController::class, 'index']);
-            $router->get('news-categories', [V1ApiAdminNewsCategoryController::class, 'store']);
+            $router->post('news-categories', [V1ApiAdminNewsCategoryController::class, 'store']);
             $router->put('news-categories/{newsCategory}', [V1ApiAdminNewsCategoryController::class, 'update']);
             $router->delete('news-categories/{newsCategory}', [V1ApiAdminNewsCategoryController::class, 'destroy']);
 
             /* News comments */
-            $router->get('news-comments',[V1ApiAdminNewsCommentController::class,'index']);
+            $router->get('news-comments/{news}',[V1ApiAdminNewsCommentController::class,'index']);
             $router->get('news-comments/{newsComment}',[V1ApiAdminNewsCommentController::class,'show']);
             $router->put('news-comments/{newsComment}',[V1ApiAdminNewsCommentController::class,'update']);
             $router->delete('news-comments/{newsComment}',[V1ApiAdminNewsCommentController::class,'destroy']);

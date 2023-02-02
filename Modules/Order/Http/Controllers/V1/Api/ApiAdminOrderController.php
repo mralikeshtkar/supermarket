@@ -171,8 +171,8 @@ class ApiAdminOrderController extends Controller
     {
         ApiResponse::authorize($request->user()->can('factor', Order::class));
         $order = Order::init()->selectColumns(['id'])->findOrFailById($order);
-        $pdf = PDF::loadView('factor', [], [], );
-        $pdf->download(now()->toDateTimeString() . '-test.pdf');
+        $pdf = PDF::loadView('factor',['order'=>$order]);
+        return response()->json(['pdf'=>$pdf->download(now()->toDateTimeString() . '-test.pdf')]);
     }
 
 }

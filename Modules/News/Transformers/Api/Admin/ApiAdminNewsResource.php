@@ -4,6 +4,7 @@ namespace Modules\News\Transformers\Api\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Modules\News\Enums\NewsStatus;
 
 class ApiAdminNewsResource extends JsonResource
 {
@@ -17,6 +18,8 @@ class ApiAdminNewsResource extends JsonResource
     {
         return collect($this->resource)->when(array_key_exists('created_at', $this->resource->getAttributes()), function (Collection $collection) {
             $collection->put('created_at', verta($this->resource->created_at)->formatJalaliDate());
+        })->when(array_key_exists('status', $this->resource->getAttributes()), function (Collection $collection) {
+            $collection->put('status_translated', NewsStatus::getDescription($this->resource->status));
         });
     }
 }

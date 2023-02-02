@@ -21,5 +21,6 @@
     "News": true,
     "Vote": true,
     "Advertisement": true,
-    "Poster": true
+    "Poster": true,
+    "Transportation": true
 }
