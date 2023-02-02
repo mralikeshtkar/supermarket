@@ -33,8 +33,8 @@ return new class extends Migration {
             $table->string('mobile');
             $table->text('address');
             $table->string('postal_code');
-            $table->float('latitude');
-            $table->float('longitude');
+            $table->float('latitude')->nullable();
+            $table->float('longitude')->nullable();
             $table->timestamps();
         });
     }
