@@ -16,12 +16,20 @@ use Modules\Product\Transformers\V1\Api\ProductResource;
 use Modules\User\Entities\User;
 use Modules\User\Rules\FavouritableRule;
 use Modules\User\Transformers\V1\Api\ApiUserOrderResource;
+use Modules\User\Transformers\V1\Api\ApiUserResource;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class ApiUserController extends Controller
 {
+    public function currentUser(Request $request)
+    {
+        return ApiResponse::message(trans("Received information successfully"))
+            ->addData('user',new ApiUserResource($request->user()->only(['id','mobile','email','name'])))
+            ->send();
+    }
+
     /**
      * @OA\Post(
      *     path="/users/{id}",

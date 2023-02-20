@@ -19,6 +19,7 @@ use Modules\User\Http\Controllers\V1\Api\ApiUserController as V1ApiUserControlle
 
 Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
+        $router->get('user', [V1ApiUserController::class, 'currentUser']);
         $router->put('users', [V1ApiUserController::class, 'update']);
         $router->post('users/like', [V1ApiUserController::class, 'like']);
         $router->post('users/dislike', [V1ApiUserController::class, 'dislike']);
