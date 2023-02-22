@@ -50,10 +50,11 @@ class ApiAdminRackRowController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $rack_row
      * @return JsonResponse
      */
-    public function show($rack_row)
+    public function show(Request $request,$rack_row)
     {
         ApiResponse::authorize($request->user()->can('manageRackRows', Rack::class));
         try {
