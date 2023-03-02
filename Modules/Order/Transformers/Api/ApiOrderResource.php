@@ -4,6 +4,7 @@ namespace Modules\Order\Transformers\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Modules\Order\Enums\OrderStatus;
 use Modules\Product\Transformers\V1\Api\ProductResource;
 use Modules\Transportation\Transformers\Api\ApiOrderInvoiceResource;
 use function collect;
@@ -25,6 +26,8 @@ class ApiOrderResource extends JsonResource
                 $collection->put('formatted_amount', number_format($this->resource->amount));
             })->when(array_key_exists('created_at', $this->resource->toArray()), function (Collection $collection) {
                 $collection->put('created_at', jalaliFormat($this->resource->created_at));
+            })->when(array_key_exists('status', $this->resource->toArray()), function (Collection $collection) {
+                $collection->put('translated_status', OrderStatus::getDescription($this->resource->status));
             })->when($this->resource->relationLoaded('address'), function (Collection $collection) {
                 $collection->put('address', collect($this->resource->address)->when($this->resource->address->originalIsEquivalent('province_name'), function (Collection $collection) {
                     $collection->put('province_name', $this->resource->address->province_name);
