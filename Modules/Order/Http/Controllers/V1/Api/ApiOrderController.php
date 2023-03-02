@@ -32,6 +32,7 @@ class ApiOrderController extends Controller
     {
         $order = $request->user()
             ->orders()
+            ->with(['address','products:id,name,price','products.image','invoices'])
             ->findOrFail($order);
         return ApiResponse::message(trans("Received information successfully"))
             ->addData('order', new ApiOrderResource($order))
