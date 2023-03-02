@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             ProvinceCitySeeder::class,
-            UserSeeder::class,
+//            UserSeeder::class,
 //            ProductSeeder::class,
 //            AddressSeeder::class,
         ]);

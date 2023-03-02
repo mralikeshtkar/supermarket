@@ -16,11 +16,11 @@ class BrandResource extends JsonResource
      */
     public function toArray($request)
     {
-        return collect($this->resource)->when(array_key_exists('status',$this->resource->toArray()),function (Collection $collection){
-          $collection->put('translated_status',BrandStatus::getDescription($this->resource->status))
-          ->put('status_css_class',BrandStatus::fromValue($this->resource->status)->getCssClass());
+        return collect($this->resource)->when(array_key_exists('status', $this->resource->toArray()), function (Collection $collection) {
+            $collection->put('translated_status', BrandStatus::getDescription($this->resource->status))
+                ->put('status_css_class', BrandStatus::fromValue($this->resource->status)->getCssClass());
         })->when($this->resource->relationLoaded('image'), function (Collection $collection) {
-                $collection->put('image', $this->resource->image);
-            });
+            $collection->put('image', $this->resource->image);
+        });
     }
 }
