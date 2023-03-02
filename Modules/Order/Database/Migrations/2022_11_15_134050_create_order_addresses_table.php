@@ -25,6 +25,12 @@ return new class extends Migration
                 ->on('cities')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->foreignId('district_id')
+                ->nullable()
+                ->references('id')
+                ->on('districts')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
             $table->string('name');
             $table->string('mobile');
             $table->text('address');
