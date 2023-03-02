@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
 
         $router->get('user/orders-list',[V1ApiOrderController::class,'index']);
+        $router->get('user/orders-list/{order}',[V1ApiOrderController::class,'show']);
 
         $router->group(['prefix' => 'admin'], function (Router $router) {
             $router->get('orders', [V1ApiAdminOrderController::class, 'index']);

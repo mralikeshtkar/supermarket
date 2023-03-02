@@ -28,6 +28,16 @@ class ApiOrderController extends Controller
             ->send();
     }
 
+    public function show(Request $request, $order)
+    {
+        $order = $request->user()
+            ->orders()
+            ->findOrFail($order);
+        return ApiResponse::message(trans("Received information successfully"))
+            ->addData('order', new ApiOrderResource($order))
+            ->send();
+    }
+
     /**
      * @OA\Post(
      *     path="/orders",
