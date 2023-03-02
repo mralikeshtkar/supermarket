@@ -79,13 +79,13 @@ class CartProductResource extends JsonResource
         }
         $onlinePayDiscount = Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_ONLINE_PAY_DISCOUNT, 0);
         if (!$request->filled('is_pay_in_person') && $onlinePayDiscount) {
-            $onlinePayDiscountAmount = ($result->total_price / 100) * $onlinePayDiscount;
+            $onlinePayDiscountAmount = ($result['total_price'] / 100) * $onlinePayDiscount;
             $result->when($result->has('discount_amount'), function (Collection $collection) use ($onlinePayDiscountAmount, $result) {
-                $collection->put('discount_amount', $result->discount_amount + $onlinePayDiscountAmount)
-                    ->put('total_price', $result->total_price - $onlinePayDiscountAmount);
+                $collection->put('discount_amount', $result['discount_amount'] + $onlinePayDiscountAmount)
+                    ->put('total_price', $result['total_price'] - $onlinePayDiscountAmount);
             }, function (Collection $collection) use ($onlinePayDiscountAmount, $result) {
                 $collection->put('discount_amount', $onlinePayDiscountAmount)
-                    ->put('total_price', $result->total_price - $onlinePayDiscountAmount);
+                    ->put('total_price', $result['total_price'] - $onlinePayDiscountAmount);
             });
         }
         return $result;

@@ -34,6 +34,14 @@ class StoreroomEntrance extends Model
 
     #region Methods
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function (StoreroomEntrance $storeroomEntrance){
+            dd($storeroomEntrance->products()->get());
+        });
+    }
+
     /**
      * @param $storeroom_entrance
      * @return Model|Collection|Builder|array|null

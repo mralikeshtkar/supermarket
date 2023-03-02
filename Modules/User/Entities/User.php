@@ -157,7 +157,7 @@ class User extends Authenticatable
             'mobile' => to_valid_mobile_number($request->mobile),
             'email' => $request->email,
             'is_blocked' => $request->is_blocked,
-            'point' => $request->point,
+            'point' => $request->filled('point') ? $request->point : $this->point,
         ]);
         if ($request->filled('role')) $this->assignRole($request->role);
         return $this->refresh();

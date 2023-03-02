@@ -41,15 +41,15 @@ Route::prefix('v1')->group(function (Router $router) {
         });
         $router->group(['prefix' => 'admin'], function (Router $router) {
 
+            /* Online */
+            $router->get('users/online', [V1ApiAdminUserController::class, 'online']);
+
             $router->get('users', [V1ApiAdminUserController::class, 'index']);
             $router->post('users', [V1ApiAdminUserController::class, 'store']);
             $router->get('users/{user}', [V1ApiAdminUserController::class, 'show']);
             $router->match(['put', 'patch'], 'users/{user}', [V1ApiAdminUserController::class, 'update']);
             $router->delete('users/{user}', [V1ApiAdminUserController::class, 'destroy']);
             $router->get('user', [V1ApiAdminUserController::class, 'user']);
-
-            /* Online */
-            $router->get('users/online', [V1ApiAdminUserController::class, 'online']);
 
             /* Cart */
             $router->get('users/{user}/cart', [V1ApiAdminUserController::class, 'cart']);

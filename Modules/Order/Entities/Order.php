@@ -19,6 +19,7 @@ use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Discount\Entities\Discount;
 use Modules\Discount\Exceptions\DiscountIsInvalidException;
 use Modules\Order\Enums\OrderAddressType;
+use Modules\Order\Enums\OrderInvoiceStatus;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use Modules\Product\Entities\Product;
 use Modules\Setting\Entities\Setting;
@@ -309,6 +310,17 @@ class Order extends Model
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    #endregion
+
+    #region Scopes
+
+    public function scopeSuccess(Builder $builder)
+    {
+        $builder->whereHas('invoices',function ($q){
+            $q->where('status',OrderInvoiceStatus::Success);
+        });
     }
 
     #endregion

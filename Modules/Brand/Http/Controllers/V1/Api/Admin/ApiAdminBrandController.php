@@ -10,7 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Modules\Brand\Entities\Brand;
 use Modules\Brand\Enums\BrandStatus;
+use Modules\Brand\Transformers\Api\ApiAdminBrandResource;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 use function trans;
@@ -31,8 +33,9 @@ class ApiAdminBrandController extends Controller
     public function index(Request $request)
     {
         ApiResponse::authorize($request->user()->can('manage', Brand::class));
+        $brands=Brand::init()->getAdminIndexPaginate($request);
         return ApiResponse::message(trans('brand::messages.received_information_successfully'))
-            ->addData('brands', Brand::init()->getAdminIndexPaginate($request))
+            ->addData('brands', ApiPaginationResource::make($brands)->additional(['itemsResource' => ApiAdminBrandResource::class]))
             ->send();
     }
 

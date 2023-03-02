@@ -60,6 +60,7 @@ class Product extends Model
         'status',
         'old_price',
         'additional_price',
+        'quantity',
         'manufacturer_price',
         'delivery_is_free',
         'has_tax_exemption',
