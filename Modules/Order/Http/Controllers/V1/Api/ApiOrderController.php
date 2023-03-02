@@ -74,7 +74,7 @@ class ApiOrderController extends Controller
     {
         ApiResponse::init($request->all(), [
             'address_id' => ['required', Rule::exists(Address::class, 'id')->where('user_id', $request->user()->id)],
-            'factor_id' => ['required', Rule::exists(Address::class, 'id')->where('user_id', $request->user()->id)],
+            'factor_id' => ['nullable', Rule::exists(Address::class, 'id')->where('user_id', $request->user()->id)],
             'discount' => ['nullable', 'string'],
         ])->validate();
         try {
