@@ -110,6 +110,8 @@ Route::prefix('v1')->group(function (Router $router) {
 
         });
 
+        $router->get('products/not-purchased', [V1ApiProductController::class, 'notPurchased']);
+
         /* Faqs */
         $router->get('products/{product}/faqs', [V1ApiFaqController::class, 'index']);
         $router->get('faqs/{faq}/replies', [V1ApiFaqController::class, 'replies']);

@@ -194,6 +194,7 @@ class ApiAdminProductController extends Controller
                 'required',
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
+            'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
         ], [], trans('product::validation.attributes'))->validate();
         $product = Product::init()->store($request);
         return ApiResponse::message(trans('product::messages.product_was_created'))->send();
@@ -244,6 +245,7 @@ class ApiAdminProductController extends Controller
                 'required',
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
+            'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
         ], [], trans('product::validation.attributes'))->validate();
         try {
             $product = Product::init()->findOrFailById($product);
@@ -268,7 +270,7 @@ class ApiAdminProductController extends Controller
      * @param $product
      * @return JsonResponse
      */
-    public function accept(Request $request,$product)
+    public function accept(Request $request, $product)
     {
         ApiResponse::authorize($request->user()->can('manage', Product::class));
         return $this->_changeStatus($product, ProductStatus::Accepted);
@@ -298,7 +300,7 @@ class ApiAdminProductController extends Controller
      * @param $product
      * @return JsonResponse
      */
-    public function reject(Request $request,$product)
+    public function reject(Request $request, $product)
     {
         ApiResponse::authorize($request->user()->can('manage', Product::class));
         return $this->_changeStatus($product, ProductStatus::Rejected);

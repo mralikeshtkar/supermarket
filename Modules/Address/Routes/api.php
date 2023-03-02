@@ -65,6 +65,7 @@ Route::prefix('v1')->group(function (Router $router) {
 Route::prefix('v1')->group(function (Router $router) {
     $router->get('cities/{province}', [V1ApiCityController::class, 'show'])
         ->name('address.v1.api-city.show.get.api');
+    $router->get('cities/{city}/districts', [V1ApiCityController::class, 'districts']);
     $router->middleware('auth:sanctum')->group(function (Router $router) {
         $router->post('cities', [V1ApiCityController::class, 'store'])
             ->name('address.v1.api-city.store.post.api');
@@ -72,6 +73,10 @@ Route::prefix('v1')->group(function (Router $router) {
             ->name('address.v1.api-city.update.put-patch.api');
         $router->delete('cities/{province}', [V1ApiCityController::class, 'destroy'])
             ->name('address.v1.api-city.destroy.delete.api');
+
+        $router->group(['prefix' => 'admin'], function (Router $router) {
+
+        });
     });
 });
 

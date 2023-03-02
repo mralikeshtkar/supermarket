@@ -159,6 +159,14 @@ class ApiProductController extends Controller
             ->send();
     }
 
+    public function notPurchased(Request $request)
+    {
+        $latestSeen = Product::init()->notPurchased($request->user());
+        return ApiResponse::message(trans('product::messages.received_information_successfully'))
+            ->addData('products', ApiPaginationResource::make($latestSeen)->additional(['itemsResource' => ProductResource::class]))
+            ->send();
+    }
+
     /**
      * @OA\Get(
      *     path="/products/latest/seen",

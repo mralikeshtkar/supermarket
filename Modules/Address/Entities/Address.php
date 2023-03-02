@@ -20,6 +20,7 @@ class Address extends Model
         'user_id',
         'province_id',
         'city_id',
+        'district_id',
         'name',
         'mobile',
         'address',
@@ -59,6 +60,7 @@ class Address extends Model
             'user_id' => $request->user()->id,
             'province_id' => $request->province_id,
             'city_id' => $request->city_id,
+            'district_id' => $request->district_id,
             'name' => $request->name,
             'mobile' => to_valid_mobile_number($request->mobile),
             'address' => $request->address,
@@ -113,6 +115,7 @@ class Address extends Model
         $this->update([
             'province_id' => $request->province_id,
             'city_id' => $request->city_id,
+            'district_id' => $request->district_id,
             'name' => $request->name,
             'mobile' => to_valid_mobile_number($request->mobile),
             'address' => $request->address,
@@ -135,6 +138,11 @@ class Address extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
     }
 
     public function user(): BelongsTo

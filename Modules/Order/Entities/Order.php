@@ -119,6 +119,7 @@ class Order extends Model
         ]);
         $order->address()->create([
             'city_id' => $address->city_id,
+            'district_id' => $address->district_id,
             'name' => $address->name,
             'mobile' => $address->mobile,
             'address' => $address->address,
@@ -128,6 +129,7 @@ class Order extends Model
         if ($factor) {
             $order->factor()->create([
                 'city_id' => $factor->city_id,
+                'district_id' => $factor->district_id,
                 'name' => $factor->name,
                 'mobile' => $factor->mobile,
                 'address' => $factor->address,

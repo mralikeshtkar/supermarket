@@ -12,35 +12,21 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('districts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
+                ->nullable()
                 ->references('id')
                 ->on('users')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-            $table->foreignId('province_id')
-                ->references('id')
-                ->on('provinces')
-                ->cascadeOnDelete()
+                ->nullOnDelete()
                 ->cascadeOnUpdate();
             $table->foreignId('city_id')
                 ->references('id')
                 ->on('cities')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignId('district_id')
-                ->nullable()
-                ->references('id')
-                ->on('districts')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
             $table->string('name');
-            $table->string('mobile');
-            $table->text('address');
-            $table->string('postal_code');
-            $table->float('latitude')->nullable();
-            $table->float('longitude')->nullable();
+            $table->string('price');
             $table->timestamps();
         });
     }
@@ -52,6 +38,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('districts');
     }
 };

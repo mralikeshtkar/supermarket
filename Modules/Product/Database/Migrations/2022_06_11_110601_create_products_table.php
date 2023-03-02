@@ -38,6 +38,7 @@ return new class extends Migration {
             $table->string('price');
             $table->string('old_price')->nullable();
             $table->string('additional_price')->nullable();
+            $table->string('manufacturer_price')->nullable();
             $table->boolean('delivery_is_free')->default(false);
             $table->boolean('has_tax_exemption')->default(false);
             $table->unsignedSmallInteger('status')->default(ProductStatus::Pending);

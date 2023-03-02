@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Address\Entities\City;
 use Modules\Address\Entities\Province;
+use Modules\Address\Transformers\Api\ApiDistrictResource;
 use Modules\Core\Responses\Api\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -91,6 +92,17 @@ class ApiCityController extends Controller
                 ->addError('message', $e->getMessage())
                 ->send();
         }
+    }
+
+    public function districts(Request $request, $city)
+    {
+        $city = City::init()->select(['id'])->findByColumnOrFail($city);
+        $districts = $city->districts()
+            ->select(['id', 'city_id', 'name', 'price'])
+            ->get();
+        return ApiResponse::message(trans('address::messages.received_information_successfully'))
+            ->addData('districts', ApiDistrictResource::collection($districts))
+            ->send();
     }
 
     /**

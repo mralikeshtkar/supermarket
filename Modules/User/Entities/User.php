@@ -328,11 +328,12 @@ class User extends Authenticatable
 
     /**
      * @param $discount
+     * @param $address
      * @return CartProductResource
      */
-    public function getCart($discount = null): CartProductResource
+    public function getCart($discount = null,$address = null): CartProductResource
     {
-        return Product::init()->getCartData($this,$discount);
+        return Product::init()->getCartData($this,$discount,$address);
     }
 
     /**

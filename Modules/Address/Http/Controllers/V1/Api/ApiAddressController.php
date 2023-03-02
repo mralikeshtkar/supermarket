@@ -7,8 +7,10 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Validation\Rule;
 use Modules\Address\Entities\Address;
 use Modules\Address\Entities\City;
+use Modules\Address\Entities\District;
 use Modules\Address\Entities\Province;
 use Modules\Address\Rules\PostalCodeRule;
 use Modules\Core\Responses\Api\ApiResponse;
@@ -43,6 +45,7 @@ class ApiAddressController extends Controller
         ApiResponse::init($request->all(), [
             'province_id' => ['required', 'exists:' . Province::class . ',id'],
             'city_id' => ['required', 'exists:' . City::class . ',id'],
+            'district_id' => ['nullable', Rule::exists(District::class, 'id')->where('city_id', $request->city_id)],
             'name' => ['required', 'string'],
             'address' => ['required', 'string'],
             'postal_code' => ['required', new PostalCodeRule()],
@@ -103,6 +106,7 @@ class ApiAddressController extends Controller
         ApiResponse::init($request->all(), [
             'province_id' => ['required', 'exists:' . Province::class . ',id'],
             'city_id' => ['required', 'exists:' . City::class . ',id'],
+            'district_id' => ['nullable', Rule::exists(District::class, 'id')->where('city_id', $request->city_id)],
             'name' => ['required', 'string'],
             'address' => ['required', 'string'],
             'postal_code' => ['required', new PostalCodeRule()],
@@ -145,7 +149,7 @@ class ApiAddressController extends Controller
             ApiResponse::authorize($request->user()->can('show', $address));
             $address->load(['user', 'city', 'province']);
             return ApiResponse::message(trans('address::messages.received_information_successfully'))
-                ->addData('address',$address)
+                ->addData('address', $address)
                 ->send();
         } catch (HttpResponseException $e) {
             return ApiResponse::message(trans('core::messages.access_forbidden'))

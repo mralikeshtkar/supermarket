@@ -29,6 +29,7 @@ use Modules\Feature\Traits\HasAttribute;
 use Modules\Media\Entities\Media;
 use Modules\Media\Traits\HasMedia;
 use Modules\Order\Entities\Order;
+use Modules\Order\Enums\OrderStatus;
 use Modules\Product\Database\factories\ProductFactory;
 use Modules\Product\Enums\ProductStatus;
 use Modules\Product\Transformers\V1\Api\CartProductResource;
@@ -59,6 +60,7 @@ class Product extends Model
         'status',
         'old_price',
         'additional_price',
+        'manufacturer_price',
         'delivery_is_free',
         'has_tax_exemption',
     ];
@@ -189,6 +191,23 @@ class Product extends Model
                     });
                 });
             })->unitName()
+            ->accepted()
+            ->paginate();
+    }
+
+    /**
+     * @param $user
+     * @return _IH_Product_C|array|LengthAwarePaginator
+     */
+    public function notPurchased($user): _IH_Product_C|array|LengthAwarePaginator
+    {
+        return self::query()
+            ->select(['id', 'name', 'price'])
+            ->with(['image'])
+            ->whereDoesntHave('orders', function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                    ->where('status', OrderStatus::DeliveryToCustomer);
+            })
             ->accepted()
             ->paginate();
     }
@@ -360,6 +379,7 @@ class Product extends Model
                 'status' => ProductStatus::Pending,
                 'old_price' => $request->old_price,
                 'additional_price' => $request->additional_price,
+                'manufacturer_price' => $request->manufacturer_price,
                 'delivery_is_free' => $request->filled('delivery_is_free'),
                 'has_tax_exemption' => $request->filled('has_tax_exemption'),
             ]);
@@ -426,6 +446,7 @@ class Product extends Model
             'price' => $request->price,
             'old_price' => $request->old_price,
             'additional_price' => $request->additional_price,
+            'manufacturer_price' => $request->manufacturer_price,
             'delivery_is_free' => $request->filled('delivery_is_free'),
             'has_tax_exemption' => $request->filled('has_tax_exemption'),
         ]);
@@ -458,18 +479,19 @@ class Product extends Model
     /**
      * @param $user
      * @param $discount
+     * @param $address
      * @return CartProductResource
      */
-    public function getCartData($user, $discount = null): CartProductResource
+    public function getCartData($user, $discount = null, $address = null): CartProductResource
     {
         $cart = collect($user->cart);
         $products = self::query()
-            ->select(['id', 'name', 'price','additional_price','delivery_is_free'])
+            ->select(['id', 'name', 'price', 'additional_price', 'delivery_is_free'])
             ->with(['image', 'categories:id'])
             ->whereIn('id', $cart->keys()->toArray())
             ->stock()
             ->get();
-        return CartProductResource::make($products)->additional(['cart' => $cart, 'discount' => $discount]);
+        return CartProductResource::make($products)->additional(['cart' => $cart, 'discount' => $discount, 'address' => $address]);
     }
 
     /**

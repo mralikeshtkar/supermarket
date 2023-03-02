@@ -38,7 +38,11 @@ class CartProductResource extends JsonResource
         if ($products->pluck('delivery_is_free')->contains(true)) {
             $shipping_cost = 0;
         } else {
-            $shipping_cost = Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_SHIPPING_COST, 0);
+            if ($this->additional['address']) {
+                $shipping_cost = $this->additional['address']->district->price;
+            } else {
+                $shipping_cost = Cache::get(Setting::SETTING_CACHE_KEY, collect())->get(Setting::SETTING_SHIPPING_COST, 0);
+            }
         }
         $total_cart = $products && $products->count() ? $products->sum('sum_price') : 0;
         $total_price = $total_cart + $shipping_cost;
