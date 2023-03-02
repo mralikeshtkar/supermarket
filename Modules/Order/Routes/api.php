@@ -19,6 +19,7 @@ use Modules\Order\Http\Controllers\V1\Api\ApiOrderController as V1ApiOrderContro
 Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
 
+        $router->get('user/orders-list',[V1ApiOrderController::class,'index']);
 
         $router->group(['prefix' => 'admin'], function (Router $router) {
             $router->get('orders', [V1ApiAdminOrderController::class, 'index']);

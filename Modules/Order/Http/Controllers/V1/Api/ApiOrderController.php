@@ -9,12 +9,25 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Modules\Address\Entities\Address;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Entities\Order;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
+use Modules\Order\Transformers\Api\ApiOrderResource;
 use OpenApi\Annotations as OA;
 
 class ApiOrderController extends Controller
 {
+    public function index(Request $request)
+    {
+        $orders = $request->user()
+            ->orders()
+            ->latest()
+            ->paginate($request->get('perPage', 10));
+        return ApiResponse::message(trans("Received information successfully"))
+            ->addData('orders', ApiPaginationResource::make($orders)->additional(['itemsResource' => ApiOrderResource::class]))
+            ->send();
+    }
+
     /**
      * @OA\Post(
      *     path="/orders",
@@ -49,7 +62,7 @@ class ApiOrderController extends Controller
     public function store(Request $request)
     {
         ApiResponse::init($request->all(), [
-            'address_id' => ['required', Rule::exists(Address::class,'id')->where('user_id',$request->user()->id)],
+            'address_id' => ['required', Rule::exists(Address::class, 'id')->where('user_id', $request->user()->id)],
             'discount' => ['nullable', 'string'],
         ])->validate();
         try {
