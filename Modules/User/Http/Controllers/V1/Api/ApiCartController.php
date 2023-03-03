@@ -45,8 +45,8 @@ class ApiCartController extends Controller
     public function store(Request $request)
     {
         $product = Product::init()
-            ->withScopes(['stock'])
-            ->selectColumns(['id'])
+//            ->withScopes(['stock'])
+            ->selectColumns(['id','quantity'])
             ->findOrFailById($request->product_id);
         ApiResponse::init($request->all(), [
             'product_id' => ['required', 'exists:products,id'],
@@ -65,8 +65,8 @@ class ApiCartController extends Controller
      */
     public function reduceQuantity(Request $request)
     {
-        $product = Product::init()->selectColumns(['id'])
-            ->withScopes(['stock'])
+        $product = Product::init()->selectColumns(['id','quantity'])
+            /*->withScopes(['stock'])*/
             ->findOrFailById($request->product_id);
         ApiResponse::init($request->all(), [
             'product_id' => ['required', 'exists:products,id'],
