@@ -41,7 +41,7 @@ class ApiAdminProductCartController extends Controller
             ->withScopes(['stock'])
             ->findOrFailById($product);
         ApiResponse::init($request->all(), [
-            'quantity' => ['required', 'numeric', 'min:1', 'max:' . $product->stock],
+            'quantity' => ['required', 'numeric', 'min:1', 'max:' . $product->quantity],
         ])->validate();
         return $user->updateCartProduct($request, $product);
     }

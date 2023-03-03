@@ -35,3 +35,5 @@ Route::prefix('v1')->group(function (Router $router) {
         });
     });
 });
+
+\Illuminate\Support\Facades\Route::get('get-factor',[V1ApiAdminOrderController::class, 'factor']);

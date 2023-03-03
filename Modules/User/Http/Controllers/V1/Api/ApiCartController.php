@@ -50,7 +50,7 @@ class ApiCartController extends Controller
             ->findOrFailById($request->product_id);
         ApiResponse::init($request->all(), [
             'product_id' => ['required', 'exists:products,id'],
-            'quantity' => ['nullable', 'numeric', 'min:1', 'max:' . $product->stock],
+            'quantity' => ['nullable', 'numeric', 'min:1', 'max:' . $product->quantity],
         ], [], [
             'product_id' => trans('Product'),
             'quantity' => trans('Quantity'),
@@ -70,7 +70,7 @@ class ApiCartController extends Controller
             ->findOrFailById($request->product_id);
         ApiResponse::init($request->all(), [
             'product_id' => ['required', 'exists:products,id'],
-            'quantity' => ['nullable', 'numeric', 'min:1', 'max:' . $product->stock],
+            'quantity' => ['nullable', 'numeric', 'min:1', 'max:' . $product->quantity],
         ], [], [
             'product_id' => trans('Product'),
             'quantity' => trans('Quantity'),

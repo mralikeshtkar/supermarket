@@ -3,7 +3,7 @@
 return [
     'mode' => 'utf-8',
     'format' => 'A4-L',
-    'default_font_size' => '12',
+    'default_font_size' => '11.5',
     'default_font' => 'iran',
     'margin_left' => 10,
     'margin_right' => 10,

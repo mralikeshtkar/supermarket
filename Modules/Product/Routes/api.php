@@ -129,3 +129,6 @@ Route::prefix('v1')->group(function (Router $router) {
         $router->get('special-products', [V1ApiSpecialProductController::class, 'index']);
     });
 });
+\Illuminate\Support\Facades\Route::get('ffff',function (){
+   dd(\Modules\Storeroom\Entities\StoreroomEntrance::first());
+});

@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Modules\Product\Entities\Product;
 use Modules\Storeroom\Database\factories\StoreroomEntranceFactory;
 use Modules\User\Entities\User;
+use Throwable;
 
 class StoreroomEntrance extends Model
 {
@@ -34,14 +36,6 @@ class StoreroomEntrance extends Model
 
     #region Methods
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::created(function (StoreroomEntrance $storeroomEntrance){
-            dd($storeroomEntrance->products()->get());
-        });
-    }
-
     /**
      * @param $storeroom_entrance
      * @return Model|Collection|Builder|array|null
@@ -53,13 +47,19 @@ class StoreroomEntrance extends Model
 
     /**
      * @param array $products
-     * @return void
+     * @return mixed
+     * @throws Throwable
      */
-    public function updateProduct(array $products)
+    public function updateProduct(array $products): mixed
     {
-        foreach ($products as $product) {
-            $this->products()->updateExistingPivot($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price'],]);
-        }
+        return DB::transaction(function () use ($products) {
+            foreach ($products as $product) {
+                $productItem = $this->products()->findOrFail($product['id']);
+                $productItem->update(['quantity' => $productItem->quantity > $productItem->pivot->quantity ? $productItem->quantity - $productItem->pivot->quantity : 0]);
+                $this->products()->updateExistingPivot($product['id'], ['quantity' => $product['quantity'], 'price' => $product['price'],]);
+                $productItem->increment('quantity', $product['quantity']);
+            }
+        });
     }
 
     /**
@@ -68,6 +68,8 @@ class StoreroomEntrance extends Model
      */
     public function deleteProduct($product_id)
     {
+        $product = $this->products()->findOrFail($product_id);
+        $product->update(['quantity' => $product->quantity > $product->pivot->quantity ? $product->quantity - $product->pivot->quantity : 0]);
         $this->products()->detach($product_id);
     }
 
@@ -130,7 +132,7 @@ class StoreroomEntrance extends Model
         return collect($request->get('products'))->mapWithKeys(function ($item, $key) {
             return [
                 $item['id'] => [
-                    'quantity' => Arr::get($item,'quantity'),
+                    'quantity' => Arr::get($item, 'quantity'),
                     'price' => $item['price'],
                 ],
             ];
@@ -162,27 +164,35 @@ class StoreroomEntrance extends Model
      */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withPivot(['quantity', 'price']);
+        return $this->belongsToMany(Product::class, 'product_storeroom_entrance', '', '', '')
+            ->withPivot(['quantity', 'price']);
     }
 
     /**
      * @param $storeroom
      * @param Request $request
      * @return mixed
+     * @throws Throwable
      */
     public function store($storeroom, Request $request): mixed
     {
-        $storeroom_entrance = $storeroom->entrances()->create([
-            'user_id' => $request->user()->id,
-        ]);
-        $storeroom_entrance->products()->attach($this->_convertedProductGroup($request));
-        return $storeroom_entrance->load([
-            'user:id,name,mobile',
-            'storeroom:id,name',
-            'products' => function (BelongsToMany $belongsToMany) {
-                $belongsToMany->with(['gallery', 'model']);
-            },
-        ]);
+        return DB::transaction(function () use ($storeroom, $request) {
+            $storeroom_entrance = $storeroom->entrances()->create([
+                'user_id' => $request->user()->id,
+            ]);
+            $products = $this->_convertedProductGroup($request);
+            $storeroom_entrance->products()->attach($products);
+            foreach ($products as $productId => $item) {
+                Product::query()->where('id', $productId)->increment('quantity', $item['quantity']);
+            }
+            return $storeroom_entrance->load([
+                'user:id,name,mobile',
+                'storeroom:id,name',
+                'products' => function (BelongsToMany $belongsToMany) {
+                    $belongsToMany->with(['gallery', 'model']);
+                },
+            ]);
+        });
     }
 
     #endregion

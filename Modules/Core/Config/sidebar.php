@@ -136,7 +136,7 @@ return [
     ],
     [
         "title" => "تبلیغات",
-        "icon" => "simple-icon-bubbles",
+        "icon" => "simple-icon-magic-wand",
         "permissions" => [
             Permissions::MANAGE_ADVERTISEMENTS,
         ],
@@ -146,7 +146,7 @@ return [
     ],
     [
         "title" => "پوسترها",
-        "icon" => "simple-icon-bubbles",
+        "icon" => "simple-icon-social-foursqare",
         "permissions" => [
             Permissions::MANAGE_POSTERS,
         ],
@@ -156,7 +156,7 @@ return [
     ],
     [
         "title" => "نظرسنجی ها",
-        "icon" => "simple-icon-bubbles",
+        "icon" => "simple-icon-chart",
         "permissions" => [
             Permissions::MANAGE_POSTERS,
         ],
@@ -166,7 +166,7 @@ return [
     ],
     [
         "title" => "اخبار",
-        "icon" => "simple-icon-bubbles",
+        "icon" => "simple-icon-feed",
         "permissions" => [
             Permissions::MANAGE_NEWS,
         ],

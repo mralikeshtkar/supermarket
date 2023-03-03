@@ -151,7 +151,7 @@ class Product extends Model
     public function getAdminStocks(Request $request): LengthAwarePaginator
     {
         return self::query()
-            ->select(['id', 'name'])
+            ->select(['id', 'name','quantity'])
             ->with(['image'])
             ->when($request->filled('name'), function (Builder $builder) use ($request) {
                 $builder->where('name', 'LIKE', '%' . $request->name . '%');
@@ -760,11 +760,7 @@ class Product extends Model
      */
     public function scopeStock(Builder $builder)
     {
-        $builder->selectSub(function ($builder) {
-            $builder->selectRaw('COALESCE(SUM(product_storeroom_entrance.quantity),0) - COALESCE((select SUM(product_storeroom_out_entrance.quantity) from "product_storeroom_out_entrance" where "product_storeroom_out_entrance"."product_id" = "products"."id"),0)')
-                ->from('product_storeroom_entrance')
-                ->whereColumn('product_storeroom_entrance.product_id', 'products.id');
-        }, "stock");
+        $builder->where('products.quantity', '>=', 0);
     }
 
     /**
@@ -776,15 +772,12 @@ class Product extends Model
     public function scopeHasStock(Builder $builder, $min = null, $max = null)
     {
         $builder->when(is_numeric($min) || is_numeric($max), function (Builder $builder) use ($min, $max) {
-            $builder->whereExists(function ($builder) use ($min, $max) {
-                $builder->selectRaw('1')
-                    ->from('product_storeroom_entrance')
-                    ->whereColumn('product_storeroom_entrance.product_id', 'products.id')
-                    ->when(is_numeric($max), function ($builder) use ($max) {
-                        $builder->havingRaw('COALESCE(SUM(product_storeroom_entrance.quantity),0) - COALESCE((select SUM(product_storeroom_out_entrance.quantity) from "product_storeroom_out_entrance" where "product_storeroom_out_entrance"."product_id" = "products"."id"),0) <= ' . $max);
-                    })->when(is_numeric($min), function ($builder) use ($min) {
-                        $builder->havingRaw('COALESCE(SUM(product_storeroom_entrance.quantity),0) - COALESCE((select SUM(product_storeroom_out_entrance.quantity) from "product_storeroom_out_entrance" where "product_storeroom_out_entrance"."product_id" = "products"."id"),0) >= ' . $min);
-                    });
+            $builder->where(function ($builder) use ($min, $max) {
+                $builder->when(is_numeric($min), function ($q) use ($min) {
+                    $q->where('quantity', '>=', $min);
+                })->when(is_numeric($max), function ($q) use ($max) {
+                    $q->where('quantity', '<=', $max);
+                });
             });
         });
     }

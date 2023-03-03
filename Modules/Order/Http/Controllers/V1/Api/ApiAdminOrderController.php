@@ -8,6 +8,7 @@ use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Modules\Core\Responses\Api\ApiResponse;
+use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Entities\Order;
 use Modules\Order\Enums\OrderStatus;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
@@ -77,8 +78,9 @@ class ApiAdminOrderController extends Controller
     public function index(Request $request)
     {
         ApiResponse::authorize($request->user()->can('manage', Order::class));
+        $orders = Order::init()->getAdminIndexPaginate($request);
         return ApiResponse::message(trans('user::messages.received_information_successfully'))
-            ->addData('orders', Order::init()->getAdminIndexPaginate($request))
+            ->addData('orders', ApiPaginationResource::make($orders)->additional(['itemsResource' => ApiAdminOrderResource::class]))
             ->send();
     }
 
@@ -118,6 +120,9 @@ class ApiAdminOrderController extends Controller
             'created_at',
             'delivery_at',
         ])->withRelationships([
+            'factor',
+            'factor.city:id,province_id,name',
+            'factor.city.province:id,name',
             'address',
             'address.city:id,province_id,name',
             'address.city.province:id,name',
@@ -167,12 +172,32 @@ class ApiAdminOrderController extends Controller
             ->send();
     }
 
-    public function factor(Request $request, $order)
+    public function factor(Request $request, $order=1)
     {
-        ApiResponse::authorize($request->user()->can('factor', Order::class));
-        $order = Order::init()->selectColumns(['id'])->findOrFailById($order);
-        $pdf = PDF::loadView('factor',['order'=>$order]);
-        return response()->json(['pdf'=>$pdf->download(now()->toDateTimeString() . '-test.pdf')]);
+//        ApiResponse::authorize($request->user()->can('factor', Order::class));
+        $order = Order::init()->selectColumns([
+            'id',
+            'user_id',
+            'total',
+            'discount_amount',
+            'amount',
+            'shipping_cost',
+            'total_cart',
+            'discount',
+            'status',
+            'created_at',
+            'delivery_at',
+        ])->withRelationships([
+            'factor',
+            'factor.city:id,province_id,name',
+            'factor.city.province:id,name',
+            'address',
+            'address.city:id,province_id,name',
+            'address.city.province:id,name',
+            'products',
+        ])->findOrFailById($order);
+        $pdf = PDF::loadView('factor', ['order' => $order]);
+        return response()->json(['pdf' => $pdf->download(now()->toDateTimeString() . '-test.pdf')]);
     }
 
 }

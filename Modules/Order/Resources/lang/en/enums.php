@@ -17,6 +17,12 @@ return [
         OrderInvoiceStatus::Fail => "Fail",
     ],
     'statuses' => [
+        OrderStatus::class => [
+            OrderStatus::AwaitingReview => "badge-success",
+            OrderStatus::Preparation => "badge-success",
+            OrderStatus::DeliverToDispatcher => "badge-success",
+            OrderStatus::DeliveryToCustomer => "badge-success",
+        ],
         OrderInvoiceStatus::class => [
             OrderInvoiceStatus::Pending => "badge-warning",
             OrderInvoiceStatus::Success => "badge-success",

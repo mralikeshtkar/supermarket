@@ -44,14 +44,16 @@ class Invoice extends Model
     }
 
     /**
+     * @param $period
      * @return \Illuminate\Support\Collection
      */
-    public function getTotalOrderCountGroupByStatus(): \Illuminate\Support\Collection
+    public function getTotalSaleInPeriod($period): \Illuminate\Support\Collection
     {
         return self::query()
-            ->selectRaw('COUNT(*) AS invoices_count,order_id,status')
-            ->groupBy(['order_id', 'status'])
-            ->pluck('status', 'invoices_count');
+            ->selectRaw('SUM((amount)::integer) AS amount_sum,created_at')
+            ->groupBy('created_at')
+//            ->whereBetween('created_at', [today()->subDays($period), today()])
+            ->get();
     }
 
     /**
