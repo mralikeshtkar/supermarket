@@ -184,7 +184,9 @@ class ApiAdminRackRowController extends Controller
         try {
             $rack_row = RackRow::init()->findByIdOrFail($rack_row);
             $rack_row->detachProduct($request->product_id);
-            return ApiResponse::message(trans('rack::messages.product_deleted_from_rack_row'))->send();
+            return ApiResponse::message(trans('rack::messages.product_deleted_from_rack_row'))
+                ->addData('rack_row', $rack_row)
+                ->send();
         } catch (ModelNotFoundException $e) {
             return ApiResponse::sendError(trans('rack::messages.rack_row_not_found'), Response::HTTP_NOT_FOUND);
         } catch (Throwable $e) {

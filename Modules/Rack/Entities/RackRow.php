@@ -156,11 +156,12 @@ class RackRow extends Model
 
     /**
      * @param $product_id
-     * @return void
+     * @return RackRow
      */
-    public function detachProduct($product_id)
+    public function detachProduct($product_id): RackRow
     {
         $this->products()->detach($product_id);
+        return $this->refresh()->load(['products', 'products.image']);
     }
 
     /**
