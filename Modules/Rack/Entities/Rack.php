@@ -157,7 +157,6 @@ class Rack extends Model
                 $hasMany->withWhereHas('products', function ($builder) {
                     $builder->with(['image', 'model'])
                         ->select(['products.id', 'products.name', 'products.price',])
-                        ->stock()
                         ->accepted();
                 })->orderByPriorityAsc()->active();
             }])->orderByPriorityAsc()
