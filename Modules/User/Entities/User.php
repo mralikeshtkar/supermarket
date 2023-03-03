@@ -247,7 +247,7 @@ class User extends Authenticatable
         $cart = collect(auth()->user()->cart);
         $quantity = Arr::get($cart->get($product->id, []), 'quantity', 0);
         if ($this->_TotalPriceIsGreaterThanMaximum($product, $quantity)) return ApiResponse::sendError(trans('user::messages.setting_maximum_cart_price', ['price' => number_format($this->_getMaximumCartPrice())]), Response::HTTP_BAD_REQUEST);
-        if ($product->stock < $request->quantity + $quantity) return ApiResponse::sendError(trans('user::messages.not_enough_product_stock_exception'), Response::HTTP_BAD_REQUEST);
+        if ($product->quantity < $request->quantity + $quantity) return ApiResponse::sendError(trans('user::messages.not_enough_product_stock_exception'), Response::HTTP_BAD_REQUEST);
         $this->update([
             'cart' => $cart->put($product->id, [
                 'quantity' => $quantity + $request->quantity
@@ -291,7 +291,7 @@ class User extends Authenticatable
     {
         $cart = collect(auth()->user()->cart);
         if ($this->_TotalPriceIsGreaterThanMaximum($product, $request->quantity)) return ApiResponse::sendError(trans('user::messages.setting_maximum_cart_price', ['price' => number_format($this->_getMaximumCartPrice())]), Response::HTTP_BAD_REQUEST);
-        if ($product->stock < $request->quantity) return ApiResponse::sendError(trans('user::messages.not_enough_product_stock_exception'), Response::HTTP_BAD_REQUEST);
+        if ($product->quantity < $request->quantity) return ApiResponse::sendError(trans('user::messages.not_enough_product_stock_exception'), Response::HTTP_BAD_REQUEST);
         $this->update([
             'cart' => $cart->put($product->id, [
                 'quantity' => $request->quantity
