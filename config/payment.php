@@ -262,7 +262,7 @@ return [
 
             'mode' => 'sandbox', // can be normal, sandbox, zaringate
             'merchantId' => 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-            'callbackUrl' => 'http://yoursite.com/path/to',
+            'callbackUrl' => 'unitydl://mylink',
             'description' => 'payment using zarinpal',
         ],
         'zibal' => [
