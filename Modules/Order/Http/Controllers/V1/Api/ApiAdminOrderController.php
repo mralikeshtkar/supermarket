@@ -197,7 +197,7 @@ class ApiAdminOrderController extends Controller
             'products',
         ])->findOrFailById($order);
         $pdf = PDF::loadView('factor', ['order' => $order]);
-        return response()->json(['pdf' => $pdf->download(now()->toDateTimeString() . '-test.pdf')]);
+        return response()->json(['pdf' => "test"]);
     }
 
 }
