@@ -64,6 +64,7 @@ class Product extends Model
         'manufacturer_price',
         'delivery_is_free',
         'has_tax_exemption',
+        'description',
     ];
 
     protected $casts = [
@@ -381,6 +382,7 @@ class Product extends Model
                 'old_price' => $request->old_price,
                 'additional_price' => $request->additional_price,
                 'manufacturer_price' => $request->manufacturer_price,
+                'description' => $request->description,
                 'delivery_is_free' => $request->filled('delivery_is_free'),
                 'has_tax_exemption' => $request->filled('has_tax_exemption'),
             ]);
@@ -448,6 +450,7 @@ class Product extends Model
             'old_price' => $request->old_price,
             'additional_price' => $request->additional_price,
             'manufacturer_price' => $request->manufacturer_price,
+            'description' => $request->description,
             'delivery_is_free' => $request->filled('delivery_is_free'),
             'has_tax_exemption' => $request->filled('has_tax_exemption'),
         ]);

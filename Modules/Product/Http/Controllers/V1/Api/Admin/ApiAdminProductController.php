@@ -196,6 +196,7 @@ class ApiAdminProductController extends Controller
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
+            'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
         $product = Product::init()->store($request);
         return ApiResponse::message(trans('product::messages.product_was_created'))->send();
@@ -247,6 +248,7 @@ class ApiAdminProductController extends Controller
                 Rule::exists(ProductUnit::class, 'id')->where('status', ProductUnitStatus::Accepted)
             ],
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
+            'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
         try {
             $product = Product::init()->findOrFailById($product);
