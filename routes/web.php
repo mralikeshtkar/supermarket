@@ -14,13 +14,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    dd(\Illuminate\Support\Facades\Storage::url('public/factors/6408276085f72.pdf'));
+    $files = \Illuminate\Support\Facades\File::files(public_path('storage/factors'));
+    foreach ($files as $file) {
+        if (!now()->lt(\Illuminate\Support\Carbon::createFromTimestamp($file->getMTime())->addMinutes(30))){
+            File::delete($file->getPathname());
+        }
+    }
+    dd("ok");
     return collect(range(1, 16))->map(function ($item) {
         return "https://cdna.p30download.ir/p30dl-tutorial/Udemy.React.Js.With.Laravel.Build.Complete.PWA.Ecommerce.Project-p30download.com.part" . ($item < 10 ? "0" . $item : $item) . ".rar";
     })->implode("<br/>");
-        $data = [
-            'name' => 'علی'
-        ];
+    $data = [
+        'name' => 'علی'
+    ];
 //    return view('factor',$data);
     $pdf = PDF::loadView('factor', $data, [], [
         'format' => [685.98, 396.85],

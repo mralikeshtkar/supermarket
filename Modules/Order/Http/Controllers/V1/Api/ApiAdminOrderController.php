@@ -7,6 +7,8 @@ use BenSampo\Enum\Rules\EnumValue;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
@@ -197,10 +199,25 @@ class ApiAdminOrderController extends Controller
             'address.city.province:id,name',
             'products',
         ])->findOrFailById($order);
+        $this->_removeExpiredFactors();
         $pathPdf = storage_path('app/public/factors');
         $filename = uniqid() . time() . ".pdf";
         PDF::loadView('factor', ['order' => $order])->save($pathPdf . "/" . $filename);
         return response()->json(['pdf' => asset('storage/factors/' . $filename)]);
+    }
+
+    /**
+     * @return void
+     */
+    private function _removeExpiredFactors(): void
+    {
+        $files = File::files(public_path('storage/factors'));
+        if (is_array($files) && count($files))
+            foreach ($files as $file) {
+                if (now()->lt(Carbon::createFromTimestamp($file->getMTime())->addMinutes(30))) {
+                    File::delete($file->getPathname());
+                }
+            }
     }
 
 }
