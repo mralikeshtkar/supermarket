@@ -196,7 +196,8 @@ class ApiAdminOrderController extends Controller
             'address.city.province:id,name',
             'products',
         ])->findOrFailById($order);
-        $pdf = PDF::loadView('factor', ['order' => $order])->save(storage_path('app/public/factors'));
+        $path = storage_path('app/public/factors') . "/" . uniqid() . ".pdf";
+        $pdf = PDF::loadView('factor', ['order' => $order])->save($path);
         return response()->json(['pdf' => $pdf]);
     }
 
