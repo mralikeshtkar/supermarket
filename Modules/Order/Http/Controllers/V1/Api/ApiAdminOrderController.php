@@ -199,7 +199,6 @@ class ApiAdminOrderController extends Controller
             'address.city.province:id,name',
             'products',
         ])->findOrFailById($order);
-        $this->_removeExpiredFactors();
         $pathPdf = storage_path('app/public/factors');
         $filename = uniqid() . time() . ".pdf";
         PDF::loadView('factor', ['order' => $order])->save($pathPdf . "/" . $filename);
