@@ -7,6 +7,7 @@ use BenSampo\Enum\Rules\EnumValue;
 use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Entities\Order;
@@ -197,8 +198,8 @@ class ApiAdminOrderController extends Controller
             'products',
         ])->findOrFailById($order);
         $path = storage_path('app/public/factors') . "/" . uniqid() . ".pdf";
-        $pdf = PDF::loadView('factor', ['order' => $order])->save($path);
-        return response()->json(['pdf' => $pdf]);
+        PDF::loadView('factor', ['order' => $order])->save($path);
+        return response()->json(['pdf' => Storage::url($path)]);
     }
 
 }
