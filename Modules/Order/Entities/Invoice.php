@@ -52,7 +52,7 @@ class Invoice extends Model
         return self::query()
             ->selectRaw('SUM((amount)::integer) AS amount_sum,created_at')
             ->groupBy('created_at')
-//            ->whereBetween('created_at', [today()->subDays($period), today()])
+            ->whereBetween('created_at', [today()->subDays($period), today()])
             ->get();
     }
 

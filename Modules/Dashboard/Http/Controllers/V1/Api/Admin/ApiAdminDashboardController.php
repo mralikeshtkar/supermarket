@@ -2,16 +2,10 @@
 
 namespace Modules\Dashboard\Http\Controllers\V1\Api\Admin;
 
-use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Collection;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Order\Entities\Invoice;
-use Modules\Order\Entities\Order;
-use Modules\Order\Enums\OrderInvoiceStatus;
 
 class ApiAdminDashboardController extends Controller
 {
