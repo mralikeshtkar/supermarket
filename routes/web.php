@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    dd("salam");
     return collect(range(1, 16))->map(function ($item) {
         return "https://cdna.p30download.ir/p30dl-tutorial/Udemy.React.Js.With.Laravel.Build.Complete.PWA.Ecommerce.Project-p30download.com.part" . ($item < 10 ? "0" . $item : $item) . ".rar";
     })->implode("<br/>");
