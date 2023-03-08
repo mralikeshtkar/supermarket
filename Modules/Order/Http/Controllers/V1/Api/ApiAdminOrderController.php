@@ -172,7 +172,7 @@ class ApiAdminOrderController extends Controller
             ->send();
     }
 
-    public function factor(Request $request, $order=1)
+    public function factor(Request $request, $order = 1)
     {
 //        ApiResponse::authorize($request->user()->can('factor', Order::class));
         $order = Order::init()->selectColumns([
@@ -196,8 +196,8 @@ class ApiAdminOrderController extends Controller
             'address.city.province:id,name',
             'products',
         ])->findOrFailById($order);
-        $pdf = PDF::loadView('factor', ['order' => $order]);
-        return $pdf->stream(now()->toDateTimeString() . '-test.pdf');
+        $pdf = PDF::loadView('factor', ['order' => $order])->save(storage_path('app/public/factors'));
+        return response()->json(['pdf' => $pdf]);
     }
 
 }
