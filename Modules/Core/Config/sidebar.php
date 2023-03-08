@@ -158,7 +158,7 @@ return [
         "title" => "نظرسنجی ها",
         "icon" => "simple-icon-chart",
         "permissions" => [
-            Permissions::MANAGE_POSTERS,
+            Permissions::MANAGE_VOTES,
         ],
         "href" => [
             "name" => "votes.index",

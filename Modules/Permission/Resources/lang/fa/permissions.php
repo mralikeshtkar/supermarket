@@ -21,5 +21,6 @@ return [
     Permissions::MANAGE_ORDERS => "مدیریت سفارشات",
     Permissions::MANAGE_ADVERTISEMENTS => "مدیریت تبلیغات",
     Permissions::MANAGE_POSTERS => "مدیریت پوسترها",
+    Permissions::MANAGE_VOTES => "مدیریت نظرسنجی‌ها",
     Permissions::MANAGE_NEWS => "مدیریت اخبار",
 ];
