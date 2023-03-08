@@ -12,6 +12,10 @@ class ApiAdminDashboardController extends Controller
 
     public function index()
     {
+        return ApiResponse::message(trans('Received information successfully'))
+            ->addData('totalSalesLast30DaysDates', [])
+            ->addData('totalSalesLast30DaysValues', [])
+            ->send();
         $totalSalesLast30Days = Invoice::init()->getTotalSaleInPeriod(30);
         $totalSalesLast30Days =collect(CarbonPeriod::between(today()->subDays(30),today())->toArray())->mapWithKeys(function ($item) use ($totalSalesLast30Days){
             $i = $totalSalesLast30Days->firstWhere('created_at',$item);
