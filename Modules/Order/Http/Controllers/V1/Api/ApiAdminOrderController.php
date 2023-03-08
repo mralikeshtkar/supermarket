@@ -196,8 +196,8 @@ class ApiAdminOrderController extends Controller
             'address.city.province:id,name',
             'products',
         ])->findOrFailById($order);
-        $pdf = PDF::loadView('factor', ['order' => $order]);
         return response()->json(['pdf' => "test"]);
+        $pdf = PDF::loadView('factor', ['order' => $order]);
     }
 
 }
