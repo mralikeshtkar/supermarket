@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    phpinfo();
     $p=\Modules\Product\Entities\Product::query()->inRandomOrder()->first()->setDirectory('products')
         ->setCollection(config('product.collection_gallery'))
         ->setPriority(1)
