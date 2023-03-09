@@ -198,6 +198,14 @@ class ApiAdminProductController extends Controller
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
             'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
+        try {
+            Product::query()->inRandomOrder()->first()->setDirectory('products')
+                ->setCollection(config('product.collection_gallery'))
+                ->setPriority(1)
+                ->addMedia($request->file('image'));
+        }catch (Throwable $e){
+            dd($e);
+        }
         dd("salam");
 		try{
 			$product = Product::init()->store($request);
