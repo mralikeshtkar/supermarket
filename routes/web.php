@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $p=\Modules\Product\Entities\Product::query()->inRandomOrder()->first()->setDirectory('products')
+        ->setCollection(config('product.collection_gallery'))
+        ->setPriority(1)
+        ->addMedia(base_path('public/storage/advertisements/63d41803cf5e91674844163.jpg'));
+    dd($p);
     dd(\Intervention\Image\Facades\Image::make(public_path('storage/advertisements/63d41803cf5e91674844163.jpg')));
     $files = \Illuminate\Support\Facades\File::files(public_path('storage/factors'));
     foreach ($files as $file) {
