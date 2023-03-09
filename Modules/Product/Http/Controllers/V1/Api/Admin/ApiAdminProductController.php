@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Facades\Image;
 use Modules\Brand\Entities\Brand;
 use Modules\Category\Rules\CategoryRule;
 use Modules\Core\Responses\Api\ApiResponse;
@@ -198,15 +199,7 @@ class ApiAdminProductController extends Controller
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
             'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
-        try {
-            Product::query()->inRandomOrder()->first()->setDirectory('products')
-                ->setCollection(config('product.collection_gallery'))
-                ->setPriority(1)
-                ->addMedia($request->file('image'));
-        }catch (Throwable $e){
-            dd($e);
-        }
-        dd("salam");
+        dd(Image::make($request->file('image')));
 		try{
 			$product = Product::init()->store($request);
 			return ApiResponse::message(trans('product::messages.product_was_created'))->send();
