@@ -4,6 +4,7 @@ namespace Modules\Media\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ImageStorageService extends BaseStorageService implements Interfaces\FileStorageInterface
@@ -15,9 +16,8 @@ class ImageStorageService extends BaseStorageService implements Interfaces\FileS
 
     private function resizeImage($disk, $file, $directory, $size): bool|string
     {
-        dd(Image::make($file));
         /** @var UploadedFile $file */
-        $image = Image::make($file);
+        $image = Image::make(Storage::path('app/public/products/63a5d75baf6101671812955.jpg'));
         $img = $image->resize(
             $size['w'], $size['h'],
             function ($constraint) {
