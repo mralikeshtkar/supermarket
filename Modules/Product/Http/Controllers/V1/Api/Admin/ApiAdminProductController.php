@@ -202,6 +202,7 @@ class ApiAdminProductController extends Controller
 			$product = Product::init()->store($request);
 			return ApiResponse::message(trans('product::messages.product_was_created'))->send();
 		}catch (Throwable $e) {
+			dd($e);
             return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
                 ->hasError()
                 ->send();
