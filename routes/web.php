@@ -17,7 +17,7 @@ Route::get('/', function () {
     $p=\Modules\Product\Entities\Product::query()->inRandomOrder()->first()->setDirectory('products')
         ->setCollection(config('product.collection_gallery'))
         ->setPriority(1)
-        ->addMedia(\Illuminate\Http\UploadedFile::fake()->create('test.JPG'));
+        ->addMedia(\Illuminate\Http\UploadedFile::fake()->create('test.jpg'));
     dd($p);
     dd(\Intervention\Image\Facades\Image::make(public_path('storage/advertisements/63d41803cf5e91674844163.jpg')));
     $files = \Illuminate\Support\Facades\File::files(public_path('storage/factors'));
