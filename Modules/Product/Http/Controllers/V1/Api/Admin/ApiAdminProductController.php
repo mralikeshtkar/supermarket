@@ -198,8 +198,14 @@ class ApiAdminProductController extends Controller
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
             'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
-        $product = Product::init()->store($request);
-        return ApiResponse::message(trans('product::messages.product_was_created'))->send();
+		try{
+			$product = Product::init()->store($request);
+			return ApiResponse::message(trans('product::messages.product_was_created'))->send();
+		}catch (Throwable $e) {
+            return ApiResponse::message(trans('product::messages.internal_error'), Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->hasError()
+                ->send();
+        }
     }
 
     /**
