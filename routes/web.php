@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    dd(\Intervention\Image\Facades\Image::make(public_path('storage/advertisements/63d41803cf5e91674844163.jpg')));
     $files = \Illuminate\Support\Facades\File::files(public_path('storage/factors'));
     foreach ($files as $file) {
         if (!now()->lt(\Illuminate\Support\Carbon::createFromTimestamp($file->getMTime())->addMinutes(30))){

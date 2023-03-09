@@ -199,7 +199,6 @@ class ApiAdminProductController extends Controller
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
             'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
-        dd(Image::make($request->file('image')));
 		try{
 			$product = Product::init()->store($request);
 			return ApiResponse::message(trans('product::messages.product_was_created'))->send();
