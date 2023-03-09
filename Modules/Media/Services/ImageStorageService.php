@@ -17,7 +17,7 @@ class ImageStorageService extends BaseStorageService implements Interfaces\FileS
     private function resizeImage($disk, $file, $directory, $size): bool|string
     {
         /** @var UploadedFile $file */
-        $image = Image::make(Storage::path('app/public/products/63a5d75baf6101671812955.jpg'));
+        $image = Image::make(public_path('storage/products/63a5d75baf6101671812955.jpg'));
         $img = $image->resize(
             $size['w'], $size['h'],
             function ($constraint) {
