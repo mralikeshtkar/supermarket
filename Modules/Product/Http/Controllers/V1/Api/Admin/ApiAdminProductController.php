@@ -152,7 +152,7 @@ class ApiAdminProductController extends Controller
     public function store(Request $request)
     {
         //ApiResponse::authorize($request->user()->can('store', Product::class));
-        //$request->merge(['slug' => Str::slug($request->get('slug'))]);
+        $request->merge(['slug' => Str::slug($request->get('slug'))]);
         ApiResponse::init($request->all(), [
             'name' => [
                 'required',
@@ -198,6 +198,7 @@ class ApiAdminProductController extends Controller
             'manufacturer_price' => ['nullable', 'numeric', 'min:1'],
             'description' => ['nullable', 'string'],
         ], [], trans('product::validation.attributes'))->validate();
+        dd("salam");
 		try{
 			$product = Product::init()->store($request);
 			return ApiResponse::message(trans('product::messages.product_was_created'))->send();
