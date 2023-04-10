@@ -23,7 +23,9 @@ class ApiRackController extends Controller
     {
         foreach (Rack::all() as $item) {
             $rows = $item->rows()->orderByPriorityAsc()->get()->pluck('id')->toArray();
-            dump($rows);
+            if (count($rows)){
+                Rack::init()->changeSortRows($rows);
+            }
         }
         dd("ok");
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
