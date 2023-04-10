@@ -21,7 +21,7 @@ class RackResource extends JsonResource
             'title' => $this->resource->title,
             'description' => $this->resource->description,
             'url' => $this->resource->url,
-            'priority' => is_null($this->resource->priority) ? null : intval($this->resource->priority),
+            'priority' => intval($this->resource->priority),
         ])->when($this->resource->relationLoaded('rows'), function (Collection $collection) {
             $collection->put('rows', RackRowResource::collection($this->resource->rows));
         })->toArray();
