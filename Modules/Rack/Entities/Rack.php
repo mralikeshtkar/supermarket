@@ -126,7 +126,7 @@ class Rack extends Model
      */
     public function changeSortRows(array $rack_row_ids)
     {
-        $iteration = 0;
+        $iteration = 1;
         foreach ($rack_row_ids as $rack_row_id) {
             $this->rows()->where('id', $rack_row_id)->update(['priority' => $iteration]);
             $iteration++;

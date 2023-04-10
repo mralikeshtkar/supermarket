@@ -21,6 +21,11 @@ class ApiRackController extends Controller
 
     public function products(Request $request)
     {
+        foreach (Rack::all() as $item) {
+            dd($item->rows()->orderByPriorityAsc()->get()->pluck('id')->toArray());
+        }
+        Rack::init()->changeSortRows(Rack::init()->allRackRowsWithProducts()->pluck('id')->toArray());
+        dd("ok");
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
             ->addData('racks',RackResource::collection(Rack::init()->allRackRowsWithProducts()))
             ->send();
