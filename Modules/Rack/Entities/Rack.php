@@ -54,7 +54,7 @@ class Rack extends Model
      */
     public function changeSort(array $rack_ids)
     {
-        $iteration = 0;
+        $iteration = 1;
         foreach ($rack_ids as $rack_id) {
             self::query()->where('id', $rack_id)->update(['priority' => $iteration]);
             $iteration++;
