@@ -21,7 +21,7 @@ class ApiRackController extends Controller
 
     public function products(Request $request)
     {
-        dd(Rack::query()->count(),Rack::init()->allRackRowsWithProducts()->count());
+        dd(Rack::query()->count(),Rack::init()->allRackRowsWithProducts()->pluck('id'));
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
             ->addData('racks',RackResource::collection(Rack::init()->allRackRowsWithProducts()))
             ->send();
