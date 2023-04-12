@@ -20,15 +20,13 @@ class ApiRackController extends Controller
 {
     public function products(Request $request)
     {
-        foreach (Rack::query()->orderByPriorityAsc()->get() as $rack) {
-            $i = 1;
-            foreach ($rack->rows()->orderByPriorityAsc()->get() as $item) {
-                $item->update(['priority' => $i]);
-                $i++;
-            }
-        }
+        $items = Rack::init()->allRackRowsWithProducts();
+        $items = $items->map(function ($item,$key) {
+            $item->priority = $key;
+            return $item;
+        });
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
-            ->addData('racks', RackResource::collection(Rack::init()->allRackRowsWithProducts()))
+            ->addData('racks', RackResource::collection($items))
             ->send();
     }
 }
