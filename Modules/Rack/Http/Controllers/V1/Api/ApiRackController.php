@@ -22,9 +22,11 @@ class ApiRackController extends Controller
     {
         $items = Rack::init()->allRackRowsWithProducts();
         $items = $items->map(function ($item,$key) {
-            /** @var Rack $item */
-            $item->priority = $key;
-            $item->rows = [];
+            $item->priority = $key + 1;
+            $item->rows = $item->rows->map(function ($row,$key){
+                $row->priority = $key + 1;
+                return $row;
+            });
             return $item;
         });
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
