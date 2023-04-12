@@ -21,14 +21,22 @@ class ApiRackController extends Controller
     public function products(Request $request)
     {
         $items = Rack::init()->allRackRowsWithProducts();
-        $items = $items->map(function ($item,$key) {
-            $item->priority = $key + 1;
-            $item->rows = $item->rows->map(function ($row,$key){
-                $row->priority = $key + 1;
-                return $row;
-            });
-            return $item;
-        });
+        $items = $items->map(function ($item, $key) {
+            if ($item->rows->count()) {
+                $item->priority = $key + 1;
+                $item->rows = $item->rows->map(function ($row, $key) {
+                    if ($row->products->count()){
+                        $row->priority = $key + 1;
+                        return $row;
+                    }else{
+                        return null;
+                    }
+                })->filter();
+                return $item;
+            } else {
+                return null;
+            }
+        })->filter();
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
             ->addData('racks', RackResource::collection($items))
             ->send();
