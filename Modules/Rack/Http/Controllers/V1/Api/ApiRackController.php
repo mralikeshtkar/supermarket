@@ -18,11 +18,17 @@ use Throwable;
 
 class ApiRackController extends Controller
 {
-
     public function products(Request $request)
     {
+        foreach (Rack::query()->orderByPriorityAsc()->get() as $rack) {
+            $i = 1;
+            foreach ($rack->rows()->orderByPriorityAsc()->get() as $item) {
+                $item->update(['priority' => $i]);
+                $i++;
+            }
+        }
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
-            ->addData('racks',RackResource::collection(Rack::init()->allRackRowsWithProducts()))
+            ->addData('racks', RackResource::collection(Rack::init()->allRackRowsWithProducts()))
             ->send();
     }
 }
