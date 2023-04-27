@@ -217,8 +217,7 @@ class Product extends Model
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
             /** @var Collection $racks */
             $item->rows = $racks->filter(function ($rack) use ($item) {
-                dump($item->toArray(),$item->id,$rack->rows->pluck('products')->flatten(1)->unique('id')->toArray(),$rack->rows->pluck('products')->flatten(1)->unique('id')->contains('id',$item->id));
-                return $rack->row && $rack->rows->count() && $rack->rows->pluck('products')->flatten(1)->unique('id')->contains('id',$item->id);
+                return $rack->rows->count() && $rack->rows->pluck('products')->flatten(1)->unique('id')->contains('id',$item->id);
             });
             return $item;
         }));
