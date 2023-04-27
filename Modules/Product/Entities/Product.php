@@ -217,8 +217,8 @@ class Product extends Model
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
             /** @var Collection $racks */
             $item->rows = $racks->first(function ($rack) use ($item) {
-                return $rack->row->count() && $rack->row->first(function ($row) use ($item) {
-                        return $row->products->count() && $row->products->containts($item->id);
+                return $rack->row && $rack->row->count() && $rack->row->first(function ($row) use ($item) {
+                        return $row->products && $row->products->count() && $row->products->containts($item->id);
                     });
             });
             return $item;
