@@ -33,6 +33,7 @@ use Modules\Order\Enums\OrderStatus;
 use Modules\Product\Database\factories\ProductFactory;
 use Modules\Product\Enums\ProductStatus;
 use Modules\Product\Transformers\V1\Api\CartProductResource;
+use Modules\Rack\Entities\Rack;
 use Modules\Rack\Entities\RackRow;
 use Modules\Storeroom\Entities\StoreroomEntrance;
 use Modules\Tag\Traits\HasTag;
@@ -171,6 +172,24 @@ class Product extends Model
      */
     public function search(Request $request, $category = null): LengthAwarePaginator
     {
+        $items = Rack::init()->allRackRowsWithProductIds();
+        $items = $items->map(function ($item, $key) {
+            if ($item->rows->count()) {
+                $item->priority = $key + 1;
+                $item->rows = $item->rows->map(function ($row, $key) {
+                    if ($row->products->count()){
+                        $row->priority = $key + 1;
+                        return $row;
+                    }else{
+                        return null;
+                    }
+                })->filter();
+                return $item;
+            } else {
+                return null;
+            }
+        })->filter();
+        dd($items);
         return self::query()
             ->select(['id', 'name', 'price', 'unit_id'])
             ->with(['image'])

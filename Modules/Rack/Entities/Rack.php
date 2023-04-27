@@ -165,6 +165,21 @@ class Rack extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function allRackRowsWithProductIds()
+    {
+        return self::query()
+            ->with(['rows' => function (HasMany $hasMany) {
+                $hasMany->withWhereHas('products', function ($builder) {
+                    $builder->select(['products.id'])->accepted();
+                })->orderByPriorityAsc()->active();
+            }])->orderByPriorityAsc()
+            ->accepted()
+            ->get();
+    }
+
+    /**
      * @return void
      */
     public function destroyRack()
