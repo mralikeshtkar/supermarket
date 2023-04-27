@@ -214,8 +214,11 @@ class Product extends Model
             })->unitName()
             ->accepted()
             ->paginate();
-        $products->setCollection($products->getCollection()->transform(function ($item) {
-            $item->name = "ali";
+        $products->setCollection($products->getCollection()->transform(function ($item) use ($items) {
+            /** @var Collection $items */
+            $item->rows =$items->first(function ($rack){
+                dd($rack);
+            });
             return $item;
         }));
         return $products;
