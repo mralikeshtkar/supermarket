@@ -215,7 +215,10 @@ class Product extends Model
             ->accepted()
             ->paginate();
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
-            $item->rows = $racks->first();
+            /** @var Collection $racks */
+            $item->rows = $racks->first(function ($rack){
+                return true;
+            });
             return $item;
         }));
         return $products;
