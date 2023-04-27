@@ -173,7 +173,7 @@ class Product extends Model
     public function search(Request $request, $category = null): LengthAwarePaginator
     {
         $items = Rack::init()->allRackRowsWithProductIds();
-        $items = $items->map(function ($item, $key) {
+        $racks = $items->map(function ($item, $key) {
             if ($item->rows->count()) {
                 $item->priority = $key + 1;
                 $item->rows = $item->rows->map(function ($row, $key) {
@@ -214,7 +214,8 @@ class Product extends Model
             })->unitName()
             ->accepted()
             ->paginate();
-        $products->setCollection($products->getCollection()->transform(function ($item) use ($items) {
+        $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
+            dd($racks);
             /** @var Collection $items */
             $item->rows =$items->first(function ($rack){
                 dd($rack);
