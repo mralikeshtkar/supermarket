@@ -33,10 +33,10 @@ class RackRow extends Model
         'number_limit',
     ];
 
-    protected $appends = [
+    /*protected $appends = [
         'translated_status',
         'status_css_class',
-    ];
+    ];*/
 
     #endregion
 

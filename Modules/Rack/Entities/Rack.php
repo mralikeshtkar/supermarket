@@ -31,10 +31,10 @@ class Rack extends Model
         'status',
     ];
 
-    protected $appends = [
+    /*protected $appends = [
         'translated_status',
         'status_css_class',
-    ];
+    ];*/
 
     #endregion
 
@@ -170,9 +170,9 @@ class Rack extends Model
     public function allRackRowsWithProductIds()
     {
         return self::query()
-            ->select(['id','priority','status'])
+            ->select(['id','priority'])
             ->with(['rows' => function (HasMany $hasMany) {
-                $hasMany->select(['id','rack_id','priority','status'])->withWhereHas('products', function ($builder) {
+                $hasMany->select(['id','rack_id','priority'])->withWhereHas('products', function ($builder) {
                     $builder->select(['products.id'])->accepted();
                 })->orderByPriorityAsc()->active();
             }])->orderByPriorityAsc()
