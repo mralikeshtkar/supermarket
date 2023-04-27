@@ -215,9 +215,8 @@ class Product extends Model
             ->accepted()
             ->paginate();
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
-            dd($racks);
-            /** @var Collection $items */
-            $item->rows =$items->first(function ($rack){
+            /** @var Collection $racks */
+            $item->rows =$racks->first(function ($rack){
                 dd($rack);
             });
             return $item;
