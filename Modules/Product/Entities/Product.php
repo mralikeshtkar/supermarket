@@ -216,7 +216,7 @@ class Product extends Model
             ->paginate();
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
             /** @var Collection $racks */
-            $item->rows = $racks->first(function ($rack) use ($item) {
+            $item->rows = $racks->filter(function ($rack) use ($item) {
                 return $rack->row && $rack->rows->count() && $rack->rows->pluck('products')->flatten(1)->unique('id')->contains($item->id);
             });
             return $item;
