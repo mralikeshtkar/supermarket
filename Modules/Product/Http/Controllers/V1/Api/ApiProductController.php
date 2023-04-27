@@ -103,9 +103,10 @@ class ApiProductController extends Controller
      */
     public function show(Request $request, $product)
     {
-        $product = Product::init()->withRateAvg()
+        $product = Product::init()
+            ->withRateAvg()
             ->withAcceptedCommentsCount()
-            ->select(['id', 'name', 'price'])
+            ->select(['id', 'name', 'price','description'])
             ->with(['image', 'model'])
             ->findOrFail($product);
         $request->user()->addLastSeenProduct($product->id);
