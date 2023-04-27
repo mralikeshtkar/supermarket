@@ -170,9 +170,9 @@ class Rack extends Model
     public function allRackRowsWithProductIds()
     {
         return self::query()
-            ->select(['id','priority'])
+            ->select(['id','priority','status'])
             ->with(['rows' => function (HasMany $hasMany) {
-                $hasMany->select(['id','rack_id','priority'])->withWhereHas('products', function ($builder) {
+                $hasMany->select(['id','rack_id','priority','status'])->withWhereHas('products', function ($builder) {
                     $builder->select(['products.id'])->accepted();
                 })->orderByPriorityAsc()->active();
             }])->orderByPriorityAsc()
