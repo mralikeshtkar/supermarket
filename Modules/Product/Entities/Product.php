@@ -46,7 +46,7 @@ use Throwable;
 
 class Product extends Model
 {
-    use HasRelationships,HasEagerLimit, HasFactory, EloquentHelper, HasCategory, HasTag, HasMedia, HasComment, HasAttribute, HasRelationships, HasDiscount, HasFavouritable;
+    use HasRelationships, HasEagerLimit, HasFactory, EloquentHelper, HasCategory, HasTag, HasMedia, HasComment, HasAttribute, HasRelationships, HasDiscount, HasFavouritable;
 
     #region Constance
 
@@ -154,7 +154,7 @@ class Product extends Model
     public function getAdminStocks(Request $request): LengthAwarePaginator
     {
         return self::query()
-            ->select(['id', 'name','quantity'])
+            ->select(['id', 'name', 'quantity'])
             ->with(['image'])
             ->when($request->filled('name'), function (Builder $builder) use ($request) {
                 $builder->where('name', 'LIKE', '%' . $request->name . '%');
@@ -177,10 +177,10 @@ class Product extends Model
             if ($item->rows->count()) {
                 $item->priority = $key + 1;
                 $item->rows = $item->rows->map(function ($row, $key) {
-                    if ($row->products->count()){
+                    if ($row->products->count()) {
                         $row->priority = $key + 1;
                         return $row;
-                    }else{
+                    } else {
                         return null;
                     }
                 })->filter();
@@ -189,8 +189,7 @@ class Product extends Model
                 return null;
             }
         })->filter();
-        dd($items);
-        return self::query()
+        $products = self::query()
             ->select(['id', 'name', 'price', 'unit_id'])
             ->with(['image'])
             ->where(function (Builder $builder) use ($request, $category) {
@@ -215,6 +214,11 @@ class Product extends Model
             })->unitName()
             ->accepted()
             ->paginate();
+        $products->setCollection($products->getCollection()->transform(function ($item) {
+            $item->name = "ali";
+            return $item;
+        }));
+        return $products;
     }
 
     /**
