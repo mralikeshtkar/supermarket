@@ -216,9 +216,9 @@ class Product extends Model
             ->paginate();
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
             /** @var Collection $racks */
-            $item->rack = $racks->first(function ($rack) use ($item) {
+            $item->rack = optional($racks->first(function ($rack) use ($item) {
                 return $rack->rows->count() && $rack->rows->pluck('products')->flatten(1)->unique('id')->contains('id',$item->id);
-            });
+            }))->priority;
             return $item;
         }));
         return $products;
