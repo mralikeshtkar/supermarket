@@ -216,11 +216,7 @@ class Product extends Model
             ->paginate();
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
             /** @var Collection $racks */
-            $item->rows = $racks->first(function ($rack) use ($item) {
-                return $rack->rows->first(function ($row) use ($item) {
-                    return $row->products->count() && $row->products->contains($item->id);
-                });
-            });
+            $item->rows = $racks->first();
             return $item;
         }));
         return $products;
