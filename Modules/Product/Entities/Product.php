@@ -37,6 +37,7 @@ use Modules\Rack\Entities\RackRow;
 use Modules\Storeroom\Entities\StoreroomEntrance;
 use Modules\Tag\Traits\HasTag;
 use Modules\User\Traits\HasFavouritable;
+use Staudenmeir\EloquentHasManyDeep\Eloquent\Relations\Traits\HasEagerLimit;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +45,7 @@ use Throwable;
 
 class Product extends Model
 {
-    use HasRelationships, HasFactory, EloquentHelper, HasCategory, HasTag, HasMedia, HasComment, HasAttribute, HasRelationships, HasDiscount, HasFavouritable;
+    use HasRelationships,HasEagerLimit, HasFactory, EloquentHelper, HasCategory, HasTag, HasMedia, HasComment, HasAttribute, HasRelationships, HasDiscount, HasFavouritable;
 
     #region Constance
 
@@ -172,7 +173,9 @@ class Product extends Model
     {
         return self::query()
             ->select(['id', 'name', 'price', 'unit_id'])
-            ->with(['image', 'model'])
+            ->with(['image', 'model','rack_rows'=>function($q){
+                $q->limit(1);
+            }])
             ->where(function (Builder $builder) use ($request, $category) {
                 $builder->when(!is_null($category), function (Builder $builder) use ($category) {
                     $builder->whereHas('categories', function (Builder $builder) use ($category) {

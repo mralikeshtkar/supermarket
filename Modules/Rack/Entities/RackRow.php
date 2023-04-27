@@ -16,10 +16,11 @@ use Modules\Product\Entities\Product;
 use Modules\Rack\Database\factories\RackRowFactory;
 use Modules\Rack\Enums\RackRowStatus;
 use Modules\User\Entities\User;
+use Staudenmeir\EloquentHasManyDeep\Eloquent\Relations\Traits\HasEagerLimit;
 
 class RackRow extends Model
 {
-    use HasFactory;
+    use HasFactory,HasEagerLimit;
 
     #region Constance
 
