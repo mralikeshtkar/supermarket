@@ -174,7 +174,7 @@ class Product extends Model
         return self::query()
             ->select(['id', 'name', 'price', 'unit_id'])
             ->with(['image', 'model','rack_rows'=>function($q){
-                $q->limit(1);
+                $q->select('id','rack_id')->limit(1);
             }])
             ->where(function (Builder $builder) use ($request, $category) {
                 $builder->when(!is_null($category), function (Builder $builder) use ($category) {
