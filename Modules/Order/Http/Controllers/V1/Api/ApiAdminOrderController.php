@@ -210,10 +210,16 @@ class ApiAdminOrderController extends Controller
             'address.city.province:id,name',
             'products',
         ])->findOrFailById($order);
-        $pathPdf = storage_path('app/public/factors');
+        ob_start();
+        $pdf = PDF::loadView('factor', ['order' => $order]);
+        $pdf->save('php://output');
+        $pdfData = ob_get_contents();
+        ob_end_clean();
+        return response()->json(['pdf' => "data:application/pdf;base64,".base64_encode($pdfData)]);
+        /*$pathPdf = storage_path('app/public/factors');
         $filename = uniqid() . time() . ".pdf";
         PDF::loadView('factor', ['order' => $order])->save($pathPdf . "/" . $filename);
-        return response()->json(['pdf' => asset('storage/factors/' . $filename)]);
+        return response()->json(['pdf' => asset('storage/factors/' . $filename)]);*/
     }
 
     /**
