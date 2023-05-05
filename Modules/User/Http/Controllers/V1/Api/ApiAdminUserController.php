@@ -150,7 +150,7 @@ class ApiAdminUserController extends Controller
 
     public function exportExcel(Request $request)
     {
-        return (new UsersExport())->withFilter($request)->download('users-' . verta() . '.xlsx');
+        return (new UsersExport())->download('users-' . verta() . '.xlsx');
     }
 
     /**
