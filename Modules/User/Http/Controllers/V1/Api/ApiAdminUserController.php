@@ -151,8 +151,10 @@ class ApiAdminUserController extends Controller
     public function exportExcel(Request $request)
     {
         $fileName='users-' . verta() . '.xlsx';
-        return (new UsersExport())->withFilter($request)->download($fileName,null,[
-            'Content-Disposition'=>'attachment; filename='.$fileName
+//        return (new UsersExport())->withFilter($request)->download($fileName);
+        return \response((new UsersExport())->withFilter($request)->download($fileName),200,[
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Content-Disposition' => 'attachment; filename="myfile.xlsx"',
         ]);
     }
 
