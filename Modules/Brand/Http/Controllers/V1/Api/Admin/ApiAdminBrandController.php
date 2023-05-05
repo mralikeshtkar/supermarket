@@ -33,7 +33,7 @@ class ApiAdminBrandController extends Controller
     public function index(Request $request)
     {
         ApiResponse::authorize($request->user()->can('manage', Brand::class));
-        $brands=Brand::init()->getAdminIndexPaginate($request);
+        $brands = Brand::init()->getAdminIndexPaginate($request);
         return ApiResponse::message(trans('brand::messages.received_information_successfully'))
             ->addData('brands', ApiPaginationResource::make($brands)->additional(['itemsResource' => ApiAdminBrandResource::class]))
             ->send();
@@ -47,12 +47,12 @@ class ApiAdminBrandController extends Controller
     {
         ApiResponse::authorize($request->user()->can('create', Brand::class));
         $request->merge([
-            'slug' => Str::slug($request->slug),
+            'slug' => Str::slug($request->name_en),
             'name_en' => ucfirst($request->name_en),
         ]);
         ApiResponse::init($request->all(), [
             'name' => ['required', 'string'],
-            'name_en' => ['required', 'string'],
+            'name_en' => ['required', 'string', Rule::unique(Brand::class, 'name_en')],
             'slug' => ['required', 'string', 'unique:' . Brand::class . ',slug'],
             'image' => ['nullable', 'image'],
         ], [], trans('brand::validation.attributes'))->validate();
@@ -99,12 +99,12 @@ class ApiAdminBrandController extends Controller
     {
         ApiResponse::authorize($request->user()->can('edit', Brand::class));
         $request->merge([
-            'slug' => Str::slug($request->slug),
+            'slug' => Str::slug($request->name_en),
             'name_en' => ucfirst($request->name_en),
         ]);
         ApiResponse::init($request->all(), [
             'name' => ['required', 'string'],
-            'name_en' => ['required', 'string'],
+            'name_en' => ['required', 'string', Rule::unique(Brand::class, 'name_en')->ignore($brand, 'id')],
             'slug' => ['required', 'string', Rule::unique(Brand::class, 'slug')->ignore($brand, 'id')],
             'image' => ['nullable', 'image'],
         ], [], trans('brand::validation.attributes'))->validate();
