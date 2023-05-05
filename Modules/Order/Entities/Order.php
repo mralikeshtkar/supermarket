@@ -201,7 +201,7 @@ class Order extends Model
                 $builder->where('id', 'LIKE', '%' . $request->order . '%');
             })
             ->when($request->filled('user_name'), function (Builder $builder) use ($request) {
-                $builder->whereHas('user', function (Builder $builder) use ($request) {
+                $builder->whereHas('address', function (Builder $builder) use ($request) {
                     $builder->where('name', 'LIKE', '%' . $request->user_name . '%');
                 });
             })->when($request->filled('user_id'), function (Builder $builder) use ($request) {
