@@ -47,6 +47,7 @@ class UsersExport implements FromQuery, WithMapping, WithColumnFormatting, WithH
 
     public function query()
     {
+        dd("query");
         return User::query()
             ->select(['id', 'name', 'mobile', 'created_at']);
     }
@@ -57,6 +58,7 @@ class UsersExport implements FromQuery, WithMapping, WithColumnFormatting, WithH
      */
     public function withFilter($request): static
     {
+        dd("withFilter");
         $this->query()->filter($request);
         return $this;
     }
