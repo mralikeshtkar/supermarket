@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return (new \Modules\User\Exports\Admin\UsersExport())->download('users-'.verta().'.xlsx');
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    return (new \Modules\User\Exports\Admin\UsersExport())->withFilter($request)->download('users-'.verta().'.xlsx');
 });
