@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return \Maatwebsite\Excel\Facades\Excel::download(new \Modules\User\Exports\Admin\UsersExport(),'users-'.now().'.xlsx');
+    return \Maatwebsite\Excel\Facades\Excel::download(new \Modules\User\Exports\Admin\UsersExport(),'users-'.verta().'.xlsx');
 });
