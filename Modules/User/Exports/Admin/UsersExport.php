@@ -5,9 +5,10 @@ namespace Modules\User\Exports\Admin;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\User\Entities\User;
 
-class UsersExport implements FromCollection,WithHeadings
+class UsersExport implements FromCollection,WithMapping
 {
     public function collection()
     {
@@ -17,8 +18,11 @@ class UsersExport implements FromCollection,WithHeadings
             ->get();
     }
 
-    public function headings(): array
+    public function map($row): array
     {
-        return ['id','name','mobile'];
+        return [
+            $row->name,
+            strval($row->mobile)
+        ];
     }
 }
