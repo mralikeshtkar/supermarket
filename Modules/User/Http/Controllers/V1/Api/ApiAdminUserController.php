@@ -153,12 +153,10 @@ class ApiAdminUserController extends Controller
     {
         $fileName='users-' . verta() . '.xlsx';
         $excel = Excel::raw(new UsersExport(),\Maatwebsite\Excel\Excel::XLSX);
-        $response =  array(
-            'name' => $fileName,
-            'file' => "data:application/vnd.ms-excel;base64,".base64_encode($excel)
-        );
-        return response()->json($response);
-        return (new UsersExport())->withFilter($request)->download($fileName);
+        return ApiResponse::message(trans("The operation was done successfully"))
+            ->addData('name',$fileName)
+            ->addData('file',"data:application/vnd.ms-excel;base64,".base64_encode($excel))
+            ->send();
     }
 
     /**
