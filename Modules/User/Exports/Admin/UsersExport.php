@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\User\Entities\User;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class UsersExport implements FromCollection,WithMapping,WithColumnFormatting
 {
@@ -30,7 +31,7 @@ class UsersExport implements FromCollection,WithMapping,WithColumnFormatting
     public function columnFormats(): array
     {
         return [
-            'B' => '0'
+            'B' => DataType::TYPE_STRING
         ];
     }
 }
