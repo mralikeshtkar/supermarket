@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\User\Entities\User;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
-class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, ShouldAutoSize
+class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, WithHeadings, ShouldAutoSize
 {
 
     public function collection()
@@ -34,6 +34,14 @@ class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, 
     {
         return [
             'B' => '0'
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            __('First name and Last name'),
+            __('Mobile'),
         ];
     }
 }
