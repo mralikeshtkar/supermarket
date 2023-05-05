@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Rules\MobileRule;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
@@ -151,9 +152,13 @@ class ApiAdminUserController extends Controller
     public function exportExcel(Request $request)
     {
         $fileName='users-' . verta() . '.xlsx';
-        return ApiResponse::message(trans("ok"))
-            ->addData('excel',(new UsersExport())->withFilter($request)->download($fileName))
-            ->send();
+        $excel = Excel::raw(new UsersExport(),\Maatwebsite\Excel\Excel::XLSX);
+        $response =  array(
+            'name' => $fileName,
+            'file' => "data:application/vnd.ms-excel;base64,".base64_encode($excel)
+        );
+        return response()->json($response);
+        return (new UsersExport())->withFilter($request)->download($fileName);
     }
 
     /**
