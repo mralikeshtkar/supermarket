@@ -20,6 +20,8 @@ class UsersExport implements FromQuery, WithMapping, WithColumnFormatting, WithH
 {
     use Exportable;
 
+    private $request = null;
+
     public function map($row): array
     {
         return [
@@ -47,9 +49,11 @@ class UsersExport implements FromQuery, WithMapping, WithColumnFormatting, WithH
 
     public function query()
     {
-        dd("query");
         return User::query()
-            ->select(['id', 'name', 'mobile', 'created_at']);
+            ->select(['id', 'name', 'mobile', 'created_at'])
+            ->when($this->request, function ($q) {
+                $q->filter($this->request);
+            });
     }
 
     /**
@@ -58,8 +62,7 @@ class UsersExport implements FromQuery, WithMapping, WithColumnFormatting, WithH
      */
     public function withFilter($request): static
     {
-        dd("withFilter");
-        $this->query()->filter($request);
+        $this->request = $request;
         return $this;
     }
 
