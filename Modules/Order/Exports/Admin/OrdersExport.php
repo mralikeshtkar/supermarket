@@ -28,7 +28,7 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
             number_format($row->total),
             number_format($row->discount),
             number_format($row->amount),
-            OrderStatus::getDescription($this->status),
+            OrderStatus::getDescription($row->status),
             verta($row->created_at)->formatJalaliDatetime(),
         ];
     }
