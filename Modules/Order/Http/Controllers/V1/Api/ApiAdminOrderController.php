@@ -142,9 +142,6 @@ class ApiAdminOrderController extends Controller
 
     public function exportExcel(Request $request)
     {
-        Schema::table('users', function ($table) {
-            $table->string('code')->nullable();
-        });
         $fileName = 'orders-' . verta() . '.xlsx';
         $excel = Excel::raw((new OrdersExport())->withFilter($request), \Maatwebsite\Excel\Excel::XLSX);
         return ApiResponse::message(trans("The operation was done successfully"))
