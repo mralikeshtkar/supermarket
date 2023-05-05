@@ -19,6 +19,7 @@ use Modules\User\Rules\UniqueMobileRule;
 use Modules\User\Transformers\V1\Api\Admin\AdminUserOrderResource;
 use Modules\User\Transformers\V1\Api\Admin\AdminUserResource;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Throwable;
 
 class ApiAdminUserController extends Controller
@@ -152,10 +153,12 @@ class ApiAdminUserController extends Controller
     {
         $fileName='users-' . verta() . '.xlsx';
 //        return (new UsersExport())->withFilter($request)->download($fileName);
-        return \response((new UsersExport())->withFilter($request)->download($fileName),200,[
-            'Content-Type' => 'application/xlsx',
-            'Content-Disposition' => 'attachment; filename="myfile.xlsx"',
-        ]);
+        $disposition = response()->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'Gateways_CSV_' . date('YmdHis')
+        );
+
+        return response((new UsersExport())->withFilter($request)->download($fileName))->header('Content-Disposition', $disposition);
     }
 
     /**
