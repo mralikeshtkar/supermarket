@@ -196,6 +196,7 @@ class Order extends Model
         $orders = self::query()
             ->withCount('products')
             ->with(['address'])
+            ->latest()
             ->when($request->filled('order'), function (Builder $builder) use ($request) {
                 $builder->where('id', 'LIKE', '%' . $request->order . '%');
             })
@@ -318,8 +319,8 @@ class Order extends Model
 
     public function scopeSuccess(Builder $builder)
     {
-        $builder->whereHas('invoices',function ($q){
-            $q->where('status',OrderInvoiceStatus::Success);
+        $builder->whereHas('invoices', function ($q) {
+            $q->where('status', OrderInvoiceStatus::Success);
         });
     }
 
