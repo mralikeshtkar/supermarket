@@ -12,6 +12,7 @@ class UsersExport implements FromCollection
     public function collection()
     {
         return User::query()
+            ->select(['id','name','mobile'])
             ->limit(10)
             ->get();
     }
