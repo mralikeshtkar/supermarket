@@ -22,6 +22,9 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
         return [
             $row->id,
             number_format($row->total),
+            number_format($row->discount),
+            number_format($row->amount),
+            verta($row->created_at)->formatJalaliDatetime(),
         ];
     }
 
@@ -37,6 +40,9 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
         return [
             __('OrderId'),
             __('Total'),
+            __('Discount'),
+            __('Money Paid'),
+            __('Date'),
         ];
     }
 

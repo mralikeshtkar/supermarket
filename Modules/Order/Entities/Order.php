@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Order extends Model
 {
-    use HasFactory;
 
     #region Constance
 
