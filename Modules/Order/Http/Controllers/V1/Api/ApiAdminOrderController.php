@@ -157,8 +157,7 @@ class ApiAdminOrderController extends Controller
             ->where('status', OrderStatus::AwaitingReview)
             ->whereHas('invoices', function ($q) {
                 $q->success();
-            })->limit(5)
-            ->count();
+            })->count();
         return ApiResponse::message(trans("Received information successfully"))
             ->addData('orders_count', $orders_count)
             ->send();
