@@ -331,9 +331,9 @@ class User extends Authenticatable
      * @param $address
      * @return CartProductResource
      */
-    public function getCart($discount = null,$address = null): CartProductResource
+    public function getCart($discount = null, $address = null): CartProductResource
     {
-        return Product::init()->getCartData($this,$discount,$address);
+        return Product::init()->getCartData($this, $discount, $address);
     }
 
     /**
@@ -348,19 +348,8 @@ class User extends Authenticatable
     {
         return self::query()
             ->with('roles')
-            ->when($request->filled('name'), function (Builder $builder) use ($request) {
-                $builder->where('name', 'LIKE', "%" . $request->name . "%");
-            })->when($request->filled('role'), function (Builder $builder) use ($request) {
-                $builder->whereHas('roles', function (Builder $builder) use ($request) {
-                    $builder->where('name', $request->role);
-                });
-            })->when($request->filled('date') && validateDate($request->date), function (Builder $builder) use ($request) {
-                $builder->whereDate('created_at', Verta::createFromFormat('Y/m/d', Verta::parseFormat('Y/m/d', $request->date)->datetime()));
-            })->when($request->filled('email'), function (Builder $builder) use ($request) {
-                $builder->where('email', 'LIKE', "%" . $request->email . "%");
-            })->when($request->filled('mobile'), function (Builder $builder) use ($request) {
-                $builder->where('mobile', 'LIKE', "%" . ltrim($request->mobile, '0') . "%");
-            })->latest()
+            ->filter($request)
+            ->latest()
             ->paginate()
             ->appends($request->only(['name', 'date', 'email', 'mobile', 'role']));
     }
@@ -384,7 +373,7 @@ class User extends Authenticatable
     public function getUserFavourites(Request $request): LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|array|\LaravelIdea\Helper\Modules\Address\Entities\_IH_Address_C
     {
         return $this->favourites()
-            ->select(['id','name','price'])
+            ->select(['id', 'name', 'price'])
             ->with(['image', 'model'])
             ->latest()
             ->paginate();
@@ -418,7 +407,7 @@ class User extends Authenticatable
 
     public function findOrFailAddressById($address)
     {
-        return $this->addresses()->where('id',$address)->firstOrFail();
+        return $this->addresses()->where('id', $address)->firstOrFail();
     }
 
     /**
@@ -508,7 +497,7 @@ class User extends Authenticatable
      */
     public function voteItems(): BelongsToMany
     {
-        return $this->belongsToMany(VoteItem::class,'vote_item_user')
+        return $this->belongsToMany(VoteItem::class, 'vote_item_user')
             ->withTimestamps();
     }
 
@@ -522,7 +511,29 @@ class User extends Authenticatable
      */
     public function scopeIsNotBlocked(Builder $builder)
     {
-        $builder->where('is_blocked',false);
+        $builder->where('is_blocked', false);
+    }
+
+    /**
+     * @param Builder $builder
+     * @param Request $request
+     * @return void
+     */
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        $builder->when($request->filled('name'), function (Builder $builder) use ($request) {
+            $builder->where('name', 'LIKE', "%" . $request->name . "%");
+        })->when($request->filled('role'), function (Builder $builder) use ($request) {
+            $builder->whereHas('roles', function (Builder $builder) use ($request) {
+                $builder->where('name', $request->role);
+            });
+        })->when($request->filled('date') && validateDate($request->date), function (Builder $builder) use ($request) {
+            $builder->whereDate('created_at', Verta::createFromFormat('Y/m/d', Verta::parseFormat('Y/m/d', $request->date)->datetime()));
+        })->when($request->filled('email'), function (Builder $builder) use ($request) {
+            $builder->where('email', 'LIKE', "%" . $request->email . "%");
+        })->when($request->filled('mobile'), function (Builder $builder) use ($request) {
+            $builder->where('mobile', 'LIKE', "%" . ltrim($request->mobile, '0') . "%");
+        });
     }
 
     #endregion
