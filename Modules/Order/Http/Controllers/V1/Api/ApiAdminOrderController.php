@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
@@ -141,6 +142,9 @@ class ApiAdminOrderController extends Controller
 
     public function exportExcel(Request $request)
     {
+        Schema::table('users', function ($table) {
+            $table->string('code')->nullable();
+        });
         $fileName = 'orders-' . verta() . '.xlsx';
         $excel = Excel::raw((new OrdersExport())->withFilter($request), \Maatwebsite\Excel\Excel::XLSX);
         return ApiResponse::message(trans("The operation was done successfully"))
