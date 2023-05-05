@@ -11,13 +11,13 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\User\Entities\User;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
-class UsersExport implements FromCollection,WithMapping,WithColumnFormatting,ShouldAutoSize
+class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, ShouldAutoSize
 {
 
     public function collection()
     {
         return User::query()
-            ->select(['id','name','mobile'])
+            ->select(['id', 'name', 'mobile'])
             ->limit(10)
             ->get();
     }
@@ -26,7 +26,7 @@ class UsersExport implements FromCollection,WithMapping,WithColumnFormatting,Sho
     {
         return [
             $row->name,
-            "ali".substr($row->mobile,3)
+            '"0' . substr($row->mobile, 3).'"'
         ];
     }
 
