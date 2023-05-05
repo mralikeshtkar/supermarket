@@ -24,7 +24,7 @@ class UsersExport implements FromCollection,WithMapping,WithColumnFormatting
     {
         return [
             $row->name,
-            $row->mobile
+            substr($row->mobile,0,3)
         ];
     }
 
