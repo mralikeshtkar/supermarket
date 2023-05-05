@@ -219,10 +219,6 @@ class ApiAdminOrderController extends Controller
             'pdf' => "data:application/pdf;base64," . base64_encode($pdfData),
             'name' => "Factor order " . $order->id . ".pdf"
         ]);
-        /*$pathPdf = storage_path('app/public/factors');
-        $filename = uniqid() . time() . ".pdf";
-        PDF::loadView('factor', ['order' => $order])->save($pathPdf . "/" . $filename);
-        return response()->json(['pdf' => asset('storage/factors/' . $filename)]);*/
     }
 
     /**

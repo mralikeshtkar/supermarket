@@ -59,7 +59,7 @@ class ApiAdminUserController extends Controller
     public function show(Request $request, $user)
     {
         ApiResponse::authorize($request->user()->can('show', User::class));
-        $user = User::init()->selectColumns(['id', 'mobile', 'email', 'name', 'password', 'is_blocked'])
+        $user = User::init()->selectColumns(['id', 'mobile', 'email', 'name', 'password','point','code', 'is_blocked'])
             ->withRelationships(['roles'])
             ->findOrFailById($user);
         try {
