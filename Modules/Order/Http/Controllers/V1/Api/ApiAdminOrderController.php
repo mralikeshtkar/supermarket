@@ -151,18 +151,6 @@ class ApiAdminOrderController extends Controller
             ->send();
     }
 
-    public function notifications(Request $request)
-    {
-        $orders_count = Order::query()
-            ->where('status', OrderStatus::AwaitingReview)
-            ->whereHas('invoices', function ($q) {
-                $q->success();
-            })->count();
-        return ApiResponse::message(trans("Received information successfully"))
-            ->addData('orders_count', $orders_count)
-            ->send();
-    }
-
     /**
      * @param Request $request
      * @param $order
