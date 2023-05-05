@@ -14,6 +14,7 @@ use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use Modules\Permission\Entities\Role;
 use Modules\Permission\Transformers\V1\Admin\AdminCheckUserPermissionAccessResource;
 use Modules\User\Entities\User;
+use Modules\User\Exports\Admin\UsersExport;
 use Modules\User\Rules\UniqueMobileRule;
 use Modules\User\Transformers\V1\Api\Admin\AdminUserOrderResource;
 use Modules\User\Transformers\V1\Api\Admin\AdminUserResource;
@@ -145,6 +146,11 @@ class ApiAdminUserController extends Controller
         return ApiResponse::message(trans('user::messages.user_was_deleted'))
             ->addData('user', $user)
             ->send();
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return (new UsersExport())->withFilter($request)->download('users-' . verta() . '.xlsx');
     }
 
     /**

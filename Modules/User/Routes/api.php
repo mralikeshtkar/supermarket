@@ -49,6 +49,7 @@ Route::prefix('v1')->group(function (Router $router) {
             $router->get('users/{user}', [V1ApiAdminUserController::class, 'show']);
             $router->match(['put', 'patch'], 'users/{user}', [V1ApiAdminUserController::class, 'update']);
             $router->delete('users/{user}', [V1ApiAdminUserController::class, 'destroy']);
+            $router->post('users/export-excel', [V1ApiAdminUserController::class, 'exportExcel']);
             $router->get('user', [V1ApiAdminUserController::class, 'user']);
 
             /* Cart */
