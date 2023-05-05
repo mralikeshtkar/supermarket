@@ -44,9 +44,6 @@ class ApiAdminDashboardController extends Controller
             $collection->push([
                 'text' => "{$orders_count} سفارش در بخش سفارشات ثبت شده است که بررسی نشده اند",
                 'link' => "/orders",
-            ])->push([
-                'text' => "{$orders_count} سفارش در بخش سفارشات ثبت شده است که بررسی نشده اند",
-                'link' => "/orders",
             ]);
         })->toArray();
         return ApiResponse::message(trans("Received information successfully"))
