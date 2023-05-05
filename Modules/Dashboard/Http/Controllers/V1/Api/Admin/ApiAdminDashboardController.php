@@ -40,9 +40,10 @@ class ApiAdminDashboardController extends Controller
             ->whereHas('invoices', function ($q) {
                 $q->success();
             })->count();
-        $notifications = collect([])->when($orders_count, function (Collection $collection) use ($orders_count) {
+        $notifications = collect([])->when(!$orders_count, function (Collection $collection) use ($orders_count) {
             $collection->push([
                 'text' => "{$orders_count} سفارش در بخش سفارشات ثبت شده است که بررسی نشده اند",
+                'link' => "/orders",
             ]);
         })->toArray();
         return ApiResponse::message(trans("Received information successfully"))
