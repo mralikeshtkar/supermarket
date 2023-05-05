@@ -31,7 +31,7 @@ class UsersExport implements FromCollection,WithMapping,WithColumnFormatting
     public function columnFormats(): array
     {
         return [
-            'B' => DataType::TYPE_STRING
+            'B' => '#############'
         ];
     }
 }
