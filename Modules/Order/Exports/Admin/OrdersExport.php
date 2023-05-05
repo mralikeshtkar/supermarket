@@ -21,6 +21,8 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
     {
         return [
             $row->id,
+            $row->address->name,
+            "0".substr($row->address->mobile,3),
             number_format($row->total),
             number_format($row->discount),
             number_format($row->amount),
@@ -39,6 +41,8 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
     {
         return [
             __('OrderId'),
+            __('Receiver'),
+            __('Mobile'),
             __('Total'),
             __('Discount'),
             __('Money Paid'),
