@@ -5,6 +5,7 @@ namespace Modules\Dashboard\Http\Controllers\V1\Api\Admin;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Order\Entities\Invoice;
 use Modules\Order\Entities\Order;
@@ -39,9 +40,11 @@ class ApiAdminDashboardController extends Controller
             ->whereHas('invoices', function ($q) {
                 $q->success();
             })->count();
-        $notifications = collect([])->push([
-            'text' => "{$orders_count} سفارش در بخش سفارشات ثبت شده است که بررسی نشده اند",
-        ])->toArray();
+        $notifications = collect([])->when($orders_count, function (Collection $collection) use ($orders_count) {
+            $collection->push([
+                'text' => "{$orders_count} سفارش در بخش سفارشات ثبت شده است که بررسی نشده اند",
+            ]);
+        })->toArray();
         return ApiResponse::message(trans("Received information successfully"))
             ->addData('notifications', $notifications)
             ->send();
