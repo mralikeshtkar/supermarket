@@ -17,7 +17,7 @@ class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, 
     public function collection()
     {
         return User::query()
-            ->select(['id', 'name', 'mobile'])
+            ->select(['id', 'name', 'mobile','created_at'])
             ->limit(10)
             ->get();
     }
@@ -26,7 +26,8 @@ class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, 
     {
         return [
             $row->name,
-            '0' . substr($row->mobile, 3)
+            '0' . substr($row->mobile, 3),
+            verta($row->created_at)->formatJalaliDate(),
         ];
     }
 
@@ -42,6 +43,7 @@ class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, 
         return [
             __('First name and Last name'),
             __('Mobile'),
+            __('Register date'),
         ];
     }
 }
