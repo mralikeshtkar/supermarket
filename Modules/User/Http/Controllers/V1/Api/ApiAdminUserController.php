@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Rules\MobileRule;
@@ -83,6 +84,7 @@ class ApiAdminUserController extends Controller
         ApiResponse::authorize($request->user()->can('create', User::class));
         ApiResponse::init($request->all(), [
             'name' => ['nullable', 'string'],
+            'code' => ['nullable', 'numeric',Rule::unique(User::class,'code')],
             'mobile' => ['required', new MobileRule(), new UniqueMobileRule()],
             'email' => ['nullable', 'email'],
         ])->validate();
@@ -108,6 +110,7 @@ class ApiAdminUserController extends Controller
         ApiResponse::authorize($request->user()->can('edit', User::class));
         ApiResponse::init($request->all(), [
             'name' => ['nullable', 'string'],
+            'code' => ['nullable', 'numeric',Rule::unique(User::class,'code')->ignore($user)],
             'mobile' => ['required', new MobileRule(), new UniqueMobileRule($user)],
             'email' => ['nullable', 'email'],
             'role' => ['nullable', 'exists:roles,name'],

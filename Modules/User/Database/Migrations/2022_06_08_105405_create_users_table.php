@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('email')->unique()->nullable();
             $table->string('name')->nullable();
             $table->string('password')->nullable();
+            $table->string('code')->nullable();
             $table->json('cart')->nullable();
             $table->json('last_seen_products')->nullable();
             $table->boolean('is_blocked')->default(false);

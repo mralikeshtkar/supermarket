@@ -44,6 +44,7 @@ class User extends Authenticatable
         'mobile',
         'email',
         'name',
+        'code',
         'password',
         'cart',
         'last_seen_products',
@@ -157,6 +158,7 @@ class User extends Authenticatable
             'mobile' => to_valid_mobile_number($request->mobile),
             'email' => $request->email,
             'is_blocked' => $request->is_blocked,
+            'code' => $request->code,
             'point' => $request->filled('point') ? $request->point : $this->point,
         ]);
         if ($request->filled('role')) $this->assignRole($request->role);
@@ -192,6 +194,7 @@ class User extends Authenticatable
             'mobile' => to_valid_mobile_number($request->mobile),
             'email' => $request->email,
             'point' => $request->point,
+            'code' => $request->code,
         ]);
     }
 
