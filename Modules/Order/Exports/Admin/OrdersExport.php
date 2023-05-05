@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\Order\Entities\Order;
+use Modules\Order\Enums\OrderStatus;
 use Modules\User\Entities\User;
 
 class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, WithHeadings, ShouldAutoSize
@@ -19,6 +20,7 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
 
     public function map($row): array
     {
+
         return [
             $row->id,
             $row->address->name,
@@ -26,6 +28,7 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
             number_format($row->total),
             number_format($row->discount),
             number_format($row->amount),
+            OrderStatus::getDescription($this->status),
             verta($row->created_at)->formatJalaliDatetime(),
         ];
     }
@@ -46,6 +49,7 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
             __('Total'),
             __('Discount'),
             __('Money Paid'),
+            __('Status'),
             __('Date'),
         ];
     }
@@ -54,6 +58,7 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
     {
         return Order::query()
             ->with(['address','invoices'])
+            ->latest()
             ->when($this->request, function ($q) {
                 $q->filter($this->request);
             });
