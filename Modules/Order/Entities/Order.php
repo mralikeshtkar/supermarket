@@ -197,22 +197,8 @@ class Order extends Model
             ->withCount('products')
             ->with(['address'])
             ->latest()
-            ->when($request->filled('order'), function (Builder $builder) use ($request) {
-                $builder->where('id', 'LIKE', '%' . $request->order . '%');
-            })
-            ->when($request->filled('user_name'), function (Builder $builder) use ($request) {
-                $builder->whereHas('address', function (Builder $builder) use ($request) {
-                    $builder->where('name', 'LIKE', '%' . $request->user_name . '%');
-                });
-            })->when($request->filled('user_id'), function (Builder $builder) use ($request) {
-                $builder->whereHas('user', function (Builder $builder) use ($request) {
-                    $builder->where('id', $request->user_name);
-                });
-            })->when($request->filled('from') && validateDate($request->from), function (Builder $builder) use ($request) {
-                $builder->whereDate('created_at', '>=', Verta::parseFormat('Y/m/d', $request->from)->datetime());
-            })->when($request->filled('to') && validateDate($request->to), function (Builder $builder) use ($request) {
-                $builder->whereDate('created_at', '<=', Verta::parseFormat('Y/m/d', $request->to)->datetime());
-            })->paginate();
+            ->filter($request)
+            ->paginate();
         return ApiPaginationResource::make($orders)->additional(['itemsResource' => ApiAdminOrderResource::class]);
     }
 
@@ -321,6 +307,25 @@ class Order extends Model
     {
         $builder->whereHas('invoices', function ($q) {
             $q->where('status', OrderInvoiceStatus::Success);
+        });
+    }
+
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        $builder->when($request->filled('order'), function (Builder $builder) use ($request) {
+            $builder->where('id', 'LIKE', '%' . $request->order . '%');
+        })->when($request->filled('user_name'), function (Builder $builder) use ($request) {
+            $builder->whereHas('address', function (Builder $builder) use ($request) {
+                $builder->where('name', 'LIKE', '%' . $request->user_name . '%');
+            });
+        })->when($request->filled('user_id'), function (Builder $builder) use ($request) {
+            $builder->whereHas('user', function (Builder $builder) use ($request) {
+                $builder->where('id', $request->user_name);
+            });
+        })->when($request->filled('from') && validateDate($request->from), function (Builder $builder) use ($request) {
+            $builder->whereDate('created_at', '>=', Verta::parseFormat('Y/m/d', $request->from)->datetime());
+        })->when($request->filled('to') && validateDate($request->to), function (Builder $builder) use ($request) {
+            $builder->whereDate('created_at', '<=', Verta::parseFormat('Y/m/d', $request->to)->datetime());
         });
     }
 

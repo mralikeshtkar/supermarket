@@ -9,14 +9,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Entities\Order;
 use Modules\Order\Enums\OrderStatus;
+use Modules\Order\Exports\Admin\OrdersExport;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
-use OpenApi\Annotations as OA;
 
 class ApiAdminOrderController extends Controller
 {
@@ -136,6 +136,16 @@ class ApiAdminOrderController extends Controller
             ->addData('order', ApiAdminOrderResource::make($order))
             ->addData('statuses', OrderStatus::asSelectArray())
             ->addData('min_delivery_date', Verta::now()->format('Y/n/j H:i'))
+            ->send();
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $fileName = 'orders-' . verta() . '.xlsx';
+        $excel = Excel::raw((new OrdersExport())->withFilter($request), \Maatwebsite\Excel\Excel::XLSX);
+        return ApiResponse::message(trans("The operation was done successfully"))
+            ->addData('name', $fileName)
+            ->addData('file', "data:application/vnd.ms-excel;base64," . base64_encode($excel))
             ->send();
     }
 

@@ -9,6 +9,8 @@
     "Discount is invalid": "کد تخفیف معتبر نمیباشد",
     "The discount code cannot be used for this shopping cart": "کد تخفیف برای این سبد خرید قابل استفاده نمی باشد",
     "Order": "سفارش",
+    "Total": "مجموع",
+    "OrderId": "شناسه سفارش",
     "created": "ثبت اطلاعات",
     "updated": "بروزرسانی اطلاعات",
     "tag": "برچسب",
