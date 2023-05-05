@@ -4,11 +4,12 @@ namespace Modules\User\Exports\Admin;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Modules\User\Entities\User;
 
-class UsersExport implements FromCollection,WithMapping
+class UsersExport implements FromCollection,WithMapping,WithColumnFormatting
 {
     public function collection()
     {
@@ -22,7 +23,14 @@ class UsersExport implements FromCollection,WithMapping
     {
         return [
             $row->name,
-            strval($row->mobile)
+            $row->mobile
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'B' => '0'
         ];
     }
 }
