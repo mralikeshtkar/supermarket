@@ -152,7 +152,7 @@ class ApiAdminUserController extends Controller
     {
         $fileName='users-' . verta() . '.xlsx';
         return (new UsersExport())->withFilter($request)->download($fileName,null,[
-            'Content-Disposition: attachment; filename='.$fileName
+            'Content-Disposition'=>'attachment; filename='.$fileName
         ]);
     }
 
