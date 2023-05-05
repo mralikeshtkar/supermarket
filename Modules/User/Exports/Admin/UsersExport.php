@@ -33,7 +33,7 @@ class UsersExport implements FromCollection, WithMapping, WithColumnFormatting, 
     public function columnFormats(): array
     {
         return [
-            'B' => '#############'
+            'B' => '##########'
         ];
     }
 }
