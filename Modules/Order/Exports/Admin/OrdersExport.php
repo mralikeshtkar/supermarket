@@ -21,7 +21,7 @@ class OrdersExport implements FromQuery, WithMapping, WithColumnFormatting, With
     {
         return [
             $row->id,
-            $row->total,
+            number_format($row->total),
         ];
     }
 
