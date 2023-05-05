@@ -19,13 +19,14 @@ use Modules\Order\Http\Controllers\V1\Api\ApiOrderController as V1ApiOrderContro
 Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
 
-        $router->get('user/orders-list',[V1ApiOrderController::class,'index']);
-        $router->get('user/orders-list/{order}',[V1ApiOrderController::class,'show']);
+        $router->get('user/orders-list', [V1ApiOrderController::class, 'index']);
+        $router->get('user/orders-list/{order}', [V1ApiOrderController::class, 'show']);
 
         $router->group(['prefix' => 'admin'], function (Router $router) {
             $router->get('orders', [V1ApiAdminOrderController::class, 'index']);
             $router->get('orders/{order}', [V1ApiAdminOrderController::class, 'show']);
             $router->post('orders/export-excel', [V1ApiAdminOrderController::class, 'exportExcel']);
+            $router->get('orders/notifications', [V1ApiAdminOrderController::class, 'notifications'])->middleware('throttle:60,2');
             $router->put('orders/{order}/change-status', [V1ApiAdminOrderController::class, 'changeStatus']);
             $router->patch('orders/{order}/delivery-date', [V1ApiAdminOrderController::class, 'deliveryDate']);
             $router->get('orders/{order}/factor', [V1ApiAdminOrderController::class, 'factor']);
@@ -37,4 +38,4 @@ Route::prefix('v1')->group(function (Router $router) {
     });
 });
 
-\Illuminate\Support\Facades\Route::get('get-factor',[V1ApiAdminOrderController::class, 'factor']);
+\Illuminate\Support\Facades\Route::get('get-factor', [V1ApiAdminOrderController::class, 'factor']);

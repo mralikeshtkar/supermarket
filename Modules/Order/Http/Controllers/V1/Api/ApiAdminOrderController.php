@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Responses\Api\ApiResponse;
 use Modules\Core\Transformers\Api\ApiPaginationResource;
 use Modules\Order\Entities\Order;
+use Modules\Order\Enums\OrderInvoiceStatus;
 use Modules\Order\Enums\OrderStatus;
 use Modules\Order\Exports\Admin\OrdersExport;
 use Modules\Order\Transformers\Api\Admin\ApiAdminOrderResource;
@@ -147,6 +148,19 @@ class ApiAdminOrderController extends Controller
         return ApiResponse::message(trans("The operation was done successfully"))
             ->addData('name', $fileName)
             ->addData('file', "data:application/vnd.ms-excel;base64," . base64_encode($excel))
+            ->send();
+    }
+
+    public function notifications(Request $request)
+    {
+        $orders_count = Order::query()
+            ->where('status', OrderStatus::AwaitingReview)
+            ->whereHas('invoices', function ($q) {
+                $q->success();
+            })->limit(5)
+            ->count();
+        return ApiResponse::message(trans("Received information successfully"))
+            ->addData('orders_count', $orders_count)
             ->send();
     }
 
