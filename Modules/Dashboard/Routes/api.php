@@ -19,7 +19,9 @@ Route::prefix('v1')->group(function (Router $router) {
     $router->middleware('auth:sanctum')->group(function (Router $router) {
         $router->group(['prefix' => 'admin'], function (Router $router){
             $router->get('dashboard', [V1ApiAdminDashboardController::class, 'index']);
-            $router->get('dashboard/notifications', [V1ApiAdminDashboardController::class, 'notifications'])->middleware('throttle:60,4');
+            $router->middleware([
+                'excluded_middleware' => 'throttle:api'
+            ])->get('dashboard/notifications', [V1ApiAdminDashboardController::class, 'notifications'])->middleware('throttle:60,4');
         });
     });
 });
