@@ -153,7 +153,6 @@ class Product extends Model
      */
     public function getAdminStocks(Request $request): LengthAwarePaginator
     {
-        $this->storeroom_entrances()
         return self::query()
             ->select(['id', 'name', 'quantity'])
             ->with(['image'])
