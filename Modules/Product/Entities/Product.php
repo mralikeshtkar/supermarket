@@ -153,6 +153,7 @@ class Product extends Model
      */
     public function getAdminStocks(Request $request): LengthAwarePaginator
     {
+        $this->storeroom_entrances()
         return self::query()
             ->select(['id', 'name', 'quantity'])
             ->with(['image'])
@@ -160,6 +161,12 @@ class Product extends Model
                 $builder->where('name', 'LIKE', '%' . $request->name . '%');
             })->when($request->filled('min'), function (Builder $builder) use ($request) {
                 $builder->where('name', 'LIKE', '%' . $request->name . '%');
+            })->when($request->filled('storeroom'), function (Builder $builder) use ($request) {
+                $builder->whereHas('storeroom_entrances', function ($q) use ($request) {
+                    $q->whereHas('storeroom', function ($q) use ($request) {
+                        $q->where('name', $request->storeroom);
+                    });
+                });
             })->stock()
             ->hasStock($request->min, $request->max)
             ->paginate();
@@ -217,7 +224,7 @@ class Product extends Model
         $products->setCollection($products->getCollection()->transform(function ($item) use ($racks) {
             /** @var Collection $racks */
             $item->rack = optional($racks->first(function ($rack) use ($item) {
-                return $rack->rows->count() && $rack->rows->pluck('products')->flatten(1)->unique('id')->contains('id',$item->id);
+                return $rack->rows->count() && $rack->rows->pluck('products')->flatten(1)->unique('id')->contains('id', $item->id);
             }))->priority;
             return $item;
         }));
