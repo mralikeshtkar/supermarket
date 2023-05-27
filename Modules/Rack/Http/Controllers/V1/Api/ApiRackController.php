@@ -37,6 +37,7 @@ class ApiRackController extends Controller
                 return null;
             }
         })->filter();
+        dd($items->count);
         return ApiResponse::message(trans('rack::messages.received_information_successfully'))
             ->addData('racks', RackResource::collection($items))
             ->send();
